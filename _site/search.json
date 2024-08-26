@@ -79,9 +79,23 @@
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "About",
+    "title": "Bhairavi Vairavelu",
     "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
+    "text": "Bhairavi is a results-driven and well-organized analyst, bringing a robust background in tech consulting and data analytics. She enjoys spending time with her chihuahua and reading books."
+  },
+  {
+    "objectID": "about.html#education",
+    "href": "about.html#education",
+    "title": "Bhairavi Vairavelu",
+    "section": "Education",
+    "text": "Education\nSingapore Management University | Master of IT in Business(Analytics) | Aug 2022 - present\nSingapore Institute of Technology | B.Eng in ICT (Software Engineering) | Sept 2018 - Jan 2022"
+  },
+  {
+    "objectID": "about.html#experience",
+    "href": "about.html#experience",
+    "title": "Bhairavi Vairavelu",
+    "section": "Experience",
+    "text": "Experience\nBilligence | Junior BI Consultant | Aug 2022 - present\nErnst & Young | Technology Consultant | Jan 2022 - April 2022\nErnst & Young | Technology Consultant Intern | Jan 2021 - Dec 2021\nTech Mahindra | Associate Software Engineer | Jun 2017 - May 2018\nGIC | Data Analyst Intern | May 2016 - Aug 2016"
   },
   {
     "objectID": "Hands-On_Ex/Hands-on_Ex01/Hands-on_Ex01A.html",
