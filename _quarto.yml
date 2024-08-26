@@ -7,10 +7,14 @@ website:
     left:
     - text: "Hands-On Exercise"
       menu:
-        - text: "Hands-On Exercise 1A"
+        - text: "Hands-On Exercise 01A"
           href: "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01A.html"
-        - text: "Hands-On Exercise 1B"
+        - text: "Hands-On Exercise 01B"
           href: "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01B.html"
+    - text: "In-Class Exercise"
+      menu:
+        - text: "In-Class Exercise 01"
+          href: "In-Class_Ex/In-Class_Ex01/In-Class_Ex01.html"
     right:
       - href: index.qmd
         text: Home

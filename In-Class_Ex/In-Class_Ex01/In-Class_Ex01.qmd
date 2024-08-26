@@ -1,0 +1,11 @@
+---
+title: "In-Class Exercise 01"
+author: "Bhairavi Vairavelu"
+date: "Aug 26 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
