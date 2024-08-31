@@ -2,7 +2,7 @@
 title: "Bhairavi Vairavelu"
 about:
   template: jolla
-  #image: profile.jpg
+  image: Bhairavi_1.jpg
   links:
     - icon: linkedin
       text: LinkedIn
