@@ -1,0 +1,258 @@
+---
+title: "In-Class Exercise 01"
+author: "Bhairavi Vairavelu"
+date: "Aug 26 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+## 1. Getting Started
+
+### 1.1 Loading the R Packages
+
+This code chunk loads the R packages we require for this exercise:
+
+```{r}
+pacman::p_load(tidyverse, sf, tmap, ggstatsplot)
+```
+
+### 1.2 Loading the Data
+
+This code chunk imports the shapefile:
+
+```{r}
+mpsz14_shp <- st_read(dsn = "data", 
+                     layer = "MP14_SUBZONE_WEB_PL")
+```
+
+This code chunk (should) import the kml file. However, since it's corrupted we will not be using it.
+
+```{r}
+# mpsz14_kml <- st_read("data/MasterPlan2014SubzoneBoundaryWebKML.kml")
+```
+
+We could help GovTech by writing out a new kml file and send it back to them :)
+
+```{r}
+#st_write(mpsz14_shp,
+#         "data/MP14_SUBZONE_WEB_PL.kml",
+#         delete_dsn = TRUE)
+```
+
+This code chunk imports the Pre-Schools Location kml and geojson file and saves it in a sf simple data frame:
+
+```{r}
+preschool_kml <- st_read("data/PreSchoolsLocation.kml")
+preschool_geojson <- st_read("data/PreSchoolsLocation.geojson") 
+```
+
+This code chunk imports the Master Plan 2019 shapefile:
+
+```{r}
+mpsz19_shp <- st_read(dsn = "data/", 
+                      layer = "MPSZ-2019")
+```
+
+This code chunk imports the Master Plan 2019 kml file, However, I'm encountering an error with this line of code..
+
+```{r}
+#mpsz19_kml <- st_read("data/MasterPlan2019SubzoneBoundaryNoSeaKML.kml")
+```
+
+## 2. Handling Coordinate Systems
+
+### 2.1 Verifying Coordinate System
+
+This code chunk is used to check the project of the imported sf objects:
+
+```{r}
+st_crs(mpsz19_shp)
+```
+
+From the above output, we know that it is using EPSG:4362 instead of EPSG:3414
+
+### 2.2 Transforming Coordinate System
+
+This code chunk helps to transform the coordinate system of Master Plan 2019 shapefile:
+
+```{r}
+mpsz19_shp <- st_read(dsn = "data/", 
+                     layer = "MPSZ-2019") %>%
+  st_transform(crs = 3414)
+```
+
+This code chunk helps to transform the coordinate system of Pre-Schools Location kml file:
+
+```{r}
+preschool <- st_read("data/PreSchoolsLocation.kml") %>%
+  st_transform(crs = 3414)
+```
+
+## 3. Geospatial Data Wrangling
+
+### 3.1 Point-in-Polygon Count
+
+This code chunk is used to count the number of pre-schools in each planning sub-zone:
+
+```{r}
+mpsz19_shp <- mpsz19_shp %>%
+  mutate(`PreSch Count` = lengths(
+    st_intersects(mpsz19_shp, preschool)))
+mpsz19_shp
+```
+
+The new column (PreSch Count) has been added to the data frame as shown in the result output above.
+
+### 3.2 Computing Density
+
+The following code chunk can be used to: - Derive the area of each planning sub-zone - Drop the unit of measurement of the area - Calculate the density of pre-schools at the planning sub-zone level
+
+```{r}
+mpsz19_shp <- mpsz19_shp %>%
+  mutate(Area = units::drop_units(
+    st_area(.)),
+    `PreSch Density` = `PreSch Count` / Area * 1000000
+  )
+mpsz19_shp
+```
+
+The new columns (Area, PreSch Density) have been added to the data frame as shown in the result output above.
+
+## 4. Statistical Analysis
+
+By using Exploratory Data Analysis (EDA) and Confirmatory Data Analysis (CDA), we can explore and confirm the statistical relationship between Pre-School Density and Pre-School Count.
+
+```{r}
+mpsz19_shp$`PreSch Density` <- as.numeric(as.character(mpsz19_shp$`PreSch Density`))
+mpsz19_shp$`PreSch Count` <- as.numeric(as.character(mpsz19_shp$`PreSch Count`)) 
+mpsz19_shp_new <- as.data.frame(mpsz19_shp)
+
+ggscatterstats(data = mpsz19_shp_new,
+               x = `PreSch Density`,
+               y = `PreSch Count`,
+               type = "parametric")
+```
+
+## 5. Population Data
+
+### 5.1 Loading the Data
+
+The code chunk below is used to load the Singapore Residents by Planning Area / Subzone, Age Group, Sex and Type of Dwelling data from Singtat:
+
+```{r}
+popdata <- read_csv("data/respopagesextod2023.csv")
+```
+
+### 5.2 Data Wrangling
+
+The code chunk below is used to prepare a data frame showing the population by Planning Area and Planning Subzone:
+
+```{r}
+popdata2023 <- popdata %>% 
+  group_by(PA, SZ, AG) %>% 
+  summarise(`POP`=sum(`Pop`)) %>%  
+  ungroup() %>% 
+  pivot_wider(names_from=AG,
+              values_from = POP)
+
+colnames(popdata2023)
+```
+
+### 5.3 Data Processing
+
+The code chunk below achieves the following logic: - YOUNG: age group 0 to 4 until age group 20 to 24 - ECONOMY ACTIVE: age group 25-29 until age group 60-64 - AGED: age group 65 and above - TOTAL: all age groups - DEPENDENCY; the ratio between young and aged against the economy active group
+
+```{r}
+popdata2023 <- popdata2023 %>%
+  mutate(YOUNG=rowSums(.[3:6]) # Aged 0 - 24, 10 - 24
+         +rowSums(.[14])) %>% # Aged 5 - 9
+  mutate(`ECONOMY ACTIVE` = rowSums(.[7:13])+ # Aged 25 - 59
+  rowSums(.[15])) %>%  # Aged 60 -64
+  mutate(`AGED`=rowSums(.[16:21])) %>%
+  mutate(`TOTAL`=rowSums(.[3:21])) %>%
+  mutate(`DEPENDENCY`=(`YOUNG` + `AGED`)
+  / `ECONOMY ACTIVE`) %>% 
+  select(`PA`, `SZ`, `YOUNG`, 
+         `ECONOMY ACTIVE`, `AGED`,
+         `TOTAL`, `DEPENDENCY`)
+```
+
+Let's take a look at the transformed data frame:
+
+```{r}
+popdata2023
+```
+
+### 5.4 Joining Data
+
+The code chunk below is used to join the popdata2023 with the mpsz19_shp data:
+
+```{r}
+popdata2023 <- popdata2023 %>%
+  mutate_at(.vars = vars(PA, SZ), 
+          .funs = list(toupper)) 
+
+mpsz_pop2023 <- left_join(mpsz19_shp, popdata2023,
+                          by = c("SUBZONE_N" = "SZ"))
+
+pop2023_mpsz <- left_join(popdata2023, mpsz19_shp, 
+                          by = c("SZ" = "SUBZONE_N"))
+```
+
+## 6. Analytical Maps
+
+### 6.1 Percentile Map
+
+The percentile map is a special type of quantile map with six specific categories: 0-1%,1-10%, 10-50%,50-90%,90-99%, and 99-100%. The corresponding breakpoints can be derived by means of the base R quantile command, passing an explicit vector of cumulative probabilities as c(0,.01,.1,.5,.9,.99,1). Note that the begin and endpoint need to be included.
+
+Step 1: Data Preparation The code chunk below helps to exclude records with NA:
+
+```{r}
+mpsz_pop2023 <- mpsz_pop2023 %>%
+  drop_na()
+```
+
+Step 2: get function The code chunk below defines a function to get the input data and field that is to be used to create the percentile map:
+
+```{r}
+get.var <- function(vname, df) {
+  v <- df[vname] %>% st_set_geometry(NULL)
+  v <- unname(v[,1]) # unlist(v)
+  return(v)
+}
+```
+
+```{r}
+mpsz19_shp
+```
+
+Step 3: Percentile Mapping function The code chunk below creates a function for computing and plotting the percentile map:
+
+```{r}
+percentmap <- function(vnam, df, legtitle=NA, mtitle="Percentile Map"){
+  percent <- c(0,.01,.1,.5,.9,.99,1)
+  var <- get.var(vnam, df)
+  bperc <- quantile(var, percent)
+  tm_shape(mpsz_pop2023) +
+  tm_polygons() +
+  tm_shape(df) +
+     tm_fill(vnam,
+             title=legtitle,
+             breaks=bperc,
+             palette="Blues",
+          labels=c("< 1%", "1% - 10%", "10% - 50%", "50% - 90%", "90% - 99%", "> 99%"))  +
+  tm_borders() +
+  tm_layout(main.title = mtitle, 
+            title.position = c("right","bottom"))
+}
+```
+
+Step 4: Running the functions The code chunk below runs the percentile map function:
+
+```{r}
+percentmap("DEPENDENCY", mpsz_pop2023)
+```
