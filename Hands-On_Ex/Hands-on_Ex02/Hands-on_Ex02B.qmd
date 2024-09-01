@@ -1,0 +1,15 @@
+---
+title: "Hands-on Exercise 02B"
+author: "Bhairavi Vairavelu"
+date: "Sep 01 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+# 2nd Order Spatial Point Patterns Analysis Methods
+
+## 1. Overview
