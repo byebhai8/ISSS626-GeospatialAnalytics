@@ -209,17 +209,19 @@ pop2023_mpsz <- left_join(popdata2023, mpsz19_shp,
 
 The percentile map is a special type of quantile map with six specific categories: 0-1%,1-10%, 10-50%,50-90%,90-99%, and 99-100%. The corresponding breakpoints can be derived by means of the base R quantile command, passing an explicit vector of cumulative probabilities as c(0,.01,.1,.5,.9,.99,1). Note that the begin and endpoint need to be included.
 
-Step 1: Data Preparation 
+Step 1: Data Preparation
 
 The code chunk below helps to exclude records with NA:
+
 ```{r}
 mpsz_pop2023 <- mpsz_pop2023 %>%
   drop_na()
 ```
 
-Step 2: get function 
+Step 2: get function
 
 The code chunk below defines a function to get the input data and field that is to be used to create the percentile map:
+
 ```{r}
 get.var <- function(vname, df) {
   v <- df[vname] %>% st_set_geometry(NULL)
@@ -232,9 +234,10 @@ get.var <- function(vname, df) {
 mpsz19_shp
 ```
 
-Step 3: Percentile Mapping function 
+Step 3: Percentile Mapping function
 
 The code chunk below creates a function for computing and plotting the percentile map:
+
 ```{r}
 percentmap <- function(vnam, df, legtitle=NA, mtitle="Percentile Map"){
   percent <- c(0,.01,.1,.5,.9,.99,1)
@@ -254,9 +257,10 @@ percentmap <- function(vnam, df, legtitle=NA, mtitle="Percentile Map"){
 }
 ```
 
-Step 4: Running the functions 
+Step 4: Running the functions
 
 The code chunk below runs the percentile map function:
+
 ```{r}
 percentmap("DEPENDENCY", mpsz_pop2023)
 ```
@@ -268,6 +272,7 @@ A box map is an augmented quartile map, with an additional lower and upper categ
 Step 1: Creating boxbreaks function
 
 The code chunk below is an R function that creates break points for a box map:
+
 ```{r}
 boxbreaks <- function(v,mult=1.5) {
   qv <- unname(quantile(v))
@@ -296,9 +301,10 @@ boxbreaks <- function(v,mult=1.5) {
 }
 ```
 
-Step 2: get function 
+Step 2: get function
 
 The code chunk below is an R function to extract a variable as a vector out of an sf data frame:
+
 ```{r}
 get.var <- function(vname,df) {
   v <- df[vname] %>% st_set_geometry(NULL)
@@ -310,6 +316,7 @@ get.var <- function(vname,df) {
 Step 3: Boxmap function
 
 The code chunk below is an R function to create a box map:
+
 ```{r}
 boxmap <- function(vnam, df, 
                    legtitle=NA,
@@ -339,11 +346,13 @@ boxmap <- function(vnam, df,
 Step 4: Plotting Box Map
 
 The code chunk below runs the box map function:
+
 ```{r}
 boxmap("DEPENDENCY", mpsz_pop2023)
 ```
 
 The code chunk below plots an interactive box map:
+
 ```{r}
 tmap_options(check.and.fix = TRUE)
 tmap_mode("view")
