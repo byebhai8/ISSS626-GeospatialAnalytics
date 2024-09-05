@@ -10,5 +10,208 @@ execute:
   freeze: true
 ---
 
-## Network Constrained Spatial Point Patterns Analysis
+# Network Constrained Spatial Point Patterns Analysis
 
+## 1. Overview
+
+Network constrained Spatial Point Patterns Analysis (NetSPAA)
+- Collection of spatial point patterns and analysis methods
+- Specially developed for analysing spatial point event that occurs on or alongside network
+
+The spatial point event can be locations of traffic accidents or childcare centres.
+
+The network can be a road or river network.
+
+We will use the functions of spNetwork package
+- To derive network kernel density estimation (NKDE)
+- To perform network G-function and K-function analysis
+
+## 2. Data
+
+Two geospatial data sets (in ESRI shapefile format) will be used
+- Punggol_St, a line features geospatial data which store the road network within Punggol Planning Area
+- Punggol_CC, a point feature geospatial data which store the location of childcare centres within Punggol Planning Area
+
+## 3. Installing & Launching R Packages
+
+Four R Packages will be used - spNetwork, sf, tmap, tidyverse
+
+```{r}
+pacman::p_load(sf, spNetwork, tmap, tidyverse)
+```
+
+## 4. Data Import & Preparations
+
+The code chunk below uses st_read to import the geospatial data sets as sf data frames:
+```{r}
+network <- st_read(dsn="data", 
+                   layer="Punggol_St")
+```
+
+```{r}
+childcare <- st_read(dsn="data",
+                     layer="Punggol_CC")
+```
+
+The code chunk below is used to examine the structure of the output simple features data tables:
+
+```{r}
+childcare
+```
+
+```{r}
+network
+```
+
+spNetwork is actually expecting the geospatial data to contain complete CRS information..
+
+```{r}
+st_crs(childcare)
+```
+
+```{r}
+st_crs(network)
+```
+
+As such, we will be assigning the correct crs to both the childcare and network simple feature data frames:
+```{r}
+childcare3414 <- st_set_crs(childcare, 3414)
+st_crs(childcare3414)
+```
+
+```{r}
+network3414 <- st_set_crs(network, 3414)
+st_crs(network3414)
+```
+
+## 5. Visualizing Geospatial Data
+
+It's good practice to visualize geospatial data before jumping into analysis. One way is to use the plot() function as shown below:
+
+```{r}
+plot(st_geometry(network3414))
+plot(childcare3414,add=T,col='red',pch = 19)
+```
+
+To visualize in an interactive manner, we can use the mapping function of tmap package:
+
+```{r}
+tmap_mode('view')
+tm_shape(childcare3414) + 
+  tm_dots() + 
+  tm_shape(network3414) +
+  tm_lines()
+```
+
+```{r}
+tmap_mode('plot')
+```
+
+## 6. Network KDE (NKDE) Analysis
+
+### 6.1 Preparing lixels object
+
+Before computing NKDE, we need to cut the SpatialLines object into lixels with a specified minimal distance. We can use lixeline_line() of spNetwork for this:
+
+```{r}
+lixels <- lixelize_lines(network3414, 
+                         700, 
+                         mindist = 375)
+```
+
+### 6.2 Generating line centre points
+
+We will use lines_centre() of spNetwork to generate a SpatialPointsDataFrame with line centre points:
+
+```{r}
+samples <- lines_center(lixels) 
+```
+
+### 6.3 Performing NKDE
+
+To drop the Z-dimension since we require 2-D coordinates:
+```{r}
+childcare3414 <- st_zm(childcare3414)
+childcare3414
+```
+
+We will use the code chunk below to compute NKDE:
+```{r}
+densities <- nkde(network3414, 
+                  events = childcare3414,
+                  w = rep(1, nrow(childcare3414)),
+                  samples = samples,
+                  kernel_name = "quartic",
+                  bw = 300, 
+                  div= "bw", 
+                  method = "simple", 
+                  digits = 1, 
+                  tol = 1,
+                  grid_shape = c(1,1), 
+                  max_depth = 8,
+                  agg = 5, 
+                  sparse = TRUE,
+                  verbose = FALSE)
+```
+
+To verify densities output:
+```{r}
+# densities 
+```
+
+### 6.4 Visualizing NKDE
+
+Before visualizing NKDE, we will need to insert the computed density valies into the samples and lixels object as density field.
+
+```{r}
+samples$density <- densities
+lixels$density <- densities
+```
+
+The code chunk below is used to rescale the density values from number of events per meter to number of events per kilometer.
+
+```{r}
+# rescaling to help the mapping
+samples$density <- samples$density*1000
+lixels$density <- lixels$density*1000
+```
+
+The code chunk below is used to prepare an interactive and high cartographic quality map visualization:
+
+```{r}
+tmap_mode('view')
+tm_shape(lixels)+
+  tm_lines(col="density")+
+tm_shape(childcare3414)+
+  tm_dots()
+tmap_mode('plot')
+```
+
+## 7. Network Constrained G- & K-Function Analysis
+
+We will be performing complete spatial randomness (CSR) test by using kfunctions() of spNetwork package.
+
+H0: The observed spatial point events (distribution of childcare centres) are uniformly distributed over a street network in Punggol Planning Area.
+
+The CSR test is based on the assumption of the binomial point process, which implies the hypothesis that the childcare centres are randomly and independently distributed over the street network. But if this hypothesis is rejected, it means that the distribution of childcare centres are spatially interacting and dependent on each other, meaning they may form nonrandom patterns.
+
+```{r}
+kfun_childcare <- kfunctions(network3414, 
+                             childcare3414,
+                             start = 0, 
+                             end = 1000, 
+                             step = 50, 
+                             width = 50, 
+                             nsim = 50, 
+                             resolution = 50,
+                             verbose = FALSE, 
+                             conf_int = 0.05)
+```
+
+We can use the code chunk below to visualize the object of the k-function:
+
+```{r}
+kfun_childcare$plotk
+```
+
+The blue line is the empirical network K-function of the childcare centres in Punggol planning area. The gray envelop represents the results of the 50 simulations in the interval 2.5% - 97.5%. Because the blue line between the distance of 250m-400m are below the gray area, we can infer that the childcare centres in Punggol planning area resemble regular pattern at the distance of 250m-400m.
