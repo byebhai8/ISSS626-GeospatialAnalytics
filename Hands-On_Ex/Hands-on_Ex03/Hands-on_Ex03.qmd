@@ -1,0 +1,14 @@
+---
+title: "Hands-on Exercise 03"
+author: "Bhairavi Vairavelu"
+date: "Sep 05 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+## Network Constrained Spatial Point Patterns Analysis
+

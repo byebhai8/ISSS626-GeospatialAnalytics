@@ -1,4 +1,14 @@
 ---
 title: "Take-Home Exercise 01"
 author: "Bhairavi Vairavelu"
+date: "Sep 02 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
 ---
+
+## Geospatial Analytics for Public Good
+
