@@ -1,0 +1,315 @@
+---
+title: "Take-Home Exercise 01"
+author: "Bhairavi Vairavelu"
+date: "Sep 02 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+# Geospatial Analytics for Public Good
+
+## 1. Overview
+
+Road traffic accidents result in significant human and economic costs worldwide, with approximately 1.19 million deaths annually and 20-50 million non-fatal injuries, particularly affecting vulnerable road users. In Thailand, about 20,000 people die each year, making it one of the deadliest countries for road accidents. Accidents frequently occur on national highways, with 66% happening on straight roads and specific high-risk zones like curves, intersections and steep slopes.
+
+## 2. Getting Started
+
+### 2.1 Objectives
+
+This analysis aims to discover factors that influence road traffic accidents by examining both behavioural and environmental causes through spatial and spatio-temporal point patterns. This includes:
+
+1.  Visualizing spatio-temporal dynamics of accidents
+
+2.  Conducting spatial analysis using Network Spatial Point Patterns Analysis
+
+3.  Conducting spatio-temporal analysis using Temporal Network Spatial Point Patterns Analysis
+
+### 2.2 The Study Area
+
+The focus of this study would be the Bangkok Metropolitan Region (BMR).
+
+![](BMR.png){fig-align="center" width="450"}
+
+Note: The projected coordinate system of Thailand is WGS84/UTM zone 47N, and the EPSG code is 32647.
+
+### 2.3 Analytical Tools
+
+The p_load function of pacman package is used to install and loads the analytical tools that we will be using throughout this exercise.
+
+```{r}
+pacman::p_load(sf, tidyverse, tmap, Hmisc)
+```
+
+-   sf for importing, managing, and processing geospatial data
+
+-   tidyverse for performing data science tasks such as importing, wrangling and visualizing data
+
+-   tmap for visualizing geospatial objects
+
+-   Hmisc for summary statistics
+
+## 3. Data
+
+### 3.1 Getting the Data
+
+Three basic data sets will be used for this analysis:
+
+1.  Thailand Road Accident \[2019-2022\] on Kaggle
+
+2.  Thailand Roads (OpenStreetMap Export) on HDX
+
+3.  Thailand - Subnational Administrative Boundaries on HDX
+
+#### 3.1.1 Thailand Road Accident \[2019-2022\] on Kaggle
+
+![](Data01.png){fig-align="center"}
+
+Link: <https://www.kaggle.com/datasets/thaweewatboy/thailand-road-accident-2019-2022>
+
+Note: Kaggle account is required in order to download this dataset.
+
+#### 3.1.2 Thailand Roads (OpenStreetMap Export) on HDX
+
+![](Data02.png){fig-align="center"}
+
+Link: <https://data.humdata.org/dataset/hotosm_tha_roads>
+
+#### 3.1.3 Thailand - Subnational Administrative Boundaries on HDX
+
+![](Data03_1.png){fig-align="center"}
+
+Link: <https://data.humdata.org/dataset/cod-ab-tha?>
+
+### 3.2 Storing the Data
+
+At the Take-Home_Ex01 folder, we will create a sub-folder called data. Then, inside this sub-folder, we will create two new sub-folders and name them geospatial and aspatial respectively.
+
+#### 3.2.1 Geospatial Data Sets
+
+We will place the following data files into the geospatial sub-folder:
+
+1.  hotosm_tha_roads_lines_shp.shp
+
+2.  tha_admbndp_admALL_rtsd_itos_20220121.shp
+
+#### 3.2.2 Aspatial Data Sets
+
+We call a data set an aspatial data set because among its data fields, there are two fields that capture the x- and y-coordinates of the data points.
+
+We will place the following data files into the aspatial sub-folder:
+
+1.  thai_road_accident_2019_2022.csv
+
+### 3.3 Importing the Data
+
+#### 3.3.1 Importing Thailand Roads Data
+
+The code chunk below uses st_read() function of sf package to import the hotosm_tha_roads_lines_shp.shp shapefile into R as a simple feature data frame. For this code chunk, we will define the data path and the layer to provide the shapefile name.
+
+```{r}
+thaiRoads = st_read(dsn = "data/geospatial",
+                        layer = "hotosm_tha_roads_lines_shp")
+```
+
+The message above reveals that there are a total of 2792590 features and 14 fields in thaiRoads linestring feature data frame, and it the coordinate system (CRS) is currently NA.
+
+#### 3.3.2 Importing Thailand - Subnational Administrative Boundaries Data
+
+Likewise, the code chunk below will use the st_read() function of sf package to import the tha_admbndp_admALL_rtsd_itos_20220121.shp shapefile into R as a simple feature data frame.
+
+```{r}
+admBndrs = st_read(dsn = "data/geospatial",
+                        layer = "tha_admbndp_admALL_rtsd_itos_20220121")
+```
+
+The message above reveals that there are a total of 7425 features and 23 fields in admBndrs point feature data frame, and it is in wgs84 coordinates system.
+
+#### 3.3.3 Importing Thailand Road Accidents Data
+
+Since thai_road_accident_2019_2022.csv data file is in csv file format, we will use the read_csv() of readr package to import this data as shown in the code chunk below. Note that the output will be in a tibble data frame format.
+
+```{r}
+accidents <- read_csv("data/aspatial/thai_road_accident_2019_2022.csv")
+```
+
+The message above reveals that there are a total of 81735 rows and 18 fields in accidents tibble data frame.
+
+## 4. Data Wrangling
+
+### 4.1 Aspatial Data Wrangling
+
+#### 4.1.1 Contents of Aspatial Data
+
+Let us examine if the accidents data was imported correctly using the list() function of Base R.
+
+```{r}
+list(accidents)
+```
+
+The output reinforces that the accidents tibble data frame consists of 81735 rows and 18 columns. Moving forward, we will be utilizing two useful columns - latitude and longitude. Note that they are in decimal degree format. Let's assume that the data is in wgs84 coordinates system.
+
+#### 4.1.2 Handling Missing Values
+
+The filter() function of dplyr package can be used to verify if our key columns - latitude and longitude, have any missing values.
+
+```{r}
+accidents %>%
+  filter(is.na(longitude) | longitude == "",
+         is.na(latitude)  | latitude == "")
+```
+
+The output proves that there are 359 rows which contain missing values for the latitude and longitude columns.
+
+To handle this issue, we will re-use the filter() function to exclude these missing values from our tibble data frame.
+
+```{r}
+accidents <- accidents %>%
+  filter(!is.na(longitude) | longitude != "",
+         !is.na(latitude)  | latitude != "")
+```
+
+Let us verify if the rows with missing values have been dropped by re-running our initial code chunk.
+
+```{r}
+accidents %>%
+  filter(is.na(longitude) | longitude == "",
+         is.na(latitude)  | latitude == "")
+```
+
+The message above confirms that the rows with missing values have been excluded.
+
+#### 4.1.3 Handling Duplicates
+
+We want to avoid the repetition of records, which could lead to incorrect analysis of accidents. Hence, we will check for duplicates using group_by_all() to ensure the integrity of our data.
+
+```{r}
+duplicate <- accidents %>%
+  group_by_all() %>%
+  filter(n()>1) %>%
+  ungroup()
+
+duplicate
+```
+
+The message above confirms that there are no duplicated records in our accidents tibble data frame.
+
+#### 4.1.4 Creating Simple Feature Data Frame
+
+The code chunk below converts the accidents tibble data frame into a simple feature data frame by using st_as_sf() of sf packages.
+
+```{r}
+accidents_sf <- st_as_sf(accidents, 
+                       coords = c("longitude", "latitude"),
+                       crs=4326) %>%
+  st_transform(crs = 32647)
+```
+
+As mentioned previously, the projected coordinate system of Thailand is WGS84/UTM zone 47N, and the EPSG code is 32647. Hence, we will set the following arguments accordingly:
+
+-   coords argument to specify the column names to use for x- and y-coordinates
+-   crs argument to specify the coordinates system in epsg format, EPSG:4326 for wgs84 and EPSG:32647 for Thailand's projected coordinate system
+
+### 4.2 Geospatial Data Wrangling
+
+#### 4.2.1 Contents of Geospatial Data
+
+Let us examine the contents of this newly created simple feature data frame by utilizing the glimpse() function of dplyr package, which helps to reveal the data type of each field.
+
+```{r}
+glimpse(accidents_sf)
+```
+
+Note that a new column called geometry has been added into the data frame. Also, the columns longitude and latitude have been dropped from the data frame.
+
+Likewise, we can run the glimpse() function for bot the thaiRoads and admBndrs simple feature data frames.
+
+```{r}
+glimpse(thaiRoads)
+```
+
+```{r}
+glimpse(admBndrs)
+```
+
+#### 4.2.2 Coordinate Systems
+
+As mentioned previously, the projected coordinate system of Thailand is WGS84/UTM zone 47N, and the EPSG code is 32647.
+
+We can use st_crs() of sf package to identify the coordinate system of a simple feature data frame.
+
+```{r}
+st_crs(accidents_sf)
+```
+
+The message above shows that, since we manually transformed this aspatial tibble data frame to a simple feature data frame, the coordinate system of accidents_sf is correctly assigned.
+
+```{r}
+st_crs(thaiRoads)
+```
+
+The message above shows that there is no assignment of coordinate system for thaiRoads simple feature data frame.
+
+```{r}
+st_crs(admBndrs)
+```
+
+The message above shows that the admBndrs simple feature data frame is in wgs84 coordinate system.
+
+##### 4.2.2.1 Assigning EPSG Code
+
+Since thaiRoads simple feature data frame has no assignment, we will use the below code chunk to assign the EPSG code to it.
+
+```{r}
+thaiRoads32647 <- st_set_crs(thaiRoads, 32647)
+```
+
+Let us check the CSR again by using the code chunk below.
+
+```{r}
+st_crs(thaiRoads32647)
+```
+
+##### 4.2.2.2 Transforming Projection
+
+As the admBndrs simple feature data frame is in wgs84 coordinate system, we will perform projection transformation using the code chunk below.
+
+```{r}
+admBndrs32647 <- st_transform(admBndrs, 
+                              crs = 32647)
+```
+
+Let us display the content of admBndrs32647 to verify the updated coordinate system information.
+
+```{r}
+st_crs(admBndrs32647)
+```
+
+xx
+
+## 5. Plotting Geospatial Data
+
+We will use plot() of R Graphic to visualize the geospatial features of our geospatial simple feature data frames.
+
+```{r}
+# plot(accidents_sf)
+```
+
+x
+
+```{r}
+# plot(thaiRoads32647)
+```
+
+x
+
+```{r}
+
+```
+
+x
+
+xx...
