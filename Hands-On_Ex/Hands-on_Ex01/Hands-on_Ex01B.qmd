@@ -8,6 +8,15 @@ execute:
   echo: true
   message: false
   freeze: true
+format:
+  html:
+    grid:
+      body-width: 1300px
+      sidebar-width: 50px
+      margin-width: 350px
+    toc: true
+    toc-depth: 5
+    toc-location: right
 ---
 
 # Choropleth Mapping with R
@@ -388,4 +397,3 @@ tm_shape(mpsz_pop2020[mpsz_pop2020$REGION_N=="CENTRAL REGION", ])+
             frame = FALSE) +
   tm_borders(alpha = 0.5)
 ```
-

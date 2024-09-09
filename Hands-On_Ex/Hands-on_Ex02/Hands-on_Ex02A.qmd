@@ -8,6 +8,15 @@ execute:
   echo: true
   message: false
   freeze: true
+format:
+  html:
+    grid:
+      body-width: 1300px
+      sidebar-width: 50px
+      margin-width: 350px
+    toc: true
+    toc-depth: 5
+    toc-location: right
 ---
 
 # 1st Order Spatial Point Patterns Analysis Methods
@@ -16,22 +25,18 @@ execute:
 
 Spatial Point Pattern Analysis is the evaluation of the pattern or distribution, of a set of points on a surface. In this exercise, we aim to discover the spatial point processes of childcare centers in Singapore.
 
-The specific questions we want to answer are the following:
-- Are childcare centers in Singapore randomly distributed throughout the country?
-- If the answer to above qns is No, the next logical qns is where are the locations with higher concentration of childcare centers?
+The specific questions we want to answer are the following: - Are childcare centers in Singapore randomly distributed throughout the country? - If the answer to above qns is No, the next logical qns is where are the locations with higher concentration of childcare centers?
 
 ## 2. Data
 
-We will be using 3 data sets:
-- CHILDCARE, a point feature data providing both location and attribute information of childcare centres
-- MP14_SUBZONE_WEB_PL, a polygon feature data providing information of URA 2014 Master Plan Planning Subzone boundary data
-- CostalOutline, a polygon feature data showing the national boundary of Singapore
+We will be using 3 data sets: - CHILDCARE, a point feature data providing both location and attribute information of childcare centres - MP14_SUBZONE_WEB_PL, a polygon feature data providing information of URA 2014 Master Plan Planning Subzone boundary data - CostalOutline, a polygon feature data showing the national boundary of Singapore
 
 ## 3. Installing & Loading R Packages
 
-We will be using 5 R packages -> sf, spatstat, raster, maptools and tmap.
+We will be using 5 R packages -\> sf, spatstat, raster, maptools and tmap.
 
 The code chunk below is used to install and launch the 5 R packages:
+
 ```{r}
 pacman::p_load(sf, raster, spatstat, tmap, tidyverse, maptools)
 ```
@@ -93,12 +98,12 @@ plot(sg_sf3414)
 ```{r}
 plot(mpsz_sf3414)
 ```
+
 ```{r}
 tmap_mode('view')
 tm_shape(childcare_sf)+
   tm_sf()
 ```
-
 
 ```{r}
 tmap_mode('view')
@@ -115,6 +120,7 @@ tmap_mode('plot')
 ### 5.1 Converting sf data frames to sp's Spatial class
 
 The code chunk below uses as_Spatial() of sf package to convert the 3 geospatial data from simple feature data fram to sp's Spatial class:
+
 ```{r}
 childcare <- as_Spatial(childcare_sf)
 mpsz <- as_Spatial(mpsz_sf)
@@ -122,6 +128,7 @@ sg <- as_Spatial(sg_sf)
 ```
 
 The code chunk below can be used to display the 3 Spatial classes:
+
 ```{r}
 list(childcare)
 ```
@@ -141,12 +148,14 @@ spatstat requires analytical data in ppp object form.
 There is no direct way to convert a Spatial class into ppp object. Hence, we need to convert the Spatial classes into Spatial objects first.
 
 The code chunk below converts the Spatial classes into generic sp format:
+
 ```{r}
 childcare_sp <- as(childcare, "SpatialPoints")
 sg_sp <- as(sg, "SpatialPolygons")
 ```
 
 We will use the code chunk below to display the properties:
+
 ```{r}
 list(childcare_sp)
 ```
@@ -158,17 +167,20 @@ list(sg_sp)
 ### 5.3 Converting generic sp format into spatstat's ppp format
 
 We will use the as.ppp() function of spatstat to convert the spatial data into spatstat's ppp object format:
+
 ```{r}
 childcare_ppp <- as.ppp(childcare_sf)
 childcare_ppp
 ```
 
 Let's plot the childcare_ppp and examine the difference:
+
 ```{r}
 plot(childcare_ppp)
 ```
 
 The code chunk below retrieves the summary statistics of the newly created ppp object:
+
 ```{r}
 summary(childcare_ppp)
 ```
@@ -176,21 +188,25 @@ summary(childcare_ppp)
 ### 5.4 Handling Duplicated Points
 
 We can use the code chunk below to check for duplication in a ppp object:
+
 ```{r}
 any(duplicated(childcare_ppp))
 ```
 
 We can use the code chunk below to count the number of co-incidence points:
+
 ```{r}
 multiplicity(childcare_ppp)
 ```
 
 We can use the code chunk below to find out how many locations have more than one point event:
+
 ```{r}
 sum(multiplicity(childcare_ppp) > 1)
 ```
 
 We can use the code chunk below to view the locations of duplicate point events:
+
 ```{r}
 tmap_mode('view')
 tm_shape(childcare) +
@@ -205,6 +221,7 @@ tmap_mode('plot')
 Jittering - this will add a small perturbation to the duplicate points so that they do not occupy the same exact space.
 
 The code chunk below implements the jittering approach:
+
 ```{r}
 childcare_ppp_jit <- rjitter(childcare_ppp, 
                              retry=TRUE, 
@@ -213,6 +230,7 @@ childcare_ppp_jit <- rjitter(childcare_ppp,
 ```
 
 The code chunk below helps to check if there are any duplicated points in this:
+
 ```{r}
 any(duplicated(childcare_ppp_jit))
 ```
@@ -220,11 +238,13 @@ any(duplicated(childcare_ppp_jit))
 ### 5.5 Creating owin object
 
 The code chunk below is used to convert sg Spatial Polygon object into an owin object of spatstat:
+
 ```{r}
 sg_owin <- as.owin(sg_sf)
 ```
 
 The output object can be displayed using the plot() function:
+
 ```{r}
 plot(sg_owin)
 ```
@@ -236,11 +256,13 @@ summary(sg_owin)
 ### 5.6 Combining point events object & owin object
 
 We will extract childcare events that are located within Singapore using the code chunk below:
+
 ```{r}
 childcareSG_ppp = childcare_ppp[sg_owin]
 ```
 
 The output object combines both the point and polygon feature into one ppp object:
+
 ```{r}
 summary(childcareSG_ppp)
 ```
@@ -251,13 +273,12 @@ plot(childcareSG_ppp)
 
 ## 6. 1st Order Spatial Point Patterns Analysis
 
-We will focus on
-- Deriving kernel density estimation (KDE) layer for visualizing and exploring the intensity of point processes
-- Performing confirmatory spatial points patterns analysis by using nearest neighbour statistics
+We will focus on - Deriving kernel density estimation (KDE) layer for visualizing and exploring the intensity of point processes - Performing confirmatory spatial points patterns analysis by using nearest neighbour statistics
 
-### 6.1  Kernel Density Estimation
+### 6.1 Kernel Density Estimation
 
 The code chunk below computes a kernel density:
+
 ```{r}
 kde_childcareSG_bw <- density(childcareSG_ppp,
                               sigma=bw.diggle,
@@ -266,22 +287,26 @@ kde_childcareSG_bw <- density(childcareSG_ppp,
 ```
 
 The plot() function of Base R is then used to display the kernel density derived:
+
 ```{r}
 plot(kde_childcareSG_bw)
 ```
 
 We can actually retrieve the bandwidth used to compute the kde layer:
+
 ```{r}
 bw <- bw.diggle(childcareSG_ppp)
 bw
 ```
 
 In the code chunk below, we can convert the unit of measurement from meter to kilometer:
+
 ```{r}
 childcareSG_ppp.km <- rescale.ppp(childcareSG_ppp, 1000, "km")
 ```
 
 Now, we can rerun and plot the output kde map:
+
 ```{r}
 kde_childcareSG.bw <- density(childcareSG_ppp.km, sigma=bw.diggle, edge=TRUE, kernel="gaussian")
 plot(kde_childcareSG.bw)
@@ -294,7 +319,7 @@ Notice that the only change from the previous plot is in the data values.
 There are 3 other spatstat functions that can be used to determine the bandwidth.
 
 ```{r}
- bw.CvL(childcareSG_ppp.km)
+bw.CvL(childcareSG_ppp.km)
 ```
 
 ```{r}
@@ -310,6 +335,7 @@ bw.diggle(childcareSG_ppp.km)
 ```
 
 The code chunk below will be used to compare the output of using bw.diggle and bw.ppl methods:
+
 ```{r}
 kde_childcareSG.ppl <- density(childcareSG_ppp.km, 
                                sigma=bw.ppl, 
@@ -323,6 +349,7 @@ plot(kde_childcareSG.ppl, main = "bw.ppl")
 ### 6.3 Working with different kernel methods
 
 The code chunk below will be used to compute 3 more kernel density estimations by using these 3 kernel functions:
+
 ```{r}
 par(mfrow=c(2,2))
 plot(density(childcareSG_ppp.km, 
@@ -352,6 +379,7 @@ plot(density(childcareSG_ppp.km,
 ### 7.1 Computing KDE by using fixed bandwidth
 
 The unit of measurement of object is in kilometer, hence the 600m is 0.6km:
+
 ```{r}
 kde_childcareSG_600 <- density(childcareSG_ppp.km, sigma=0.6, edge=TRUE, kernel="gaussian")
 plot(kde_childcareSG_600)
@@ -359,15 +387,17 @@ plot(kde_childcareSG_600)
 
 ### 7.2 Computing KDE by using adaptive bandwidth
 
-Fixed bandwidth method is very sensitive to highly skewed distribution of spatial point patterns over geographical units. 
+Fixed bandwidth method is very sensitive to highly skewed distribution of spatial point patterns over geographical units.
 
 One way to overcome this problem is by using adaptive bandwidth instead:
+
 ```{r}
 kde_childcareSG_adaptive <- adaptive.density(childcareSG_ppp.km, method="kernel")
 plot(kde_childcareSG_adaptive)
 ```
 
 We can compare the fixed and adaptive kernel density estimation outputs:
+
 ```{r}
 par(mfrow=c(1,2))
 plot(kde_childcareSG.bw, main = "Fixed bandwidth")
@@ -377,17 +407,20 @@ plot(kde_childcareSG_adaptive, main = "Adaptive bandwidth")
 ### 7.3 Converting KDE output into grid object
 
 We convert it so that it is suitable for mapping purposes:
+
 ```{r}
 gridded_kde_childcareSG_bw <- as.SpatialGridDataFrame.im(kde_childcareSG.bw)
 spplot(gridded_kde_childcareSG_bw)
 ```
 
 Next, we will convert the gridded kernel density object into Raster Layer object:
+
 ```{r}
 kde_childcareSG_bw_raster <- raster(kde_childcareSG.bw)
 ```
 
 Let's take a look at the properties of the Raster Layer object:
+
 ```{r}
 kde_childcareSG_bw_raster
 ```
@@ -395,6 +428,7 @@ kde_childcareSG_bw_raster
 Notice that the crs property is NA...
 
 Hence, we will assign the CRS information:
+
 ```{r}
 projection(kde_childcareSG_bw_raster) <- CRS("+init=EPSG:3414")
 kde_childcareSG_bw_raster
@@ -411,6 +445,7 @@ tm_shape(kde_childcareSG_bw_raster) +
 ### 7.5 Comparing Spatial Point Patterns using KDE
 
 The code chunk below will be used to extract the target planning areas:
+
 ```{r}
 pg <- mpsz_sf %>%
   filter(PLN_AREA_N == "PUNGGOL")
@@ -423,6 +458,7 @@ jw <- mpsz_sf %>%
 ```
 
 To plot the target planning areas:
+
 ```{r}
 par(mfrow=c(2,2))
 plot(pg, main = "Ponggol")
@@ -441,6 +477,7 @@ plot(jw, main = "Jurong West")
 ```
 
 We will convert these sf objects into owin objects:
+
 ```{r}
 pg_owin = as.owin(pg)
 tm_owin = as.owin(tm)
@@ -449,6 +486,7 @@ jw_owin = as.owin(jw)
 ```
 
 We will use the code chunk below to extract childcare that is within the specific region:
+
 ```{r}
 childcare_pg_ppp = childcare_ppp_jit[pg_owin]
 childcare_tm_ppp = childcare_ppp_jit[tm_owin]
@@ -457,6 +495,7 @@ childcare_jw_ppp = childcare_ppp_jit[jw_owin]
 ```
 
 We will use the rescale.ppp() function to transform the unit of measurement from metre to kilometre:
+
 ```{r}
 childcare_pg_ppp.km = rescale.ppp(childcare_pg_ppp, 1000, "km")
 childcare_tm_ppp.km = rescale.ppp(childcare_tm_ppp, 1000, "km")
@@ -465,6 +504,7 @@ childcare_jw_ppp.km = rescale.ppp(childcare_jw_ppp, 1000, "km")
 ```
 
 We will use the code chunk below to plot the 4 study areas and the locations of the childcare centers:
+
 ```{r}
 par(mfrow=c(2,2))
 plot(childcare_pg_ppp.km, main="Punggol")
@@ -474,6 +514,7 @@ plot(childcare_jw_ppp.km, main="Jurong West")
 ```
 
 The code chunk below will be used to compute the KDE of these 4 planning areas:
+
 ```{r}
 par(mfrow=c(2,2))
 plot(density(childcare_pg_ppp.km, 
@@ -499,6 +540,7 @@ plot(density(childcare_jw_ppp.km,
 ```
 
 For comparison purposes, we will use 250m as the bandwidth:
+
 ```{r}
 par(mfrow=c(2,2))
 plot(density(childcare_ck_ppp.km, 

@@ -8,16 +8,27 @@ execute:
   echo: true
   message: false
   freeze: true
+format:
+  html:
+    grid:
+      body-width: 1300px
+      sidebar-width: 50px
+      margin-width: 350px
+    toc: true
+    toc-depth: 5
+    toc-location: right
 ---
 
 ## 1. Install R Packages
 
 The code chunk below is used to install and launch R packages:
+
 ```{r}
 pacman::p_load(sf, raster, spatstat, tmap, tidyverse)
 ```
 
 Installing maptools:
+
 ```{r}
 #| eval: false
 install.packages("maptools", repos = "https://packagemanager.posit.co/cran/2023-10-13")
@@ -77,7 +88,6 @@ childcareSG_ppp.km <- rescale.ppp(childcareSG_ppp, 1000, "km")
 kde_childcareSG_adaptive <- adaptive.density(childcareSG_ppp.km, method="kernel")
 ```
 
-
 ```{r}
 gridded_kde_childcareSG_ad <- as(
   kde_childcareSG_adaptive,
@@ -89,4 +99,3 @@ spplot(gridded_kde_childcareSG_ad)
 ```{r}
 set.seed(1234)
 ```
-

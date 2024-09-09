@@ -8,29 +8,32 @@ execute:
   echo: true
   message: false
   freeze: true
+format:
+  html:
+    grid:
+      body-width: 1300px
+      sidebar-width: 50px
+      margin-width: 350px
+    toc: true
+    toc-depth: 5
+    toc-location: right
 ---
 
 # Network Constrained Spatial Point Patterns Analysis
 
 ## 1. Overview
 
-Network constrained Spatial Point Patterns Analysis (NetSPAA)
-- Collection of spatial point patterns and analysis methods
-- Specially developed for analysing spatial point event that occurs on or alongside network
+Network constrained Spatial Point Patterns Analysis (NetSPAA) - Collection of spatial point patterns and analysis methods - Specially developed for analysing spatial point event that occurs on or alongside network
 
 The spatial point event can be locations of traffic accidents or childcare centres.
 
 The network can be a road or river network.
 
-We will use the functions of spNetwork package
-- To derive network kernel density estimation (NKDE)
-- To perform network G-function and K-function analysis
+We will use the functions of spNetwork package - To derive network kernel density estimation (NKDE) - To perform network G-function and K-function analysis
 
 ## 2. Data
 
-Two geospatial data sets (in ESRI shapefile format) will be used
-- Punggol_St, a line features geospatial data which store the road network within Punggol Planning Area
-- Punggol_CC, a point feature geospatial data which store the location of childcare centres within Punggol Planning Area
+Two geospatial data sets (in ESRI shapefile format) will be used - Punggol_St, a line features geospatial data which store the road network within Punggol Planning Area - Punggol_CC, a point feature geospatial data which store the location of childcare centres within Punggol Planning Area
 
 ## 3. Installing & Launching R Packages
 
@@ -43,6 +46,7 @@ pacman::p_load(sf, spNetwork, tmap, tidyverse)
 ## 4. Data Import & Preparations
 
 The code chunk below uses st_read to import the geospatial data sets as sf data frames:
+
 ```{r}
 network <- st_read(dsn="data", 
                    layer="Punggol_St")
@@ -74,6 +78,7 @@ st_crs(network)
 ```
 
 As such, we will be assigning the correct crs to both the childcare and network simple feature data frames:
+
 ```{r}
 childcare3414 <- st_set_crs(childcare, 3414)
 st_crs(childcare3414)
@@ -130,12 +135,14 @@ samples <- lines_center(lixels)
 ### 6.3 Performing NKDE
 
 To drop the Z-dimension since we require 2-D coordinates:
+
 ```{r}
 childcare3414 <- st_zm(childcare3414)
 childcare3414
 ```
 
 We will use the code chunk below to compute NKDE:
+
 ```{r}
 densities <- nkde(network3414, 
                   events = childcare3414,
@@ -155,6 +162,7 @@ densities <- nkde(network3414,
 ```
 
 To verify densities output:
+
 ```{r}
 # densities 
 ```
