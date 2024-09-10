@@ -8,15 +8,6 @@ execute:
   echo: true
   message: false
   freeze: true
-format:
-  html:
-    grid:
-      body-width: 1300px
-      sidebar-width: 50px
-      margin-width: 350px
-    toc: true
-    toc-depth: 5
-    toc-location: right
 ---
 
 # Network Constrained Spatial Point Patterns Analysis
@@ -48,13 +39,25 @@ pacman::p_load(sf, spNetwork, tmap, tidyverse)
 The code chunk below uses st_read to import the geospatial data sets as sf data frames:
 
 ```{r}
+#|eval: false
 network <- st_read(dsn="data", 
                    layer="Punggol_St")
+write_rds(network, "data/rds/network.rds")
 ```
 
 ```{r}
+network <- read_rds("data/rds/network.rds")
+```
+
+```{r}
+#|eval: false
 childcare <- st_read(dsn="data",
                      layer="Punggol_CC")
+write_rds(childcare, "data/rds/childcare.rds")
+```
+
+```{r}
+childcare <- read_rds("data/rds/childcare.rds")
 ```
 
 The code chunk below is used to examine the structure of the output simple features data tables:
@@ -119,9 +122,15 @@ tmap_mode('plot')
 Before computing NKDE, we need to cut the SpatialLines object into lixels with a specified minimal distance. We can use lixeline_line() of spNetwork for this:
 
 ```{r}
+#|eval: false
 lixels <- lixelize_lines(network3414, 
                          700, 
                          mindist = 375)
+write_rds(lixels, "data/rds/lixels.rds")
+```
+
+```{r}
+lixels <- read_rds("data/rds/lixels.rds")
 ```
 
 ### 6.2 Generating line centre points
@@ -129,7 +138,13 @@ lixels <- lixelize_lines(network3414,
 We will use lines_centre() of spNetwork to generate a SpatialPointsDataFrame with line centre points:
 
 ```{r}
+#|eval: false
 samples <- lines_center(lixels) 
+write_rds(samples, "data/rds/samples.rds")
+```
+
+```{r}
+samples <- read_rds("data/rds/samples.rds")
 ```
 
 ### 6.3 Performing NKDE
@@ -144,6 +159,7 @@ childcare3414
 We will use the code chunk below to compute NKDE:
 
 ```{r}
+#|eval: false
 densities <- nkde(network3414, 
                   events = childcare3414,
                   w = rep(1, nrow(childcare3414)),
@@ -159,12 +175,11 @@ densities <- nkde(network3414,
                   agg = 5, 
                   sparse = TRUE,
                   verbose = FALSE)
+write_rds(densities, "data/rds/densities.rds")
 ```
 
-To verify densities output:
-
 ```{r}
-# densities 
+densities <- read_rds("data/rds/densities.rds")
 ```
 
 ### 6.4 Visualizing NKDE
@@ -204,6 +219,7 @@ H0: The observed spatial point events (distribution of childcare centres) are un
 The CSR test is based on the assumption of the binomial point process, which implies the hypothesis that the childcare centres are randomly and independently distributed over the street network. But if this hypothesis is rejected, it means that the distribution of childcare centres are spatially interacting and dependent on each other, meaning they may form nonrandom patterns.
 
 ```{r}
+#|eval: false
 kfun_childcare <- kfunctions(network3414, 
                              childcare3414,
                              start = 0, 
@@ -214,6 +230,11 @@ kfun_childcare <- kfunctions(network3414,
                              resolution = 50,
                              verbose = FALSE, 
                              conf_int = 0.05)
+write_rds(kfun_childcare, "data/rds/kfun_childcare.rds")
+```
+
+```{r}
+kfun_childcare <- read_rds("data/rds/kfun_childcare.rds")
 ```
 
 We can use the code chunk below to visualize the object of the k-function:

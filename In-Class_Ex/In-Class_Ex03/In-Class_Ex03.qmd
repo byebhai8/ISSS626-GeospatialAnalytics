@@ -1,0 +1,119 @@
+---
+title: "In-Class Exercise 03"
+author: "Bhairavi Vairavelu"
+date: "Sep 09 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+## 1. Installing & Launching R Packages
+
+The following R Packages will be used for this exercise.
+
+```{r}
+pacman::p_load(sf, spNetwork, tmap, tidyverse)
+```
+
+## 2. Importing the Data
+
+The code chunk below uses st_read to import the geospatial data sets as sf data frames:
+
+```{r}
+network <- st_read(dsn="data", 
+                   layer="Punggol_St")
+network
+```
+
+```{r}
+childcare <- st_read(dsn="data",
+                     layer="Punggol_CC") %>%
+  st_zm(drop = TRUE, what = "ZM")
+childcare
+```
+
+## 3. Coordinate Reference System
+
+```{r}
+childcare3414 <- st_set_crs(childcare, 3414)
+st_crs(childcare3414)
+```
+
+```{r}
+network3414 <- st_set_crs(network, 3414)
+st_crs(network3414)
+```
+
+## 4. Visualizing Geospatial Data
+
+```{r}
+plot(st_geometry(network3414))
+plot(childcare3414,add=T,col='red',pch = 19)
+```
+
+To visualize in an interactive manner, we can use the mapping function of tmap package:
+
+```{r}
+tmap_mode('view')
+tm_shape(childcare3414) + 
+  tm_dots() + 
+  tm_shape(network3414) +
+  tm_lines()
+tmap_mode('plot')
+```
+
+## 5. Network KDE Analysis
+
+Before computing NKDE, we need to cut the SpatialLines object into lixels with a specified minimal distance. We can use lixeline_line() of spNetwork for this:
+
+```{r}
+lixels <- lixelize_lines(network3414, 
+                         700, 
+                         mindist = 350)
+```
+
+We will use lines_centre() of spNetwork to generate a SpatialPointsDataFrame with line centre points:
+
+```{r}
+samples <- lines_center(lixels) 
+```
+
+We will use the code chunk below to compute NKDE:
+
+```{r}
+densities <- nkde(network3414, 
+                  events = childcare3414,
+                  w = rep(1, nrow(childcare3414)),
+                  samples = samples,
+                  kernel_name = "quartic",
+                  bw = 300, 
+                  div= "bw", 
+                  method = "simple", 
+                  digits = 1, 
+                  tol = 1,
+                  grid_shape = c(1,1), 
+                  max_depth = 8,
+                  agg = 5, 
+                  sparse = TRUE,
+                  verbose = FALSE)
+```
+
+## 6. Visualizing NKDE
+
+Before visualizing NKDE, we will need to insert the computed density values into the samples and lixels object as density field.
+
+```{r}
+samples$density <- densities
+lixels$density <- densities
+```
+
+The code chunk below is used to rescale the density values from number of events per meter to number of events per kilometer.
+
+```{r}
+# rescaling to help the mapping
+samples$density <- samples$density*1000
+lixels$density <- lixels$density*1000
+```

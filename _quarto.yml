@@ -23,6 +23,8 @@ website:
           href: "In-Class_Ex/In-Class_Ex01/In-Class_Ex01_1.html"
         - text: "In-Class Exercise 02"
           href: "In-Class_Ex/In-Class_Ex02/In-Class_Ex02.html"
+        - text: "In-Class Exercise 03"
+          href: "In-Class_Ex/In-Class_Ex03/In-Class_Ex03.html"
     - text: "Take-Home Exercise"
       menu:
         - text: "Take-Home Exercise 01"
@@ -35,7 +37,13 @@ format:
   html:
     theme: journal
     css: styles.css
+    grid:
+      body-width: 1300px
+      sidebar-width: 50px
+      margin-width: 350px
     toc: true
+    toc-depth: 5
+    toc-location: right
 
 editor: visual
 

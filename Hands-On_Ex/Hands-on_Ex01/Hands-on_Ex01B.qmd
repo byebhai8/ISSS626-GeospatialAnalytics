@@ -8,15 +8,6 @@ execute:
   echo: true
   message: false
   freeze: true
-format:
-  html:
-    grid:
-      body-width: 1300px
-      sidebar-width: 50px
-      margin-width: 350px
-    toc: true
-    toc-depth: 5
-    toc-location: right
 ---
 
 # Choropleth Mapping with R
@@ -61,6 +52,7 @@ Before we prepare a thematic map, we need to prepare the data table with year 20
 We will use two functions for data wrangling: pivot_wider() of tidyr package, and mutate(), filter(), group_by() and select() of dplyr package.
 
 ```{r}
+#|eval: false
 popdata2020 <- popdata %>%
   filter(Time == 2020) %>%
   group_by(PA, SZ, AG) %>%
@@ -79,6 +71,11 @@ mutate(`DEPENDENCY` = (`YOUNG` + `AGED`)
   select(`PA`, `SZ`, `YOUNG`, 
        `ECONOMY ACTIVE`, `AGED`, 
        `TOTAL`, `DEPENDENCY`)
+write_rds(popdata2020, "data/rds/popdata2020.rds")
+```
+
+```{r}
+popdata2020 <- read_rds("data/rds/popdata2020.rds")
 ```
 
 ### 3.2 Joining Attribute & Geospatial Data
@@ -95,9 +92,14 @@ popdata2020 <- popdata2020 %>%
 We will use a left_join of dplyr to join the geographical data and attribute table using Planning Subzone name as the common identifier.
 
 ```{r}
+#|eval: false
 mpsz_pop2020 <- left_join(mpsz, popdata2020,
                           by = c("SUBZONE_N" = "SZ"))
 write_rds(mpsz_pop2020, "data/rds/mpszpop2020.rds")
+```
+
+```{r}
+mpsz_pop2020 <- read_rds("data/rds/mpszpop2020.rds")
 ```
 
 ## 4. Choropleth Mapping Geospatial Data

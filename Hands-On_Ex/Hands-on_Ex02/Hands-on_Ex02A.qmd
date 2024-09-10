@@ -8,15 +8,6 @@ execute:
   echo: true
   message: false
   freeze: true
-format:
-  html:
-    grid:
-      body-width: 1300px
-      sidebar-width: 50px
-      margin-width: 350px
-    toc: true
-    toc-depth: 5
-    toc-location: right
 ---
 
 # 1st Order Spatial Point Patterns Analysis Methods
@@ -25,11 +16,21 @@ format:
 
 Spatial Point Pattern Analysis is the evaluation of the pattern or distribution, of a set of points on a surface. In this exercise, we aim to discover the spatial point processes of childcare centers in Singapore.
 
-The specific questions we want to answer are the following: - Are childcare centers in Singapore randomly distributed throughout the country? - If the answer to above qns is No, the next logical qns is where are the locations with higher concentration of childcare centers?
+The specific questions we want to answer are the following:
+
+-   Are childcare centers in Singapore randomly distributed throughout the country?
+
+-   If the answer to above qns is No, the next logical qns is where are the locations with higher concentration of childcare centers?
 
 ## 2. Data
 
-We will be using 3 data sets: - CHILDCARE, a point feature data providing both location and attribute information of childcare centres - MP14_SUBZONE_WEB_PL, a polygon feature data providing information of URA 2014 Master Plan Planning Subzone boundary data - CostalOutline, a polygon feature data showing the national boundary of Singapore
+We will be using 3 data sets:
+
+-   CHILDCARE, a point feature data providing both location and attribute information of childcare centres
+
+-   MP14_SUBZONE_WEB_PL, a polygon feature data providing information of URA 2014 Master Plan Planning Subzone boundary data
+
+-   CostalOutline, a polygon feature data showing the national boundary of Singapore
 
 ## 3. Installing & Loading R Packages
 
@@ -48,17 +49,35 @@ pacman::p_load(sf, raster, spatstat, tmap, tidyverse, maptools)
 We will be using st_read() of sf package to import 3 geospatial data sets into R.
 
 ```{r}
+#|eval: false
 childcare_sf <- st_read("data/child-care-services-geojson.geojson") %>%
   st_transform(crs = 3414)
+write_rds(childcare_sf, "data/rds/childcare_sf.rds")
 ```
 
 ```{r}
+childcare_sf <- read_rds("data/rds/childcare_sf.rds")
+```
+
+```{r}
+#|eval: false
 sg_sf <- st_read(dsn = "data", layer="CostalOutline")
+write_rds(sg_sf, "data/rds/sg_sf.rds")
 ```
 
 ```{r}
+sg_sf <- read_rds("data/rds/sg_sf.rds")
+```
+
+```{r}
+#|eval: false
 mpsz_sf <- st_read(dsn = "data", 
                 layer = "MP14_SUBZONE_WEB_PL")
+write_rds(mpsz_sf, "data/rds/mpsz_sf.rds")
+```
+
+```{r}
+mpsz_sf <- read_rds("data/rds/mpsz_sf.rds")
 ```
 
 Before we use these data sets, we need to ensure that they are projected in the same projection system.
@@ -122,9 +141,19 @@ tmap_mode('plot')
 The code chunk below uses as_Spatial() of sf package to convert the 3 geospatial data from simple feature data fram to sp's Spatial class:
 
 ```{r}
+#|eval: false
 childcare <- as_Spatial(childcare_sf)
 mpsz <- as_Spatial(mpsz_sf)
 sg <- as_Spatial(sg_sf)
+write_rds(childcare, "data/rds/childcare.rds")
+write_rds(mpsz, "data/rds/mpsz.rds")
+write_rds(sg, "data/rds/sg.rds")
+```
+
+```{r}
+childcare <- read_rds("data/rds/childcare.rds")
+mpsz <- read_rds("data/rds/mpsz.rds")
+sg <- read_rds("data/rds/sg.rds")
 ```
 
 The code chunk below can be used to display the 3 Spatial classes:
@@ -150,8 +179,16 @@ There is no direct way to convert a Spatial class into ppp object. Hence, we nee
 The code chunk below converts the Spatial classes into generic sp format:
 
 ```{r}
+#|eval: false
 childcare_sp <- as(childcare, "SpatialPoints")
 sg_sp <- as(sg, "SpatialPolygons")
+write_rds(childcare_sp, "data/rds/childcare_sp.rds")
+write_rds(sg_sp, "data/rds/sg_sp.rds")
+```
+
+```{r}
+childcare_sp <- read_rds("data/rds/childcare_sp.rds")
+sg_sp <- read_rds("data/rds/sg_sp.rds")
 ```
 
 We will use the code chunk below to display the properties:
@@ -169,8 +206,13 @@ list(sg_sp)
 We will use the as.ppp() function of spatstat to convert the spatial data into spatstat's ppp object format:
 
 ```{r}
+#|eval: false
 childcare_ppp <- as.ppp(childcare_sf)
-childcare_ppp
+write_rds(childcare_ppp, "data/rds/childcare_ppp.rds")
+```
+
+```{r}
+childcare_ppp <- read_rds("data/rds/childcare_ppp.rds")
 ```
 
 Let's plot the childcare_ppp and examine the difference:
@@ -240,7 +282,13 @@ any(duplicated(childcare_ppp_jit))
 The code chunk below is used to convert sg Spatial Polygon object into an owin object of spatstat:
 
 ```{r}
+#|eval: false
 sg_owin <- as.owin(sg_sf)
+write_rds(sg_owin, "data/rds/sg_owin.rds")
+```
+
+```{r}
+sg_owin <- read_rds("data/rds/sg_owin.rds")
 ```
 
 The output object can be displayed using the plot() function:
@@ -280,10 +328,16 @@ We will focus on - Deriving kernel density estimation (KDE) layer for visualizin
 The code chunk below computes a kernel density:
 
 ```{r}
+#|eval: false
 kde_childcareSG_bw <- density(childcareSG_ppp,
                               sigma=bw.diggle,
                               edge=TRUE,
-                            kernel="gaussian") 
+                              kernel="gaussian") 
+write_rds(kde_childcareSG_bw, "data/rds/kde_childcareSG_bw.rds")
+```
+
+```{r}
+kde_childcareSG_bw <- read_rds("data/rds/kde_childcareSG_bw.rds")
 ```
 
 The plot() function of Base R is then used to display the kernel density derived:
@@ -337,10 +391,19 @@ bw.diggle(childcareSG_ppp.km)
 The code chunk below will be used to compare the output of using bw.diggle and bw.ppl methods:
 
 ```{r}
+#|eval: false
 kde_childcareSG.ppl <- density(childcareSG_ppp.km, 
                                sigma=bw.ppl, 
                                edge=TRUE,
                                kernel="gaussian")
+write_rds(kde_childcareSG.ppl, "data/rds/kde_childcareSG_ppl.rds")
+```
+
+```{r}
+kde_childcareSG.ppl <- read_rds("data/rds/kde_childcareSG_ppl.rds")
+```
+
+```{r}
 par(mfrow=c(1,2))
 plot(kde_childcareSG.bw, main = "bw.diggle")
 plot(kde_childcareSG.ppl, main = "bw.ppl")
@@ -381,7 +444,16 @@ plot(density(childcareSG_ppp.km,
 The unit of measurement of object is in kilometer, hence the 600m is 0.6km:
 
 ```{r}
+#|eval: false
 kde_childcareSG_600 <- density(childcareSG_ppp.km, sigma=0.6, edge=TRUE, kernel="gaussian")
+write_rds(kde_childcareSG_600, "data/rds/kde_childcareSG600.rds")
+```
+
+```{r}
+kde_childcareSG_600 <- read_rds("data/rds/kde_childcareSG600.rds")
+```
+
+```{r}
 plot(kde_childcareSG_600)
 ```
 
@@ -392,9 +464,16 @@ Fixed bandwidth method is very sensitive to highly skewed distribution of spatia
 One way to overcome this problem is by using adaptive bandwidth instead:
 
 ```{r}
+#|eval: false
 kde_childcareSG_adaptive <- adaptive.density(childcareSG_ppp.km, method="kernel")
-plot(kde_childcareSG_adaptive)
+write_rds(kde_childcareSG_adaptive, "data/rds/kde_childcareSG_adaptive.rds")
 ```
+
+```{r}
+kde_childcareSG_adaptive <- read_rds("data/rds/kde_childcareSG_adaptive.rds")
+```
+
+\``{r} plot(kde_childcareSG_adaptive)`
 
 We can compare the fixed and adaptive kernel density estimation outputs:
 

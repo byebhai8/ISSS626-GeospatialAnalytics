@@ -8,15 +8,6 @@ execute:
   echo: true
   message: false
   freeze: true
-format:
-  html:
-    grid:
-      body-width: 1300px
-      sidebar-width: 50px
-      margin-width: 350px
-    toc: true
-    toc-depth: 5
-    toc-location: right
 ---
 
 # Geospatial Analytics for Public Good
@@ -120,8 +111,14 @@ We will place the following data files into the aspatial sub-folder:
 The code chunk below uses st_read() function of sf package to import the hotosm_tha_roads_lines_shp.shp shapefile into R as a simple feature data frame. For this code chunk, we will define the data path and the layer to provide the shapefile name.
 
 ```{r}
+#|eval: false
 thaiRoads = st_read(dsn = "data/geospatial",
                         layer = "hotosm_tha_roads_lines_shp")
+write_rds(thaiRoads, "data/rds/thaiRoads.rds")
+```
+
+```{r}
+thaiRoads <- read_rds("data/rds/thaiRoads.rds")
 ```
 
 The message above reveals that there are a total of 2792590 features and 14 fields in thaiRoads linestring feature data frame, and it the coordinate system (CRS) is currently NA.
@@ -131,8 +128,14 @@ The message above reveals that there are a total of 2792590 features and 14 fiel
 Likewise, the code chunk below will use the st_read() function of sf package to import the tha_admbndp_admALL_rtsd_itos_20220121.shp shapefile into R as a simple feature data frame.
 
 ```{r}
+#|eval: false
 admBndrs = st_read(dsn = "data/geospatial",
                         layer = "tha_admbndp_admALL_rtsd_itos_20220121")
+write_rds(admBndrs, "data/rds/admBndrs.rds")
+```
+
+```{r}
+admBndrs <- read_rds("data/rds/admBndrs.rds")
 ```
 
 The message above reveals that there are a total of 7425 features and 23 fields in admBndrs point feature data frame, and it is in wgs84 coordinates system.
@@ -142,7 +145,13 @@ The message above reveals that there are a total of 7425 features and 23 fields 
 Since thai_road_accident_2019_2022.csv data file is in csv file format, we will use the read_csv() of readr package to import this data as shown in the code chunk below. Note that the output will be in a tibble data frame format.
 
 ```{r}
+#|eval: false
 accidents <- read_csv("data/aspatial/thai_road_accident_2019_2022.csv")
+write_rds(accidents, "data/rds/accidents.rds")
+```
+
+```{r}
+accidents <- read_rds("data/rds/accidents.rds")
 ```
 
 The message above reveals that there are a total of 81735 rows and 18 fields in accidents tibble data frame.
@@ -200,7 +209,6 @@ duplicate <- accidents %>%
   group_by_all() %>%
   filter(n()>1) %>%
   ungroup()
-
 duplicate
 ```
 
@@ -211,10 +219,16 @@ The message above confirms that there are no duplicated records in our accidents
 The code chunk below converts the accidents tibble data frame into a simple feature data frame by using st_as_sf() of sf packages.
 
 ```{r}
+#|eval: false
 accidents_sf <- st_as_sf(accidents, 
                        coords = c("longitude", "latitude"),
                        crs=4326) %>%
   st_transform(crs = 32647)
+write_rds(accidents_sf, "data/rds/accidents_sf.rds")
+```
+
+```{r}
+accidents_sf <- read_rds("data/rds/accidents_sf.rds")
 ```
 
 As mentioned previously, the projected coordinate system of Thailand is WGS84/UTM zone 47N, and the EPSG code is 32647. Hence, we will set the following arguments accordingly:
@@ -273,7 +287,13 @@ The message above shows that the admBndrs simple feature data frame is in wgs84 
 Since thaiRoads simple feature data frame has no assignment, we will use the below code chunk to assign the EPSG code to it.
 
 ```{r}
+#|eval: false
 thaiRoads32647 <- st_set_crs(thaiRoads, 32647)
+write_rds(thaiRoads32647, "data/rds/thaiRoads32647.rds")
+```
+
+```{r}
+thaiRoads32647 <- read_rds("data/rds/thaiRoads32647.rds")
 ```
 
 Let us check the CSR again by using the code chunk below.
@@ -287,8 +307,14 @@ st_crs(thaiRoads32647)
 As the admBndrs simple feature data frame is in wgs84 coordinate system, we will perform projection transformation using the code chunk below.
 
 ```{r}
+#|eval: false
 admBndrs32647 <- st_transform(admBndrs, 
                               crs = 32647)
+write_rds(admBndrs32647, "data/rds/admBndrs32647.rds")
+```
+
+```{r}
+admBndrs32647 <- read_rds("data/rds/admBndrs32647.rds")
 ```
 
 Let us display the content of admBndrs32647 to verify the updated coordinate system information.

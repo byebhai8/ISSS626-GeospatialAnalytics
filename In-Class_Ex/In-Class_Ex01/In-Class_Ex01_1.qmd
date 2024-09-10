@@ -8,15 +8,6 @@ execute:
   echo: true
   message: false
   freeze: true
-format:
-  html:
-    grid:
-      body-width: 1300px
-      sidebar-width: 50px
-      margin-width: 350px
-    toc: true
-    toc-depth: 5
-    toc-location: right
 ---
 
 ## 1. Getting Started
