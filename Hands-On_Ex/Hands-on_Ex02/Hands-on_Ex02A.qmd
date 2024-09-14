@@ -349,14 +349,26 @@ plot(kde_childcareSG_bw)
 We can actually retrieve the bandwidth used to compute the kde layer:
 
 ```{r}
+#|eval: false
 bw <- bw.diggle(childcareSG_ppp)
+write_rds(bw, "data/rds/bw.rds")
+```
+
+```{r}
+bw <- read_rds("data/rds/bw.rds")
 bw
 ```
 
 In the code chunk below, we can convert the unit of measurement from meter to kilometer:
 
 ```{r}
+#|eval: false
 childcareSG_ppp.km <- rescale.ppp(childcareSG_ppp, 1000, "km")
+write_rds(childcareSG_ppp.km, "data/rds/childcareSG_ppp_km.rds")
+```
+
+```{r}
+childcareSG_ppp.km <- read_rds("data/rds/childcareSG_ppp_km.rds")
 ```
 
 Now, we can rerun and plot the output kde map:
@@ -473,8 +485,6 @@ write_rds(kde_childcareSG_adaptive, "data/rds/kde_childcareSG_adaptive.rds")
 kde_childcareSG_adaptive <- read_rds("data/rds/kde_childcareSG_adaptive.rds")
 ```
 
-\``{r} plot(kde_childcareSG_adaptive)`
-
 We can compare the fixed and adaptive kernel density estimation outputs:
 
 ```{r}
@@ -495,7 +505,13 @@ spplot(gridded_kde_childcareSG_bw)
 Next, we will convert the gridded kernel density object into Raster Layer object:
 
 ```{r}
+#|eval: false
 kde_childcareSG_bw_raster <- raster(kde_childcareSG.bw)
+write_rds(kde_childcareSG_bw_raster, "data/rds/kde_childcareSG_bw_raster.rds")
+```
+
+```{r}
+kde_childcareSG_bw_raster <- read_rds("data/rds/kde_childcareSG_bw_raster.rds")
 ```
 
 Let's take a look at the properties of the Raster Layer object:
@@ -526,6 +542,7 @@ tm_shape(kde_childcareSG_bw_raster) +
 The code chunk below will be used to extract the target planning areas:
 
 ```{r}
+#|eval: false
 pg <- mpsz_sf %>%
   filter(PLN_AREA_N == "PUNGGOL")
 tm <- mpsz_sf %>%
@@ -534,6 +551,17 @@ ck <- mpsz_sf %>%
   filter(PLN_AREA_N == "CHOA CHU KANG")
 jw <- mpsz_sf %>%
   filter(PLN_AREA_N == "JURONG WEST")
+write_rds(pg, "data/rds/pg.rds")
+write_rds(tm, "data/rds/tm.rds")
+write_rds(ck, "data/rds/ck.rds")
+write_rds(jw, "data/rds/jw.rds")
+```
+
+```{r}
+pg <- read_rds("data/rds/pg.rds")
+tm <- read_rds("data/rds/tm.rds")
+ck <- read_rds("data/rds/ck.rds")
+jw <- read_rds("data/rds/jw.rds")
 ```
 
 To plot the target planning areas:

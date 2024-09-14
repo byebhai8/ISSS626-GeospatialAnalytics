@@ -257,6 +257,7 @@ plot(childcareSG_ppp)
 The code chunk below will be used to extract the target planning areas:
 
 ```{r}
+#|eval: false
 pg <- mpsz_sf %>%
   filter(PLN_AREA_N == "PUNGGOL")
 tm <- mpsz_sf %>%
@@ -265,7 +266,19 @@ ck <- mpsz_sf %>%
   filter(PLN_AREA_N == "CHOA CHU KANG")
 jw <- mpsz_sf %>%
   filter(PLN_AREA_N == "JURONG WEST")
+write_rds(pg, "data/rds/pg2.rds")
+write_rds(tm, "data/rds/tm2.rds")
+write_rds(ck, "data/rds/ck2.rds")
+write_rds(jw, "data/rds/jw2.rds")
 ```
+
+```{r}
+pg <- read_rds("data/rds/pg2.rds")
+tm <- read_rds("data/rds/tm2.rds")
+ck <- read_rds("data/rds/ck2.rds")
+jw <- read_rds("data/rds/jw2.rds")
+```
+
 
 Plotting the target planning areas:
 
@@ -349,7 +362,13 @@ The null hypothesis will be rejected if p-value is smaller than alpha value of 0
 We will perform the Monte Carlo test with G-function:
 
 ```{r}
+#|eval: false
 G_CK.csr <- envelope(childcare_ck_ppp, Gest, nsim = 999)
+write_rds(G_CK.csr, "data/rds/G_CK_csr.rds")
+```
+
+```{r}
+G_CK.csr <- read_rds("data/rds/G_CK_csr.rds")
 ```
 
 ```{r}
@@ -376,8 +395,15 @@ The null hypothesis will be rejected if p-value is smaller than alpha value of 0
 The code chunk below is used to perform the hypothesis testing:
 
 ```{r}
+#|eval: false
 G_tm.csr <- envelope(childcare_tm_ppp, Gest, correction = "all", nsim = 999)
+write_rds(G_tm.csr, "data/rds/G_tm_csr.rds")
 ```
+
+```{r}
+G_tm.csr <- read_rds("data/rds/G_tm_csr.rds")
+```
+
 
 ```{r}
 plot(G_tm.csr)
@@ -407,8 +433,15 @@ The null hypothesis will be rejected if p-value is smaller than alpha value of 0
 We will perform the Monte Carlo test with F-function:
 
 ```{r}
+#|eval: false
 F_CK.csr <- envelope(childcare_ck_ppp, Fest, nsim = 999)
+write_rds(F_CK.csr, "data/rds/F_CK_csr.rds")
 ```
+
+```{r}
+F_CK.csr <- read_rds("data/rds/F_CK_csr.rds")
+```
+
 
 ```{r}
 plot(F_CK.csr)
@@ -434,8 +467,15 @@ The null hypothesis will be rejected if p-value is smaller than alpha value of 0
 The code chunk below is used to perform the hypothesis testing:
 
 ```{r}
+#|eval: false
 F_tm.csr <- envelope(childcare_tm_ppp, Fest, correction = "all", nsim = 999)
+write_rds(F_tm.csr, "data/rds/F_tm_csr.rds")
 ```
+
+```{r}
+F_tm.csr <- read_rds("data/rds/F_tm_csr.rds")
+```
+
 
 ```{r}
 plot(F_tm.csr)
@@ -465,8 +505,15 @@ The null hypothesis will be rejected if p-value is smaller than alpha value of 0
 The code chunk below is used to perform the hypothesis testing:
 
 ```{r}
+#|eval: false
 K_ck.csr <- envelope(childcare_ck_ppp, Kest, nsim = 99, rank = 1, glocal=TRUE)
+write_rds(K_ck.csr, "data/rds/K_CK_csr.rds")
 ```
+
+```{r}
+K_ck.csr <- read_rds("data/rds/K_CK_csr.rds")
+```
+
 
 ```{r}
 plot(K_ck.csr, . - r ~ r, xlab="d", ylab="K(d)-r")
@@ -494,8 +541,15 @@ The null hypothesis will be rejected if p-value is smaller than alpha value of 0
 The code chunk below is used to perform the hypothesis testing:
 
 ```{r}
+#|eval: false
 K_tm.csr <- envelope(childcare_tm_ppp, Kest, nsim = 99, rank = 1, glocal=TRUE)
+write_rds(K_tm.csr, "data/rds/K_tm_csr.rds")
 ```
+
+```{r}
+K_tm.csr <- read_rds("data/rds/K_tm_csr.rds")
+```
+
 
 ```{r}
 plot(K_tm.csr, . - r ~ r, 
@@ -525,8 +579,15 @@ The null hypothesis will be rejected if p-value is smaller than alpha value of 0
 The code chunk below is used to perform the hypothesis testing:
 
 ```{r}
+#|eval: false
 L_ck.csr <- envelope(childcare_ck_ppp, Lest, nsim = 99, rank = 1, glocal=TRUE)
+write_rds(L_ck.csr, "data/rds/L_CK_csr.rds")
 ```
+
+```{r}
+L_ck.csr <- read_rds("data/rds/L_CK_csr.rds")
+```
+
 
 ```{r}
 plot(L_ck.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
@@ -554,8 +615,15 @@ The null hypothesis will be rejected if p-value is smaller than alpha value of 0
 The code chunk below is used to perform the hypothesis testing:
 
 ```{r}
+#|eval: false
 L_tm.csr <- envelope(childcare_tm_ppp, Lest, nsim = 99, rank = 1, glocal=TRUE)
+write_rds(L_tm.csr, "data/rds/L_tm_csr.rds")
 ```
+
+```{r}
+L_tm.csr <- read_rds("data/rds/L_tm_csr.rds")
+```
+
 
 The code chunk below is used to plot the model output:
 
