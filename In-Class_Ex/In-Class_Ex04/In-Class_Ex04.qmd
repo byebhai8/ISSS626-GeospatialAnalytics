@@ -1,0 +1,114 @@
+---
+title: "In-Class Exercise 04"
+author: "Bhairavi Vairavelu"
+date: "Sep 16 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+# Geographically Weighted Summary Statistics
+
+## 1. Getting Started
+
+Let's ensure that the following packages of R are installed and launched in R.
+
+```{r}
+pacman::p_load(sf, ggstatsplot, tmap, tidyverse, knitr, GWmodel)
+```
+
+## 2. Loading the Data
+
+The code chunk below uses st_read() of sf package to import Hunan shapefile into R. This imported shapefile will be a simple feature object of sf.
+
+```{r}
+hunan <- st_read(dsn = "data/geospatial", 
+                 layer = "Hunan")
+```
+
+Next, we will import the Hunan_2012.csv into R by using (read_csv) of readr package. The output is a R dataframe class.
+
+```{r}
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+```
+
+## 3. Preparing the Data
+
+The code chunk below will be used to update the attribute table of hunan's SpatialPolygonsDataFrame with the attribute fields of hunan2012 dataframe. This will be performed using the left_join() of dplyr package.
+
+```{r}
+hunan_sf <- left_join(hunan,hunan2012)%>%
+  select(1:3, 7, 15:16, 31:32)
+```
+
+## 4. Converting to SpatialPolygonDataFrame
+
+GWmodel package can only handle spatial data in older sp format, and not the sf format.
+
+```{r}
+hunan_sp <- hunan_sf %>%
+  as_Spatial()
+```
+
+## 5. Geographically Weighted Summary Statistics with Adaptive Bandwidth
+
+Cross Validation:
+
+```{r}
+bw_CV <- bw.gwr(GDPPC ~ 1,
+                data = hunan_sp,
+                approach = "CV",
+                adaptive = TRUE,
+                kernel = "bisquare",
+                longlat = T)
+```
+
+AIC:
+
+```{r}
+bw_AIC <- bw.gwr(GDPPC ~ 1,
+                data = hunan_sp,
+                approach = "AIC",
+                adaptive = TRUE,
+                kernel = "bisquare",
+                longlat = T)
+```
+
+Bandwidth AIC:
+
+```{r}
+gwstat <- gwss(data = hunan_sp,
+               vars = "GDPPC",
+               bw = bw_AIC,
+               kernel = "bisquare",
+               adaptive = TRUE,
+               longlat = T)
+```
+
+Preparing the output data:
+
+```{r}
+gwstat_df <- as.data.frame(gwstat$SDF)
+hunan_gstat <- cbind(hunan_sf, gwstat_df)
+```
+
+Visualizing it:
+
+```{r}
+tm_shape(hunan_gstat) +
+  tm_fill("GDPPC_LM",
+          n = 5,
+          style = "quantile") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Distribution of geographically wieghted mean",
+            main.title.position = "center",
+            main.title.size = 2.0,
+            legend.text.size = 1.2,
+            legend.height = 1.50, 
+            legend.width = 1.50,
+            frame = TRUE)
+```
+

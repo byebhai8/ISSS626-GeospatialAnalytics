@@ -41,7 +41,7 @@ Note: The projected coordinate system of Thailand is WGS84/UTM zone 47N, and the
 The p_load function of pacman package is used to install and loads the analytical tools that we will be using throughout this exercise.
 
 ```{r}
-pacman::p_load(sf, tidyverse, tmap, Hmisc)
+pacman::p_load(sf, tidyverse, tmap, Hmisc, lubridate)
 ```
 
 -   sf for importing, managing, and processing geospatial data
@@ -228,7 +228,7 @@ write_rds(accidents_sf, "data/rds/accidents_sf.rds")
 ```
 
 ```{r}
-accidents_sf <- read_rds("data/rds/accidents_sf.rds")
+accidents32647 <- read_rds("data/rds/accidents_sf.rds")
 ```
 
 As mentioned previously, the projected coordinate system of Thailand is WGS84/UTM zone 47N, and the EPSG code is 32647. Hence, we will set the following arguments accordingly:
@@ -243,12 +243,12 @@ As mentioned previously, the projected coordinate system of Thailand is WGS84/UT
 Let us examine the contents of this newly created simple feature data frame by utilizing the glimpse() function of dplyr package, which helps to reveal the data type of each field.
 
 ```{r}
-glimpse(accidents_sf)
+glimpse(accidents32647)
 ```
 
 Note that a new column called geometry has been added into the data frame. Also, the columns longitude and latitude have been dropped from the data frame.
 
-Likewise, we can run the glimpse() function for bot the thaiRoads and admBndrs simple feature data frames.
+Likewise, we can run the glimpse() function for both the thaiRoads and admBndrs simple feature data frames.
 
 ```{r}
 glimpse(thaiRoads)
@@ -265,7 +265,7 @@ As mentioned previously, the projected coordinate system of Thailand is WGS84/UT
 We can use st_crs() of sf package to identify the coordinate system of a simple feature data frame.
 
 ```{r}
-st_crs(accidents_sf)
+st_crs(accidents32647)
 ```
 
 The message above shows that, since we manually transformed this aspatial tibble data frame to a simple feature data frame, the coordinate system of accidents_sf is correctly assigned.
@@ -280,7 +280,7 @@ The message above shows that there is no assignment of coordinate system for tha
 st_crs(admBndrs)
 ```
 
-The message above shows that the admBndrs simple feature data frame is in wgs84 coordinate system.
+The message above shows that the admBndrs simple feature data frame is in wgs84 coordinate system, with EPSG:4326.
 
 ##### 4.2.2.1 Assigning EPSG Codes
 
@@ -323,7 +323,85 @@ Let us display the content of admBndrs32647 to verify the updated coordinate sys
 st_crs(admBndrs32647)
 ```
 
-xx
+### 4.2.3 Data Clean-Up
+
+#### 4.2.3.1 Accidents data
+
+We want to use the code chunk below to perform the following actions:
+
+-   Narrow down study area to the provinces in Bangkok Metropolitan Region (BMR)
+-   Create new columns for Season, Day of Week and Time of Day
+-   Remove province_th & route columns since the values are not in English
+-   Remove report_datetime column since we only want to focus on when the incident was reported (incident_datetime)
+
+```{r}
+#|eval: false
+bmr <- c("Nakhon Pathom", "Pathum Thani", "Nonthaburi", "Samut Prakan", "Samut Sakhon", "Bangkok")
+accidentsCU <- accidents32647 %>%
+  filter(province_en %in% bmr) %>%
+  mutate(
+    dayofweek = wday(incident_datetime, label = TRUE, abbr = TRUE),
+    month = month(incident_datetime, label = TRUE, abbr = TRUE),
+    season = case_when(
+      month(incident_datetime) %in% c(1:2, 11:12) ~ "Winter", 
+      month(incident_datetime)  %in% 3:6 ~ "Summer", 
+      month(incident_datetime)  %in% 7:10 ~ "Rainy")) %>%
+  select(`acc_code`, `province_en`, `incident_datetime`, `dayofweek`, `month`, `season`, `weather_condition`,
+         `road_description`, `slope_description`, `agency`, `vehicle_type`, `presumed_cause`, `accident_type`,
+         `number_of_vehicles_involved`, `number_of_fatalities`, `number_of_injuries`, `geometry`)
+write_rds(accidentsCU, "data/rds/accidentsCU.rds")
+```
+
+```{r}
+accidentsCU <- read_rds("data/rds/accidentsCU.rds")
+accidentsCU
+```
+
+Reference was taken from the following link to determine the seasons for BMR.
+
+Link: <https://www.thomascook.in/international-tourism/best-time-to-visit-bangkok#:~:text=The%20weather%20in%20Bangkok%20is,best%20time%20to%20visit%20Bangkok>
+
+#### 4.2.3.2 Roads data
+
+We want to use the code chunk below to perform the following actions:
+
+-   Narrow down highway fields
+-   Remove name & name_th columns since the values are not in English
+-   Cast geometry field from MULTILINESTRING to LINESTRING
+
+```{r}
+#|eval: false
+highways <- c("motorway", "primary", "secondary", "tertiary", "unclassified", "residential", "service", "track",
+              "road")
+thaiRoadsCU <- thaiRoads32647 %>%
+  filter(highway %in% highways) %>%
+  select(`name_en`, `highway`, `surface`, `smoothness`, `width`, `lanes`, `oneway`, `bridge`, `layer`, `source`,
+         `osm_id`, `geometry`)
+thaiRoadsCU <- st_cast(thaiRoadsCU, "LINESTRING")
+write_rds(thaiRoadsCU, "data/rds/thaiRoadsCU.rds")
+```
+
+```{r}
+thaiRoadsCU <- read_rds("data/rds/thaiRoadsCU.rds")
+thaiRoadsCU
+```
+
+Reference was taken from the following link to highway fields in this data set.
+
+Link: <https://wiki.openstreetmap.org/wiki/WikiProject_Thailand#Highway_classification>
+
+#### 4.2.3.3 Boundary data
+
+We want to use the code chunk below to perform the following actions:
+
+-   Narrow down highway fields
+-   Remove name & name_th columns since the values are not in English
+-   Cast geometry field from MULTILINESTRING to LINESTRING
+
+```{r}
+admBndrs32647
+```
+
 
 ## 5. Plotting Geospatial Data
 
