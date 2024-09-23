@@ -1,0 +1,712 @@
+---
+title: "Take-Home Exercise 01"
+author: "Bhairavi Vairavelu"
+date: "Sep 02 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+# Geospatial Analytics for Public Good
+
+## 1. Overview
+
+Road traffic accidents result in significant human and economic costs worldwide, with approximately 1.19 million deaths annually and 20-50 million non-fatal injuries, particularly affecting vulnerable road users. In Thailand, about 20,000 people die each year, making it one of the deadliest countries for road accidents. Accidents frequently occur on national highways, with 66% happening on straight roads and specific high-risk zones like curves, intersections and steep slopes.
+
+## 2. Getting Started
+
+### 2.1 Objectives
+
+This analysis aims to discover factors that influence road traffic accidents by examining both behavioural and environmental causes through spatial and spatio-temporal point patterns. This includes:
+
+1.  Visualizing spatio-temporal dynamics of accidents
+
+2.  Conducting spatial analysis using Network Spatial Point Patterns Analysis
+
+3.  Conducting spatio-temporal analysis using Temporal Network Spatial Point Patterns Analysis
+
+### 2.2 The Study Area
+
+The focus of this study would be the Bangkok Metropolitan Region (BMR).
+
+![](BMR2.png){fig-align="left" width="300"}
+
+Note: The projected coordinate system of Thailand is WGS84/UTM zone 47N, and the EPSG code is 32647.
+
+### 2.3 Analytical Tools
+
+The p_load function of pacman package is used to install and loads the analytical tools that we will be using throughout this exercise.
+
+```{r}
+pacman::p_load(sf, sfdep, tidyverse, tmap, Hmisc, lubridate, spNetwork, ggplot2)
+```
+
+-   sf for importing, managing, and processing geospatial data
+
+-   sfdep for computing spatial weights and autocorrelation statistics
+
+-   tidyverse for performing data science tasks such as importing, wrangling and visualizing data
+
+-   tmap for visualizing geospatial objects
+
+-   Hmisc for summary statistics
+
+-   lubridate for parsing and manipulating dates
+
+-   spNetwork for spatial point pattern analysis
+
+-   ggplot2 for plotting graphs
+
+## 3. Data
+
+### 3.1 Getting the Data
+
+Three basic data sets will be used for this analysis:
+
+1.  Thailand Road Accident \[2019-2022\] on Kaggle
+
+![](Data01.png){fig-align="center"}
+
+Link: <https://www.kaggle.com/datasets/thaweewatboy/thailand-road-accident-2019-2022>
+
+Note: a Kaggle account is required in order to download this dataset.
+
+2.  Thailand Roads (OpenStreetMap Export) on HDX
+
+![](Data02.png){fig-align="center"}
+
+Link: <https://data.humdata.org/dataset/hotosm_tha_roads>
+
+3.  Thailand - Subnational Administrative Boundaries on HDX
+
+![](Data03_1.png){fig-align="center"}
+
+Link: <https://data.humdata.org/dataset/cod-ab-tha?>
+
+### 3.2 Storing the Data
+
+At the Take-Home_Ex01 folder, we will create a sub-folder called data. Then, within this sub-folder, we will organize the data sets accordingly:
+
+-   data/geospatial will store geospatial data
+
+-   data/aspatial will store aspatial data
+
+-   data/rds will be used to store the outputs we save so that we can reuse and make our code reproducible
+
+### 3.3 Importing the Data
+
+#### 3.3.1 Thailand Roads Data
+
+The code chunk below uses st_read() function of sf package to import the hotosm_tha_roads_lines_shp shapefile into R as a simple feature data frame. For this code chunk, we will define the data path and the layer to provide the shapefile name. The output will be saved in rds format for future use.
+
+```{r}
+#|eval: false
+thaiRoadsRaw = st_read(dsn = "data/geospatial",
+                        layer = "hotosm_tha_roads_lines_shp")
+write_rds(thaiRoadsRaw, "data/rds/thaiRoadsRaw.rds")
+```
+
+The code chunk below will be used to import the saved thaiRoadsRaw.rds into R environment.
+
+```{r}
+thaiRoadsRaw <- read_rds("data/rds/thaiRoadsRaw.rds") %>%
+  rename(road = name_en)
+glimpse(thaiRoadsRaw)
+```
+
+thaiRoadsRaw has a total of 2,792,590 features and 15 fields, with geometry type of multilinestring, and the coordinate system is currently NA.
+
+#### 3.3.2 Thailand - Subnational Administrative Boundaries Data
+
+Likewise, the code chunk below will use the st_read() function of sf package to import the tha_admbndp_admALL_rtsd_itos_20220121 shapefile into R as a simple feature data frame. The output will be saved in rds format for future use.
+
+```{r}
+#|eval: false
+admBndpRaw = st_read(dsn = "data/geospatial",
+                     layer = "tha_admbnda_adm1_rtsd_20220121") #tha_admbndp_admALL_rtsd_itos_20220121
+write_rds(admBndpRaw, "data/rds/admBndpRaw.rds")
+```
+
+The code chunk below will be used to import the saved admBndpRaw.rds into R environment. Note that there are 2 administrative levels in this data set - ADM0 for country, and ADM1 for province. Hence, we will rename ADM1_EN to province.
+
+```{r}
+admBndpRaw <- read_rds("data/rds/admBndpRaw.rds") %>%
+  rename(province = ADM1_EN)
+glimpse(admBndpRaw)
+```
+
+admBndpRaw has a total of 77 features and 17 fields, with geometry type of multipolygon, and it is in wgs84 coordinates system.
+
+#### 3.3.3 Thailand Road Accidents Data
+
+Since thai_road_accident_2019_2022.csv data file is in csv file format, we will use the read_csv() of readr package to import this data as shown in the code chunk below. Note that the output will be in a tibble data frame format, and this output will be saved in rds format for future use.
+
+```{r}
+#|eval: false
+thaiAccRaw <- read_csv("data/aspatial/thai_road_accident_2019_2022.csv")
+write_rds(thaiAccRaw, "data/rds/thaiAccRaw.rds")
+```
+
+The code chunk below will be used to import the saved thaiAccRaw.rds into R environment.
+
+```{r}
+thaiAccRaw <- read_rds("data/rds/thaiAccRaw.rds") %>%
+  rename(province = province_en)
+list(thaiAccRaw)
+```
+
+thaiAccRaw has a total of 81,735 features and 18 fields, including the latitude and longitude fields.
+
+## 4. Data Wrangling
+
+### 4.1 Aspatial Data Wrangling
+
+#### 4.1.1 Removing Columns
+
+It is likely that not all 18 columns are required/useful for our analysis, especially when some of the columns contain values that are not in English (province_th & route). On top of this, there are 2 date columns in the data set - incident_datetime which represents when the accident occurred, and report_datetime which represent when the accident was reported. For the accuracy of our analysis, we only want to focus on when the accident occurred. Hence, we will remove this column as well.
+
+We will use the select() function from dplyr package to select the variables by index, and exclude the indexes of the columns that we want to remove.
+
+```{r}
+thaiAccRaw <- thaiAccRaw %>%
+  dplyr::select(1:2, 5:6, 8:18)
+list(thaiAccRaw)
+```
+
+The output confirms that we have dropped 3 columns.
+
+#### 4.1.2 Adding Columns
+
+We also want to add new columns which could potentially help with our analysis later on, namely Season, Day of Week and Time of Day. Reference was taken from the following link to determine the Seasons for BMR.
+
+Link: <https://www.thomascook.in/international-tourism/best-time-to-visit-bangkok#:~:text=The%20weather%20in%20Bangkok%20is,best%20time%20to%20visit%20Bangkok>
+
+```{r}
+thaiAccRaw <- thaiAccRaw %>%
+  mutate(
+    dayofweek = wday(incident_datetime, label = TRUE, abbr = TRUE),
+    month = month(incident_datetime, label = TRUE, abbr = TRUE),
+    season = case_when(
+      month(incident_datetime) %in% c(1:2, 11:12) ~ "Winter", 
+      month(incident_datetime)  %in% 3:6 ~ "Summer", 
+      month(incident_datetime)  %in% 7:10 ~ "Rainy"))
+list(thaiAccRaw)
+```
+
+The output confirms that we have added 3 new columns.
+
+#### 4.1.3 Filter by Province
+
+Note that thaiAccRaw has a total of 81,735 rows. We want to only focus on the study area (BMR) in our analysis. Hence, we will filter the province field to focus on the 6 provinces which are in the BMR: Bangkok, Nakhon Pathom, Pathum Thani, Nonthaburi, Samut Prakan and Samut Sakhon. 
+
+We will store these province names in a list and use it in our filter condition.
+
+```{r}
+bmr <- c("Nakhon Pathom", "Pathum Thani", "Nonthaburi", "Samut Prakan", "Samut Sakhon", "Bangkok")
+thaiAccRaw <- thaiAccRaw %>%
+  filter(province %in% bmr)
+list(thaiAccRaw)
+```
+
+Note that after the filter is applied, thaiAccRaw has been reduced to having only 13,336 rows.
+
+#### 4.1.4 Handling Missing Values
+
+Moving forward, we will be utilizing two useful columns - latitude and longitude. Note that they are in decimal degree format. 
+
+The filter() function of dplyr package can be used to verify if these key columns have any missing values.
+
+```{r}
+thaiAccRaw %>%
+  filter(is.na(longitude) | longitude == "",
+         is.na(latitude)  | latitude == "")
+```
+
+The output proves that there are 350 rows which contain missing values for the latitude and longitude columns. To handle this issue, we will re-use the filter() function to exclude these missing values from our tibble data frame.
+
+```{r}
+thaiAccRaw <- thaiAccRaw %>%
+  filter(!is.na(longitude) | longitude != "",
+         !is.na(latitude)  | latitude != "")
+```
+
+Let us verify if the rows with missing values have been dropped by re-running our initial code chunk.
+
+```{r}
+thaiAccRaw %>%
+  filter(is.na(longitude) | longitude == "",
+         is.na(latitude)  | latitude == "")
+```
+
+The message above confirms that the rows with missing values have been excluded from thaiAccRaw.
+
+#### 4.1.5 Handling Duplicates
+
+We also want to avoid the repetition of records, which could lead to incorrect analysis of accidents in thaiAccRaw. Hence, we will check for duplicates using group_by_all() to ensure the integrity of our data.
+
+```{r}
+duplicates <- thaiAccRaw %>%
+  group_by_all() %>%
+  filter(n()>1) %>%
+  ungroup()
+duplicates
+```
+
+The message above confirms that there are no duplicated records in thaiAccRaw, which is great!
+
+#### 4.1.6 Creating Simple Feature Data Frame
+
+Next, the code chunk below helps to convert thaiAccRaw into a simple feature data frame by using st_as_sf() of sf packages.
+
+As mentioned previously, the projected coordinate system of Thailand is WGS84/UTM zone 47N, and the EPSG code is 32647. Hence, we will set the following arguments accordingly:
+-   coords argument to specify the column names to use for x- and y-coordinates
+-   crs argument to specify the coordinates system in epsg format, EPSG:4326 for wgs84 and EPSG:32647 for Thailand's projected coordinate system
+
+The output will be saved in rds format for future use.
+
+```{r}
+#|eval: false
+thaiAccSF <- st_as_sf(thaiAccRaw, 
+                       coords = c("longitude", "latitude"),
+                       crs=4326) %>%
+  st_transform(crs = 32647)
+write_rds(thaiAccSF, "data/rds/thaiAccSF.rds")
+```
+
+The code chunk below will be used to import the saved thaiAccSF.rds into R environment.
+
+```{r}
+thaiAccSF <- read_rds("data/rds/thaiAccSF.rds")
+glimpse(thaiAccSF)
+```
+
+Note that a new column called geometry has been added into the data frame. Also, the columns longitude and latitude have been dropped from the data frame.
+
+### 4.2 Geospatial Data Wrangling
+
+#### 4.2.1 Removing Columns
+
+For thaiRoadsRaw data frame, we will be removing columns which do not contain values in English. We will also be removing columns which might not be helpful for our analysis - source, osm_id & osm_type.
+
+```{r}
+thaiRoadsRaw <- thaiRoadsRaw %>%
+  dplyr::select(2:10, 15)
+glimpse(thaiRoadsRaw)
+```
+
+thaiRoadsRaw now only consists of 10 columns, reduced from the original 15 columns.
+
+Likewise, for the admBndpRaw data frame, we will be removing columns which do not contain values in English. We will also be removing columns which might not be helpful for our analysis, keeping only the key variables (province, which is ADM1_EN & geometry) we want to use for our analysis. 
+
+```{r}
+admBndpRaw <- admBndpRaw %>%
+  dplyr::select(1:3, 17)
+glimpse(admBndpRaw)
+```
+
+admBndpRaw now only consists of 4 columns, reduced from the original 17 columns.
+
+#### 4.2.2 Filter by Province
+
+We want to only focus on the study area (BMR) in our analysis. Hence, we will filter the province field to focus on the 6 provinces which are in the BMR: Bangkok, Nakhon Pathom, Pathum Thani, Nonthaburi, Samut Prakan and Samut Sakhon. 
+
+We will store these province names in a list and use it in our filter condition.
+
+```{r}
+bmr <- c("Nakhon Pathom", "Pathum Thani", "Nonthaburi", "Samut Prakan", "Samut Sakhon", "Bangkok")
+admBndpRaw <- admBndpRaw %>%
+  filter(province %in% bmr)
+glimpse(admBndpRaw)
+```
+
+Note that after the filter is applied, admBndpRaw has been reduced to having only 6 rows, compared to the original 77 rows. Each of these 6 rows now represent each of the province in Bangkok Metropolitan Region.
+
+```{r}
+tmap_mode("plot")
+qtm(admBndpRaw, fill = "province") +
+  tm_legend(main.title = "Bangkok Metropolitan Region", legend.position = c("left", "top"), legend.outside = TRUE)
+```
+
+#### 4.2.3 Filter by Highway
+
+Taking reference from the below link, we will filter the highway field of thaiRoadsRaw to focus on the 5 key highway variables: motorway, primary, secondary, tertiary and unclassified. 
+
+Link: <https://wiki.openstreetmap.org/wiki/WikiProject_Thailand#Highway_classification>
+
+We will store these highway values in a list and use it in our filter condition.
+
+```{r}
+highways <- c("motorway", "primary", "secondary", "tertiary", "unclassified")
+thaiRoadsRaw <- thaiRoadsRaw %>%
+  filter(highway %in% highways)
+glimpse(thaiRoadsRaw)
+```
+
+Note that after the filter is applied, thaiRoadsRaw has been reduced to having only 188,596 rows, compared to the original 2,792,590 rows.
+
+#### 4.2.4 Handling Multilinestring
+
+For our spatio-temporal analysis, we require the geometry field in thaiRoadsRaw to be of LINESTRING instead of MULTILINESTRING. 
+
+To do this, we will utilize the st_cast() function from sf package to convert geometry field from MULTILINESTRING to LINESTRING.
+
+```{r}
+thaiRoadsRaw$geometry <- st_cast(thaiRoadsRaw$geometry, "LINESTRING")
+glimpse(thaiRoadsRaw)
+```
+
+Note that the geometry field in thaiRoadsRaw has been updated to LINESTRING now.
+
+#### 4.2.5 Coordinate Systems
+
+As mentioned previously, the projected coordinate system of Thailand is WGS84/UTM zone 47N, and the EPSG code is 32647.
+
+We can use st_crs() of sf package to identify the coordinate system of thaiRoadsRaw.
+
+```{r}
+st_crs(thaiRoadsRaw)
+```
+
+The message above shows that there is no assignment of coordinate system for thaiRoadsRaw simple feature data frame. Hence, we will use the below code chunk to assign the CRS first before transforming the CRS to EPSG 32647.
+
+The output will be saved in rds format for future use.
+
+```{r}
+#|eval: false
+thaiRoadsRaw <- st_set_crs(thaiRoadsRaw, 4326)
+thaiRoadsSF <- st_transform(thaiRoadsRaw, crs = 32647)
+write_rds(thaiRoadsSF, "data/rds/thaiRoadsSF.rds")
+```
+
+The code chunk below will be used to import the saved thaiRoadsSF.rds into R environment. Let us display the content of thaiRoadsSF to verify the updated CRS info.
+
+```{r}
+thaiRoadsSF <- read_rds("data/rds/thaiRoadsSF.rds")
+st_crs(thaiRoadsSF)
+```
+
+Likewise, we can use st_crs() of sf package to identify the coordinate system of admBndpRaw.
+
+```{r}
+st_crs(admBndpRaw)
+```
+
+As the admBndpRaw simple feature data frame is in wgs84 coordinate system, we will perform projection transformation using the code chunk below.
+
+The output will be saved in rds format for future use.
+
+```{r}
+#|eval: false
+admBndpRaw <- st_set_crs(admBndpRaw, 4326)
+admBndpSF <- st_transform(admBndpRaw, crs = 32647)
+write_rds(admBndpSF, "data/rds/admBndpSF.rds")
+```
+
+The code chunk below will be used to import the saved admBndpSF.rds into R environment. Let us display the content of admBndpSF to verify the updated CRS info.
+
+```{r}
+admBndpSF <- read_rds("data/rds/admBndpSF.rds")
+st_crs(admBndpSF)
+```
+
+Lastly, we can use st_crs() of sf package to identify the coordinate system of thaiAccSF.
+
+```{r}
+st_crs(thaiAccSF)
+```
+
+We have now verified that all our sf data frames contain the correct CRS information.
+
+#### 4.2.6 Intersection of Data
+
+Our thaiRoadsSF data could contain information on roads which are out of the admin boundaries of the 6 provinces that we want to focus on. Hence, we will clip the data by performing an intersection of thaiRoadsSF with admBndpSF data using the code chunk below.
+
+The output will be saved in rds format for future use.
+
+```{r}
+#|eval: false
+thaiRoadsBndSF <- st_intersection(thaiRoadsSF, admBndpSF)
+write_rds(thaiRoadsBndSF, "data/rds/thaiRoadsBndSF.rds")
+```
+
+The code chunk below will be used to import the saved thaiRoadsBndSF.rds into R environment. We can use st_geometry() to visualize the intersection of data to ensure it worked correctly.
+
+```{r}
+thaiRoadsBndSF <- read_rds("data/rds/thaiRoadsBndSF.rds")
+plot(st_geometry(thaiRoadsBndSF))
+```
+
+We can now proceed to tackle the objectives of this exercise.
+
+## 5. Visualizing Spatio-Temporal Dynamics of Accidents
+
+The code chunk below helps us identify that out of the 6 provinces in BMR, Bangkok has the most number of accidents.
+
+```{r}
+thaiAccSF %>%
+  group_by(province) %>%
+  summarise(numAccidents = n()) %>%
+  ggplot(aes(x = province, y = numAccidents, fill = province)) +
+    geom_bar(stat = "identity") +
+    theme_classic() +
+    labs(x = "Province", y = "Number of Accidents", title = "Number of Accidents by Province")
+```
+
+The code chunk below helps us identify that most of the accidents occurred when there were no slopes.
+
+```{r}
+thaiAccSF %>%
+  group_by(slope_description) %>%
+  summarise(numAccidents = n()) %>%
+  ggplot(aes(x = slope_description, y = numAccidents, fill = slope_description)) +
+    geom_bar(stat = "identity") +
+    theme_classic() +
+    labs(x = "Slope Description", y = "Number of Accidents", title = "Number of Accidents by Slope Description")
+```
+
+The code chunk below helps us identify that December was the month with the highest number of accidents.
+
+```{r}
+thaiAccSF %>%
+  group_by(month) %>%
+  summarise(numAccidents = n()) %>%
+  ggplot(aes(x = month, y = numAccidents, fill = month)) +
+    geom_bar(stat = "identity") +
+    theme_classic() +
+    labs(x = "Month", y = "Number of Accidents", title = "Number of Accidents by Month")
+```
+
+The code chunk below helps us identify that more accidents occur on both Friday and Saturday.
+
+```{r}
+thaiAccSF %>%
+  group_by(dayofweek) %>%
+  summarise(numAccidents = n()) %>%
+  ggplot(aes(x = dayofweek, y = numAccidents, fill = dayofweek)) +
+    geom_bar(stat = "identity") +
+    theme_classic() +
+    labs(x = "Day of Week", y = "Number of Accidents", title = "Number of Accidents by Day of Week")
+```
+
+The code chunk below helps us identify that the number of accidents occurring each season are around the same.
+
+```{r}
+thaiAccSF %>%
+  group_by(season) %>%
+  summarise(numAccidents = n()) %>%
+  ggplot(aes(x = season, y = numAccidents, fill = season)) +
+    geom_bar(stat = "identity") +
+    theme_classic() +
+    labs(x = "Season", y = "Number of Accidents", title = "Number of Accidents by Season")
+```
+
+We can also plot a heatmap to show the intensity of accidents over different days and times.
+
+```{r}
+thaiAccSF$hour <- format(thaiAccSF$incident_datetime, "%H")
+thaiAccSF %>%
+  group_by(dayofweek, hour) %>%
+  summarise(numAccidents = n()) %>%
+  ggplot(aes(x = hour, y = dayofweek, fill = numAccidents)) +
+    geom_tile(color = "white") +
+    scale_fill_gradient(low = "lightyellow", high = "red") +
+    labs(title = "Accident Density by Hour and Day of Week", x = "Hour of Day", y = "Day of Week") +
+    theme_minimal()
+```
+
+Let's set the tmap_mode to plotting.
+
+```{r}
+# tmap_mode("view")
+tmap_mode("plot")
+```
+
+We will create a map to show the location of accidents, with the admin boundaries and roads for context. We will be overlaying the thaiAccSF data as points on this map as dots.
+
+```{r}
+tm_shape(admBndpSF) + 
+  tm_polygons(col = "lightgray", alpha = 0.3) +
+  tm_shape(thaiAccSF) + 
+  tm_dots(col = "province", size = 0.02) +
+  tm_layout(title = "Accident Locations in Bangkok Metropolitan Region")
+```
+
+Next, we can break down the accident data over time using facets. This will help us analyse the accidents over time across the 6 provinces in BMR.
+
+```{r}
+tm_shape(admBndpSF) + 
+  tm_polygons(col = "lightgray", alpha = 0.3) + 
+  tm_shape(thaiAccSF) + 
+  tm_dots(col = "month", size = 0.02) + 
+  tm_facets(by = "province")
+```
+
+Likewise, we can break down the accident data over day of week using facets.
+
+```{r}
+tm_shape(admBndpSF) + 
+  tm_polygons(col = "lightgray", alpha = 0.3) + 
+  tm_shape(thaiAccSF) + 
+  tm_dots(col = "dayofweek", size = 0.02) + 
+  tm_facets(by = "province")
+```
+
+Next, we can break down the accident data over seasons using facets.
+
+```{r}
+tm_shape(admBndpSF) + 
+  tm_polygons(col = "lightgray", alpha = 0.3) + 
+  tm_shape(thaiAccSF) + 
+  tm_dots(col = "season", size = 0.02) + 
+  tm_facets(by = "province")
+```
+
+
+## 6. Spatial Analysis using Network Spatial Point Patterns Analysis
+
+We will first use as_Spatial() of sf package to convert the three geospatial data from simple feature data frame to sp's Spatial class.
+
+The output will be saved in rds format for future use.
+
+```{r}
+#|eval: false
+roads <- as_Spatial(thaiRoadsBndSF)
+boundary <- as_Spatial(admBndpSF)
+accidents <- as_Spatial(thaiAccSF)
+write_rds(roads, "data/rds/roads.rds")
+write_rds(boundary, "data/rds/boundary.rds")
+write_rds(accidents, "data/rds/accidents.rds")
+```
+
+The code chunk below will be used to import the saved rds into R environment.
+
+```{r}
+roads <- read_rds("data/rds/roads.rds")
+boundary <- read_rds("data/rds/boundary.rds")
+accidents <- read_rds("data/rds/accidents.rds")
+```
+
+We will use the list() function to display the information of these spatial classes as shown below.
+
+```{r}
+list(roads)
+```
+
+```{r}
+list(boundary)
+```
+
+```{r}
+list(accidents)
+```
+
+spatstat requires the data in ppp object form. Before that, we will convert these spatial classes into generic sp format first.
+
+The output will be saved in rds format for future use.
+
+```{r}
+#|eval: false
+accidentsSP <- as(accidents, "SpatialPoints")
+boundarySP <- as(boundary, "SpatialPolygons")
+write_rds(accidentsSP, "data/rds/accidentsSP.rds")
+write_rds(boundarySP, "data/rds/boundarySP.rds")
+```
+
+The code chunk below will be used to import the saved rds into R environment.
+
+```{r}
+accidentsSP <- read_rds("data/rds/accidentsSP.rds")
+boundarySP <- read_rds("data/rds/boundarySP.rds")
+```
+
+Likewise, will use the list() function to display the information of these spatial objects as shown below.
+
+```{r}
+list(accidentsSP)
+```
+
+```{r}
+list(boundarySP)
+```
+
+Now, we will use the as.ppp() function of spatstat to convert the spatial data into spatstat's ppp object format.
+
+The output will be saved in rds format for future use.
+
+```{r}
+# facing issues with installing/loading spatstat & spatstat.data
+# accidentsPPP <- spatstat::as.ppp(accidentsSP)
+# write_rds(accidentsPPP, "data/rds/accidentsPPP.rds")
+```
+
+The code chunk below will be used to import the saved rds into R environment.
+```{r}
+# accidentsPPP <- read_rds("data/rds/accidentsPPP.rds")
+```
+
+
+## 7. Spatio-Temporal Analysis using Temporal Network Spatial Point Patterns Analysis
+
+We will be performing network kernel density estimation by using the appropriate functions provided in spNetwork package. 
+
+Before computing NKDE, we need to cut the linestring object into lixels with a specified minimal distance. We will be using lixelize_lines() of spNetwork package for this.
+
+```{r}
+#|eval: false
+#thaiRoadsBndSF$geometry <- st_cast(thaiRoadsBndSF$geometry, "LINESTRING")
+#lixels <- lixelize_lines(thaiRoadsBndSF, 700, mindist = 375)
+```
+
+Then, we will use lines_center() of spNetwork package to generate a SpatialPointsDataFrame with line centre points.
+
+```{r}
+#|eval: false
+#samples <- lines_center(lixels)
+```
+
+This would mean that the points are located at center of the lines based on the length of the line.
+
+We can now compute NKDE by using the code chunk below.
+
+```{r}
+#|eval: false
+#densities <- nkde(thaiRoadsBndSF, 
+#                  events = thaiAccSF,
+#                  w = rep(1, nrow(thaiAccSF)),
+#                  samples = samples,
+#                  kernel_name = "quartic",
+#                  bw = 300, 
+#                  div= "bw", 
+#                  method = "simple", 
+#                  digits = 1, 
+#                  tol = 1,
+#                  grid_shape = c(1,1), 
+#                  max_depth = 8,
+#                  agg = 5, 
+#                  sparse = TRUE,
+#                  verbose = FALSE)
+```
+
+Before we visualize NKDE values, we will use the code chunk below to insert the computed density values into samples, and the lixels objects as density.
+
+```{r}
+#|eval: false
+#samples$density <- densities
+#lixels$density <- densities
+```
+
+We can now prepare the following map visualization.
+
+```{r}
+#|eval: false
+#tmap_mode('plot')
+#tm_shape(lixels)+
+#  tm_lines(col="density")+
+#tm_shape(thaiAccSF)+
+#  tm_dots()
+```
+
+xx...
