@@ -21,24 +21,48 @@ pacman::p_load(sf, raster, spatstat, tmap, tidyverse)
 Installing maptools:
 
 ```{r}
-#| eval: false
+#|eval: false
 install.packages("maptools", repos = "https://packagemanager.posit.co/cran/2023-10-13")
 ```
 
 ## 2. Load Data
 
 ```{r}
+#|eval: false
 childcare_sf <- st_read("data/child-care-services-geojson.geojson") %>%
   st_transform(crs = 3414)
+write_rds(childcare_sf, "data/rds/childcare_sf.rds")
+```
+
+To read in the rds:
+
+```{r}
+childcare_sf <- read_rds("data/rds/childcare_sf.rds")
 ```
 
 ```{r}
+#|eval: false
 sg_sf <- st_read(dsn = "data", layer="CostalOutline")
+write_rds(sg_sf, "data/rds/sg_sf.rds")
+```
+
+To read in the rds:
+
+```{r}
+sg_sf <- read_rds("data/rds/sg_sf.rds")
 ```
 
 ```{r}
+#|eval: false
 mpsz_sf <- st_read(dsn = "data", 
                 layer = "MP14_SUBZONE_WEB_PL")
+write_rds(mpsz_sf, "data/rds/mpsz_sf.rds")
+```
+
+To read in the rds:
+
+```{r}
+mpsz_sf <- read_rds("data/rds/mpsz_sf.rds")
 ```
 
 ## 3. Data Wrangling
@@ -53,12 +77,19 @@ sg_sf
 ```
 
 ```{r}
+#|eval: false
 sg_sf3414 <- st_set_crs(sg_sf, 3414)
-st_crs(sg_sf3414)
+write_rds(sg_sf3414, "data/rds/sg_sf3414.rds")
+```
+
+To read in the rds:
+
+```{r}
+sg_sf3414 <- read_rds("data/rds/sg_sf3414.rds")
 ```
 
 ```{r}
-sg_sf3414
+st_crs(sg_sf3414)
 ```
 
 ## 4. Geospatial Data Wrangling

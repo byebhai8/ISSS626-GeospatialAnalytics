@@ -25,8 +25,16 @@ pacman::p_load(tidyverse, sf, tmap, ggstatsplot)
 This code chunk imports the shapefile:
 
 ```{r}
+#|eval: false
 mpsz14_shp <- st_read(dsn = "data", 
                      layer = "MP14_SUBZONE_WEB_PL")
+write_rds(mpsz14_shp, "data/rds/mpsz14_shp.rds")
+```
+
+To read the RDS file:
+
+```{r}
+mpsz14_shp <- read_rds("data/rds/mpsz14_shp.rds")
 ```
 
 This code chunk (should) import the kml file. However, since it's corrupted we will not be using it.
@@ -46,15 +54,33 @@ We could help GovTech by writing out a new kml file and send it back to them :)
 This code chunk imports the Pre-Schools Location kml and geojson file and saves it in a sf simple data frame:
 
 ```{r}
+#|eval: false
 preschool_kml <- st_read("data/PreSchoolsLocation.kml")
 preschool_geojson <- st_read("data/PreSchoolsLocation.geojson") 
+write_rds(preschool_kml, "data/rds/preschool_kml.rds")
+write_rds(preschool_geojson, "data/rds/preschool_geojson.rds")
+```
+
+To read the rds in:
+
+```{r}
+preschool_kml <- read_rds("data/rds/preschool_kml.rds")
+preschool_geojson <- read_rds("data/rds/preschool_geojson.rds")
 ```
 
 This code chunk imports the Master Plan 2019 shapefile:
 
 ```{r}
+#|eval: false
 mpsz19_shp <- st_read(dsn = "data/", 
                       layer = "MPSZ-2019")
+write_rds(mpsz19_shp, "data/rds/mpsz19_shp.rds")
+```
+
+To read the rds in:
+
+```{r}
+mpsz19_shp <- read_rds("data/rds/mpsz19_shp.rds")
 ```
 
 This code chunk imports the Master Plan 2019 kml file, However, I'm encountering an error with this line of code..
@@ -127,10 +153,17 @@ The new columns (Area, PreSch Density) have been added to the data frame as show
 By using Exploratory Data Analysis (EDA) and Confirmatory Data Analysis (CDA), we can explore and confirm the statistical relationship between Pre-School Density and Pre-School Count.
 
 ```{r}
+#|eval: false
 mpsz19_shp$`PreSch Density` <- as.numeric(as.character(mpsz19_shp$`PreSch Density`))
 mpsz19_shp$`PreSch Count` <- as.numeric(as.character(mpsz19_shp$`PreSch Count`)) 
 mpsz19_shp_new <- as.data.frame(mpsz19_shp)
+write_rds(mpsz19_shp_new, "data/rds/mpsz19_shp_new.rds")
+```
 
+To read the rds in:
+
+```{r}
+mpsz19_shp_new <- read_rds("data/rds/mpsz19_shp_new.rds")
 ggscatterstats(data = mpsz19_shp_new,
                x = `PreSch Density`,
                y = `PreSch Count`,
@@ -144,7 +177,15 @@ ggscatterstats(data = mpsz19_shp_new,
 The code chunk below is used to load the Singapore Residents by Planning Area / Subzone, Age Group, Sex and Type of Dwelling data from Singtat:
 
 ```{r}
+#|eval: false
 popdata <- read_csv("data/respopagesextod2023.csv")
+write_rds(popdata, "data/rds/popdata.rds")
+```
+
+To read the rds in:
+
+```{r}
+popdata <- read_rds("data/rds/popdata.rds")
 ```
 
 ### 5.2 Data Wrangling
@@ -152,13 +193,20 @@ popdata <- read_csv("data/respopagesextod2023.csv")
 The code chunk below is used to prepare a data frame showing the population by Planning Area and Planning Subzone:
 
 ```{r}
+#|eval: false
 popdata2023 <- popdata %>% 
   group_by(PA, SZ, AG) %>% 
   summarise(`POP`=sum(`Pop`)) %>%  
   ungroup() %>% 
   pivot_wider(names_from=AG,
               values_from = POP)
+write_rds(popdata2023, "data/rds/popdata2023.rds")
+```
 
+To read the rds in:
+
+```{r}
+popdata2023 <- read_rds("data/rds/popdata2023.rds")
 colnames(popdata2023)
 ```
 
@@ -192,6 +240,7 @@ popdata2023
 The code chunk below is used to join the popdata2023 with the mpsz19_shp data:
 
 ```{r}
+#|eval: false
 popdata2023 <- popdata2023 %>%
   mutate_at(.vars = vars(PA, SZ), 
           .funs = list(toupper)) 
@@ -201,6 +250,16 @@ mpsz_pop2023 <- left_join(mpsz19_shp, popdata2023,
 
 pop2023_mpsz <- left_join(popdata2023, mpsz19_shp, 
                           by = c("SZ" = "SUBZONE_N"))
+
+write_rds(mpsz_pop2023, "data/rds/mpsz_pop2023.rds")
+write_rds(pop2023_mpsz, "data/rds/pop2023_mpsz.rds")
+```
+
+To read the rds in:
+
+```{r}
+mpsz_pop2023 <- read_rds("data/rds/mpsz_pop2023.rds")
+pop2023_mpsz <- read_rds("data/rds/pop2023_mpsz.rds")
 ```
 
 ## 6. Analytical Maps
@@ -239,6 +298,7 @@ Step 3: Percentile Mapping function
 The code chunk below creates a function for computing and plotting the percentile map:
 
 ```{r}
+#|eval: false
 percentmap <- function(vnam, df, legtitle=NA, mtitle="Percentile Map"){
   percent <- c(0,.01,.1,.5,.9,.99,1)
   var <- get.var(vnam, df)
@@ -255,6 +315,13 @@ percentmap <- function(vnam, df, legtitle=NA, mtitle="Percentile Map"){
   tm_layout(main.title = mtitle, 
             title.position = c("right","bottom"))
 }
+write_rds(percentmap, "data/rds/percentmap.rds")
+```
+
+To read the rds in:
+
+```{r}
+percentmap <- read_rds("data/rds/percentmap.rds")
 ```
 
 Step 4: Running the functions
@@ -274,6 +341,7 @@ Step 1: Creating boxbreaks function
 The code chunk below is an R function that creates break points for a box map:
 
 ```{r}
+#|eval: false
 boxbreaks <- function(v,mult=1.5) {
   qv <- unname(quantile(v))
   iqr <- qv[4] - qv[2]
@@ -299,6 +367,13 @@ boxbreaks <- function(v,mult=1.5) {
   bb[3:5] <- qv[2:4]
   return(bb)
 }
+write_rds(boxbreaks, "data/rds/boxbreaks.rds")
+```
+
+To read the rds in:
+
+```{r}
+boxbreaks <- read_rds("data/rds/boxbreaks.rds")
 ```
 
 Step 2: get function
@@ -318,6 +393,7 @@ Step 3: Boxmap function
 The code chunk below is an R function to create a box map:
 
 ```{r}
+#|eval: false
 boxmap <- function(vnam, df, 
                    legtitle=NA,
                    mtitle="Box Map",
@@ -341,6 +417,13 @@ boxmap <- function(vnam, df,
             title.position = c("left",
                                "top"))
 }
+write_rds(boxmap, "data/rds/boxmap.rds")
+```
+
+To read the rds in:
+
+```{r}
+boxmap <- read_rds("data/rds/boxmap.rds")
 ```
 
 Step 4: Plotting Box Map

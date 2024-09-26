@@ -200,7 +200,7 @@ The output confirms that we have added 3 new columns.
 
 #### 4.1.3 Filter by Province
 
-Note that thaiAccRaw has a total of 81,735 rows. We want to only focus on the study area (BMR) in our analysis. Hence, we will filter the province field to focus on the 6 provinces which are in the BMR: Bangkok, Nakhon Pathom, Pathum Thani, Nonthaburi, Samut Prakan and Samut Sakhon. 
+Note that thaiAccRaw has a total of 81,735 rows. We want to only focus on the study area (BMR) in our analysis. Hence, we will filter the province field to focus on the 6 provinces which are in the BMR: Bangkok, Nakhon Pathom, Pathum Thani, Nonthaburi, Samut Prakan and Samut Sakhon.
 
 We will store these province names in a list and use it in our filter condition.
 
@@ -215,7 +215,7 @@ Note that after the filter is applied, thaiAccRaw has been reduced to having onl
 
 #### 4.1.4 Handling Missing Values
 
-Moving forward, we will be utilizing two useful columns - latitude and longitude. Note that they are in decimal degree format. 
+Moving forward, we will be utilizing two useful columns - latitude and longitude. Note that they are in decimal degree format.
 
 The filter() function of dplyr package can be used to verify if these key columns have any missing values.
 
@@ -261,9 +261,7 @@ The message above confirms that there are no duplicated records in thaiAccRaw, w
 
 Next, the code chunk below helps to convert thaiAccRaw into a simple feature data frame by using st_as_sf() of sf packages.
 
-As mentioned previously, the projected coordinate system of Thailand is WGS84/UTM zone 47N, and the EPSG code is 32647. Hence, we will set the following arguments accordingly:
--   coords argument to specify the column names to use for x- and y-coordinates
--   crs argument to specify the coordinates system in epsg format, EPSG:4326 for wgs84 and EPSG:32647 for Thailand's projected coordinate system
+As mentioned previously, the projected coordinate system of Thailand is WGS84/UTM zone 47N, and the EPSG code is 32647. Hence, we will set the following arguments accordingly: - coords argument to specify the column names to use for x- and y-coordinates - crs argument to specify the coordinates system in epsg format, EPSG:4326 for wgs84 and EPSG:32647 for Thailand's projected coordinate system
 
 The output will be saved in rds format for future use.
 
@@ -299,7 +297,7 @@ glimpse(thaiRoadsRaw)
 
 thaiRoadsRaw now only consists of 10 columns, reduced from the original 15 columns.
 
-Likewise, for the admBndpRaw data frame, we will be removing columns which do not contain values in English. We will also be removing columns which might not be helpful for our analysis, keeping only the key variables (province, which is ADM1_EN & geometry) we want to use for our analysis. 
+Likewise, for the admBndpRaw data frame, we will be removing columns which do not contain values in English. We will also be removing columns which might not be helpful for our analysis, keeping only the key variables (province, which is ADM1_EN & geometry) we want to use for our analysis.
 
 ```{r}
 admBndpRaw <- admBndpRaw %>%
@@ -311,7 +309,7 @@ admBndpRaw now only consists of 4 columns, reduced from the original 17 columns.
 
 #### 4.2.2 Filter by Province
 
-We want to only focus on the study area (BMR) in our analysis. Hence, we will filter the province field to focus on the 6 provinces which are in the BMR: Bangkok, Nakhon Pathom, Pathum Thani, Nonthaburi, Samut Prakan and Samut Sakhon. 
+We want to only focus on the study area (BMR) in our analysis. Hence, we will filter the province field to focus on the 6 provinces which are in the BMR: Bangkok, Nakhon Pathom, Pathum Thani, Nonthaburi, Samut Prakan and Samut Sakhon.
 
 We will store these province names in a list and use it in our filter condition.
 
@@ -332,7 +330,7 @@ qtm(admBndpRaw, fill = "province") +
 
 #### 4.2.3 Filter by Highway
 
-Taking reference from the below link, we will filter the highway field of thaiRoadsRaw to focus on the 5 key highway variables: motorway, primary, secondary, tertiary and unclassified. 
+Taking reference from the below link, we will filter the highway field of thaiRoadsRaw to focus on the 5 key highway variables: motorway, primary, secondary, tertiary and unclassified.
 
 Link: <https://wiki.openstreetmap.org/wiki/WikiProject_Thailand#Highway_classification>
 
@@ -349,7 +347,7 @@ Note that after the filter is applied, thaiRoadsRaw has been reduced to having o
 
 #### 4.2.4 Handling Multilinestring
 
-For our spatio-temporal analysis, we require the geometry field in thaiRoadsRaw to be of LINESTRING instead of MULTILINESTRING. 
+For our spatio-temporal analysis, we require the geometry field in thaiRoadsRaw to be of LINESTRING instead of MULTILINESTRING.
 
 To do this, we will utilize the st_cast() function from sf package to convert geometry field from MULTILINESTRING to LINESTRING.
 
@@ -564,7 +562,6 @@ tm_shape(admBndpSF) +
   tm_facets(by = "province")
 ```
 
-
 ## 6. Spatial Analysis using Network Spatial Point Patterns Analysis
 
 We will first use as_Spatial() of sf package to convert the three geospatial data from simple feature data frame to sp's Spatial class.
@@ -643,14 +640,14 @@ The output will be saved in rds format for future use.
 ```
 
 The code chunk below will be used to import the saved rds into R environment.
+
 ```{r}
 # accidentsPPP <- read_rds("data/rds/accidentsPPP.rds")
 ```
 
-
 ## 7. Spatio-Temporal Analysis using Temporal Network Spatial Point Patterns Analysis
 
-We will be performing network kernel density estimation by using the appropriate functions provided in spNetwork package. 
+We will be performing network kernel density estimation by using the appropriate functions provided in spNetwork package.
 
 Before computing NKDE, we need to cut the linestring object into lixels with a specified minimal distance. We will be using lixelize_lines() of spNetwork package for this.
 

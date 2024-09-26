@@ -27,8 +27,16 @@ pacman::p_load(sf, tidyverse)
 The code chunk below uses st_read() function of sf package to import a shapefile into R as a polygon feature data frame.
 
 ```{r}
+#|eval: false
 mpsz = st_read(dsn = "data/geospatial",
                layer = "MP14_SUBZONE_WEB_PL")
+write_rds(mpsz, "data/rds/mpsz.rds")
+```
+
+To import the rds file:
+
+```{r}
+mpsz <- read_rds("data/rds/mpsz.rds")
 ```
 
 ### 2.2 Importing Polyline Feature Data in Shapefile Form

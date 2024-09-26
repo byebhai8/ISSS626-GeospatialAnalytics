@@ -25,14 +25,30 @@ pacman::p_load(sf, ggstatsplot, tmap, tidyverse, knitr, GWmodel)
 The code chunk below uses st_read() of sf package to import Hunan shapefile into R. This imported shapefile will be a simple feature object of sf.
 
 ```{r}
+#|eval: false
 hunan <- st_read(dsn = "data/geospatial", 
                  layer = "Hunan")
+write_rds(hunan, "data/rds/hunan.rds")
+```
+
+To read in the rds:
+
+```{r}
+hunan <- read_rds("data/rds/hunan.rds")
 ```
 
 Next, we will import the Hunan_2012.csv into R by using (read_csv) of readr package. The output is a R dataframe class.
 
 ```{r}
+#|eval: false
 hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+write_rds(hunan2012, "data/rds/hunan2012.rds")
+```
+
+To read in the rds:
+
+```{r}
+hunan2012 <- read_rds("data/rds/hunan2012.rds")
 ```
 
 ## 3. Preparing the Data
@@ -40,8 +56,16 @@ hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
 The code chunk below will be used to update the attribute table of hunan's SpatialPolygonsDataFrame with the attribute fields of hunan2012 dataframe. This will be performed using the left_join() of dplyr package.
 
 ```{r}
+#|eval: false
 hunan_sf <- left_join(hunan,hunan2012)%>%
-  select(1:3, 7, 15:16, 31:32)
+  dplyr::select(1:3, 7, 15:16, 31:32)
+write_rds(hunan_sf, "data/rds/hunan_sf.rds")
+```
+
+To read in the rds:
+
+```{r}
+hunan_sf <- read_rds("data/rds/hunan_sf.rds")
 ```
 
 ## 4. Converting to SpatialPolygonDataFrame
@@ -49,8 +73,16 @@ hunan_sf <- left_join(hunan,hunan2012)%>%
 GWmodel package can only handle spatial data in older sp format, and not the sf format.
 
 ```{r}
+#|eval: false
 hunan_sp <- hunan_sf %>%
   as_Spatial()
+write_rds(hunan_sp, "data/rds/hunan_sp.rds")
+```
+
+To read in the rds:
+
+```{r}
+hunan_sp <- read_rds("data/rds/hunan_sp.rds")
 ```
 
 ## 5. Geographically Weighted Summary Statistics with Adaptive Bandwidth
@@ -91,8 +123,18 @@ gwstat <- gwss(data = hunan_sp,
 Preparing the output data:
 
 ```{r}
+#|eval: false
 gwstat_df <- as.data.frame(gwstat$SDF)
 hunan_gstat <- cbind(hunan_sf, gwstat_df)
+write_rds(gwstat_df, "data/rds/gwstat_df.rds")
+write_rds(hunan_gstat, "data/rds/hunan_gstat.rds")
+```
+
+To read in the rds:
+
+```{r}
+gwstat_df <- read_rds("data/rds/gwstat_df.rds")
+hunan_gstat <- read_rds("data/rds/hunan_gstat.rds")
 ```
 
 Visualizing it:
@@ -111,4 +153,3 @@ tm_shape(hunan_gstat) +
             legend.width = 1.50,
             frame = TRUE)
 ```
-

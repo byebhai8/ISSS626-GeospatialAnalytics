@@ -23,27 +23,59 @@ pacman::p_load(sf, spNetwork, tmap, tidyverse)
 The code chunk below uses st_read to import the geospatial data sets as sf data frames:
 
 ```{r}
+#|eval: false
 network <- st_read(dsn="data", 
                    layer="Punggol_St")
+write_rds(network, "data/rds/network.rds")
+```
+
+To read in the rds:
+
+```{r}
+network <- read_rds("data/rds/network.rds")
 network
 ```
 
 ```{r}
+#|eval: false
 childcare <- st_read(dsn="data",
                      layer="Punggol_CC") %>%
   st_zm(drop = TRUE, what = "ZM")
+write_rds(childcare, "data/rds/childcare.rds")
+```
+
+To read in the rds:
+
+```{r}
+childcare <- read_rds("data/rds/childcare.rds")
 childcare
 ```
 
 ## 3. Coordinate Reference System
 
 ```{r}
+#|eval: false
 childcare3414 <- st_set_crs(childcare, 3414)
+write_rds(childcare3414, "data/rds/childcare3414.rds")
+```
+
+To read in the rds:
+
+```{r}
+childcare3414 <- read_rds("data/rds/childcare3414.rds")
 st_crs(childcare3414)
 ```
 
 ```{r}
+#|eval: false
 network3414 <- st_set_crs(network, 3414)
+write_rds(network3414, "data/rds/network3414.rds")
+```
+
+To read in the rds:
+
+```{r}
+network3414 <- read_rds("data/rds/network3414.rds")
 st_crs(network3414)
 ```
 
@@ -70,20 +102,37 @@ tmap_mode('plot')
 Before computing NKDE, we need to cut the SpatialLines object into lixels with a specified minimal distance. We can use lixeline_line() of spNetwork for this:
 
 ```{r}
+#|eval: false
 lixels <- lixelize_lines(network3414, 
                          700, 
                          mindist = 350)
+write_rds(lixels, "data/rds/lixels.rds")
+```
+
+To read in the rds:
+
+```{r}
+lixels <- read_rds("data/rds/lixels.rds")
 ```
 
 We will use lines_centre() of spNetwork to generate a SpatialPointsDataFrame with line centre points:
 
 ```{r}
+#|eval: false
 samples <- lines_center(lixels) 
+write_rds(samples, "data/rds/samples.rds")
+```
+
+To read in the rds:
+
+```{r}
+samples <- read_rds("data/rds/samples.rds")
 ```
 
 We will use the code chunk below to compute NKDE:
 
 ```{r}
+#|eval: false
 densities <- nkde(network3414, 
                   events = childcare3414,
                   w = rep(1, nrow(childcare3414)),
@@ -99,6 +148,13 @@ densities <- nkde(network3414,
                   agg = 5, 
                   sparse = TRUE,
                   verbose = FALSE)
+write_rds(densities, "data/rds/densities.rds")
+```
+
+To read in the rds:
+
+```{r}
+densities <- read_rds("data/rds/densities.rds")
 ```
 
 ## 6. Visualizing NKDE

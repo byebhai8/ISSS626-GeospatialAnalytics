@@ -27,8 +27,16 @@ pacman::p_load(sf, tmap, tidyverse)
 The code chunk below uses st_read() function of sf package to import a shapefile into R.
 
 ```{r}
+#|eval: false
 mpsz <- st_read(dsn = "data/geospatial", 
                 layer = "MP14_SUBZONE_WEB_PL")
+write_rds(mpsz, "data/rds/mpsz2.rds")
+```
+
+To read this rds file:
+
+```{r}
+mpsz <- read_rds("data/rds/mpsz2.rds")
 ```
 
 We can examine the content of mpsz by using the code chunk below.
@@ -40,7 +48,15 @@ mpsz
 Next, we will import another file and save it into an R data frame called popdata. This will be performed using read_csv() function of readr package as shown in the code chunk below.
 
 ```{r}
+#|eval: false
 popdata <- read_csv("data/aspatial/respopagesexfa2011to2020.csv")
+write_rds(popdata, "data/rds/popdata.rds")
+```
+
+To read the rds file:
+
+```{r}
+popdata <- read_rds("data/rds/popdata.rds")
 ```
 
 ## 3. Data Preparation
