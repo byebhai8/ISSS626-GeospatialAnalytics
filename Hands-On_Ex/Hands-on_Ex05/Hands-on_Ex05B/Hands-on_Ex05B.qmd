@@ -1,0 +1,420 @@
+---
+title: "Hands-on Exercise 05B"
+author: "Bhairavi Vairavelu"
+date: "Sep 29 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+# Local Measures of Spatial Autocorrelation
+
+## 1. Overview
+
+We will be computing Local Measures of Spatial Autocorrelation (GMSA) by using spdep package.
+
+## 2. Getting Started
+
+### 2.1 Analytical Question
+
+Our task is to apply appropriate spatial statistical methods to discover if development are evenly distributed geographically. If the answer is no, our next question will be "is there a sign of spatial clustering". If the answer is yes, our next question will be "where are these clusters".
+
+### 2.2 Study Area & Data
+
+In our exercise, we are interested to examine the spatial patterns of a selected development indicator of Hunan Province in People's Republic of China.
+
+Two datasets will be used
+
+-   Hunan province administrative boundary layer at country level, a shapefile
+
+-   Hunan's local development indicators in 2012, a csv file
+
+### 2.3 Analytical Tools
+
+Before we get started, we need to ensure that spdep, sf, tmap and tidyverse packages are installed and loaded into R. The code chunk below will help with this:
+
+```{r}
+pacman::p_load(sf, spdep, tmap, tidyverse)
+```
+
+## 3. Getting Data into R Environment
+
+### 3.1 Import shapefile into R
+
+The code chunk below uses st_read() of sf package to import the Hunan shapefile into R.
+
+```{r}
+#|eval: false
+hunan <- st_read(dsn = "data/geospatial", 
+                 layer = "Hunan")
+write_rds(hunan, "data/rds/hunan.rds")
+```
+
+This code chunk will read the saved rds into R environment:
+
+```{r}
+hunan <- read_rds("data/rds/hunan.rds")
+```
+
+### 3.2 Import csv file into R
+
+Next, we will import Hunan_2012.csv into R using read_csv() of readr package.
+
+```{r}
+#|eval: false
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+write_rds(hunan2012, "data/rds/hunan2012.rds")
+```
+
+This code chunk will read the saved rds into R environment:
+
+```{r}
+hunan2012 <- read_rds("data/rds/hunan2012.rds")
+```
+
+### 3.3 Performing Relational Join
+
+The code chunk below will be used to update the attribute table of hunan's SpatialPolygonsDataFrame with the attribute fields of hunan2012 data frame. This is performed using the left_join() of dplyr package.
+
+```{r}
+#|eval: false
+hunan_joined <- left_join(hunan,hunan2012) %>%
+  select(1:4, 7, 15)
+write_rds(hunan_joined, "data/rds/hunan_joined.rds")
+```
+
+This code chunk will read the saved rds into R environment:
+
+```{r}
+hunan_joined <- read_rds("data/rds/hunan_joined.rds")
+```
+
+### 3.4 Visualizing Regional Development Indicator
+
+We will prepare a basemap and choropleth map to show the distribution of GDPPC 2012 by using qtm() of tmap package.
+
+```{r}
+equal <- tm_shape(hunan_joined) +
+  tm_fill("GDPPC",
+          n = 5,
+          style = "equal") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Equal interval classification")
+
+quantile <- tm_shape(hunan_joined) +
+  tm_fill("GDPPC",
+          n = 5,
+          style = "quantile") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Equal quantile classification")
+
+tmap_arrange(equal, 
+             quantile, 
+             asp=1, 
+             ncol=2)
+```
+
+## 4. Local Indicators of Spatial Autocorrelation
+
+### 4.1 Computing Contiguity Spatial Weights
+
+Before we compute the local spatial autocorrelation statistics, we need to construct the spatial weights of the study area. These weights are used to define the neighborhood relationships between geographical units in the study area.
+
+In this code chunk, poly2nb() of spdep is used to compute the Queen contiguity weight matrices for the study area.
+
+```{r}
+wm_q <- poly2nb(hunan_joined, 
+                queen=TRUE)
+summary(wm_q)
+```
+
+### 4.2 Row-standardized weights matrix
+
+Next, we will assign weights to each neighboring polygon.
+
+```{r}
+rswm_q <- nb2listw(wm_q, 
+                   style="W", 
+                   zero.policy = TRUE)
+rswm_q
+```
+
+### 4.3 Computing local Moran's I
+
+To compute local Moran's I, the localmoran() of spdep will be used. It computes li values, given a set of zi values, and a listw object providing neighboring weighting information for the polygon associated with the zi values.
+
+The code chunks below are used to compute local Moran's I of GDPCC2012 at the county level.
+
+```{r}
+fips <- order(hunan_joined$County)
+localMI <- localmoran(hunan_joined$GDPPC, rswm_q)
+head(localMI)
+```
+
+The code chunk below lists the content of the local Moran matrix derived by using printCoefmat().
+
+```{r}
+printCoefmat(data.frame(
+  localMI[fips,], 
+  row.names=hunan_joined$County[fips]),
+  check.names=FALSE)
+```
+
+Before mapping the local Moran's I map, we will append the local Moran's I dataframe onto hunan SpatialPolygonDataFrame.
+
+```{r}
+#|eval: false
+hunan.localMI <- cbind(hunan_joined,localMI) %>%
+  rename(Pr.Ii = Pr.z....E.Ii..)
+write_rds(hunan.localMI, "data/rds/hunan_localMI.rds")
+```
+
+This code chunk will read the saved rds into R environment:
+
+```{r}
+hunan.localMI <- read_rds("data/rds/hunan_localMI.rds")
+```
+
+We will use choropleth mapping functions of tmap package to plot the local Moran's I values.
+
+```{r}
+tm_shape(hunan.localMI) +
+  tm_fill(col = "Ii", 
+          style = "pretty",
+          palette = "RdBu",
+          title = "local moran statistics") +
+  tm_borders(alpha = 0.5)
+```
+
+The code chunks below produce a choropleth map of Moran's I p-values by using functions of tmap package.
+
+```{r}
+tm_shape(hunan.localMI) +
+  tm_fill(col = "Pr.Ii", 
+          breaks=c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),
+          palette="-Blues", 
+          title = "local Moran's I p-values") +
+  tm_borders(alpha = 0.5)
+```
+
+We will plot both the local Moran's I values map and its corresponding p-values map next to each other.
+
+```{r}
+localMI.map <- tm_shape(hunan.localMI) +
+  tm_fill(col = "Ii", 
+          style = "pretty", 
+          title = "local moran statistics") +
+  tm_borders(alpha = 0.5)
+
+pvalue.map <- tm_shape(hunan.localMI) +
+  tm_fill(col = "Pr.Ii", 
+          breaks=c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),
+          palette="-Blues", 
+          title = "local Moran's I p-values") +
+  tm_borders(alpha = 0.5)
+
+tmap_arrange(localMI.map, pvalue.map, asp=1, ncol=2)
+```
+
+## 5. LISA Cluster Map
+
+This helps to show the significant locations color coded by type of spatial autocorrelation.
+
+### 5.1 Plotting Moran scatterplot
+
+The code chunk below plots the Moran scatterplot of GDPPC 2012 by using moran.plot() of spdep.
+
+```{r}
+nci <- moran.plot(hunan_joined$GDPPC, rswm_q,
+                  labels=as.character(hunan_joined$County), 
+                  xlab="GDPPC 2012", 
+                  ylab="Spatially Lag GDPPC 2012")
+```
+
+### 5.2 Standardized Variable
+
+First, we will use scale() to center and scale the variable.
+
+```{r}
+hunan_joined$Z.GDPPC <- scale(hunan_joined$GDPPC) %>% 
+  as.vector 
+```
+
+Now, we are ready to plot the Moran scatterplot again by using the code chunk below.
+
+```{r}
+nci2 <- moran.plot(hunan_joined$Z.GDPPC, rswm_q,
+                   labels=as.character(hunan_joined$County),
+                   xlab="z-GDPPC 2012", 
+                   ylab="Spatially Lag z-GDPPC 2012")
+```
+
+### 5.3 LISA map classes
+
+The code chunk below shows the steps to prepare LISA cluster map.
+
+```{r}
+quadrant <- vector(mode="numeric",length=nrow(localMI))
+hunan_joined$lag_GDPPC <- lag.listw(rswm_q, hunan_joined$GDPPC)
+DV <- hunan_joined$lag_GDPPC - mean(hunan_joined$lag_GDPPC)     
+LM_I <- localMI[,1]   
+signif <- 0.05       
+quadrant[DV <0 & LM_I>0] <- 1
+quadrant[DV >0 & LM_I<0] <- 2
+quadrant[DV <0 & LM_I<0] <- 3  
+quadrant[DV >0 & LM_I>0] <- 4    
+quadrant[localMI[,5]>signif] <- 0
+```
+
+### 5.4 Plotting LISA map
+
+Now, we can build the LISA map using the code chunk below.
+
+```{r}
+hunan.localMI$quadrant <- quadrant
+colors <- c("#ffffff", "#2c7bb6", "#abd9e9", "#fdae61", "#d7191c")
+clusters <- c("insignificant", "low-low", "low-high", "high-low", "high-high")
+
+tm_shape(hunan.localMI) +
+  tm_fill(col = "quadrant", 
+          style = "cat", 
+          palette = colors[c(sort(unique(quadrant)))+1], 
+          labels = clusters[c(sort(unique(quadrant)))+1],
+          popup.vars = c("")) +
+  tm_view(set.zoom.limits = c(11,17)) +
+  tm_borders(alpha=0.5)
+```
+
+It is better to plot both the local Moran's I values map and its corresponding p-values map next to each other.
+
+```{r}
+gdppc <- qtm(hunan_joined, "GDPPC")
+
+hunan.localMI$quadrant <- quadrant
+colors <- c("#ffffff", "#2c7bb6", "#abd9e9", "#fdae61", "#d7191c")
+clusters <- c("insignificant", "low-low", "low-high", "high-low", "high-high")
+
+LISAmap <- tm_shape(hunan.localMI) +
+  tm_fill(col = "quadrant", 
+          style = "cat", 
+          palette = colors[c(sort(unique(quadrant)))+1], 
+          labels = clusters[c(sort(unique(quadrant)))+1],
+          popup.vars = c("")) +
+  tm_view(set.zoom.limits = c(11,17)) +
+  tm_borders(alpha=0.5)
+
+tmap_arrange(gdppc, LISAmap, 
+             asp=1, ncol=2)
+```
+
+## 6. Hot/Cold Spot Area Analysis
+
+### 6.1 Distance-based weight matrix
+
+Deriving the centroid:
+
+```{r}
+#|eval: false
+longitude <- map_dbl(hunan_joined$geometry, ~st_centroid(.x)[[1]])
+latitude <- map_dbl(hunan_joined$geometry, ~st_centroid(.x)[[2]])
+coords <- cbind(longitude, latitude)
+write_rds(coords, "data/rds/coords.rds")
+```
+
+This code chunk will read the saved rds into R environment:
+
+```{r}
+coords <- read_rds("data/rds/coords.rds")
+```
+
+Determine the cut-off distance:
+
+```{r}
+k1 <- knn2nb(knearneigh(coords))
+k1dists <- unlist(nbdists(k1, coords, longlat = TRUE))
+summary(k1dists)
+```
+
+Computing fixed distance weight matrix:
+
+```{r}
+wm_d62 <- dnearneigh(coords, 0, 62, longlat = TRUE)
+wm_d62
+```
+
+```{r}
+wm62_lw <- nb2listw(wm_d62, style = 'B')
+summary(wm62_lw)
+```
+
+### 6.2 Adaptive distance weight matrix
+
+```{r}
+knn <- knn2nb(knearneigh(coords, k=8))
+knn
+```
+
+```{r}
+knn_lw <- nb2listw(knn, style = 'B')
+summary(knn_lw)
+```
+
+## 7. Computing Gi statistics
+
+### 7.1 Using fixed distance
+
+```{r}
+fips <- order(hunan_joined$County)
+gi.fixed <- localG(hunan_joined$GDPPC, wm62_lw)
+gi.fixed
+```
+
+```{r}
+hunan.gi <- cbind(hunan_joined, as.matrix(gi.fixed)) %>%
+  rename(gstat_fixed = as.matrix.gi.fixed.)
+```
+
+### 7.2 Mapping with fixed-distance weights
+
+```{r}
+gdppc <- qtm(hunan_joined, "GDPPC")
+
+Gimap <-tm_shape(hunan.gi) +
+  tm_fill(col = "gstat_fixed", 
+          style = "pretty",
+          palette="-RdBu",
+          title = "local Gi") +
+  tm_borders(alpha = 0.5)
+
+tmap_arrange(gdppc, Gimap, asp=1, ncol=2)
+```
+
+### 7.3 Using adaptive distance
+
+```{r}
+fips <- order(hunan_joined$County)
+gi.adaptive <- localG(hunan_joined$GDPPC, knn_lw)
+hunan.gi <- cbind(hunan, as.matrix(gi.adaptive)) %>%
+  rename(gstat_adaptive = as.matrix.gi.adaptive.)
+```
+
+### 7.4 Mapping with adaptive distance weights
+
+```{r}
+gdppc<- qtm(hunan_joined, "GDPPC")
+
+Gimap <- tm_shape(hunan.gi) + 
+  tm_fill(col = "gstat_adaptive", 
+          style = "pretty", 
+          palette="-RdBu", 
+          title = "local Gi") + 
+  tm_borders(alpha = 0.5)
+
+tmap_arrange(gdppc, 
+             Gimap, 
+             asp=1, 
+             ncol=2)
+```
