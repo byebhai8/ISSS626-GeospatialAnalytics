@@ -1,0 +1,295 @@
+---
+title: "In-Class Exercise 05"
+author: "Bhairavi Vairavelu"
+date: "Sep 30 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+# Global and Local Measures of Spatial Autocorrelation
+
+## 1. Getting Started
+
+Four R packages will be used for this in-class exercise, they are: sf, sfdep, tmap and tidyverse.
+
+```{r}
+pacman::p_load(sf, sfdep, tmap, tidyverse)
+```
+
+## 2. The Data
+
+Two datasets will be used
+
+-   Hunan province administrative boundary layer at country level, a shapefile
+
+-   Hunan's local development indicators in 2012, a csv file
+
+### 2.1 Import shapefile into R
+
+The code chunk below uses st_read() of sf package to import the Hunan shapefile into R.
+
+```{r}
+#|eval: false
+hunan <- st_read(dsn = "data/geospatial", 
+                 layer = "Hunan")
+write_rds(hunan, "data/rds/hunan.rds")
+```
+
+This code chunk will read the saved rds into R environment:
+
+```{r}
+hunan <- read_rds("data/rds/hunan.rds")
+```
+
+### 2.2 Import attribute table into R
+
+Next, we will import Hunan_2012.csv into R using read_csv() of readr package.
+
+```{r}
+#|eval: false
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+write_rds(hunan2012, "data/rds/hunan2012.rds")
+```
+
+This code chunk will read the saved rds into R environment:
+
+```{r}
+hunan2012 <- read_rds("data/rds/hunan2012.rds")
+```
+
+### 2.3 Performing Relational Join
+
+The code chunk below will be used to update the attribute table of hunan's SpatialPolygonsDataFrame with the attribute fields of hunan2012 data frame. This is performed using the left_join() of dplyr package.
+
+```{r}
+#|eval: false
+hunan_joined <- left_join(hunan,hunan2012) %>%
+  select(1:4, 7, 15)
+write_rds(hunan_joined, "data/rds/hunan_joined.rds")
+```
+
+This code chunk will read the saved rds into R environment:
+
+```{r}
+hunan_joined <- read_rds("data/rds/hunan_joined.rds")
+```
+
+### 2.4 Plotting a choropleth map
+
+We will plot a choropleth map showing the distribution of GDPPC of Hunan province.
+
+```{r}
+tmap_mode("plot")
+tm_shape(hunan_joined) +
+  tm_fill("GDPPC", 
+          style = "quantile", 
+          palette = "Blues",
+          title = "GDPPC") +
+  tm_layout(main.title = "Distribution of GDP per capita by county, Hunan Province",
+            main.title.position = "center",
+            main.title.size = 1.2,
+            legend.height = 0.45, 
+            legend.width = 0.35,
+            frame = TRUE) +
+  tm_borders(alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scale_bar() +
+  tm_grid(alpha =0.2)
+```
+
+## 3. Global Measures of Spatial Association
+
+### 3.1 Deriving Queen's contiguity weights
+
+```{r}
+wm_q <- hunan_joined %>%
+  mutate(nb = st_contiguity(geometry),
+         wt = st_weights(nb,
+                         style = "W"),
+         .before = 1) 
+wm_q
+```
+
+### 3.2 Computing Global Moran I
+
+In the code chunk below, global_moran() function is used to compute the Moran’s I value. Different from spdep package, the output is a tibble data.frame.
+
+```{r}
+moranI <- global_moran(wm_q$GDPPC,
+                       wm_q$nb,
+                       wm_q$wt)
+glimpse(moranI)
+```
+
+### 3.3 Performing Global Moran's I test
+
+```{r}
+global_moran_test(wm_q$GDPPC,
+                       wm_q$nb,
+                       wm_q$wt)
+```
+
+### 3.4 Performing Global Moran's I permutation test
+
+```{r}
+set.seed(1234)
+global_moran_perm(wm_q$GDPPC,
+                       wm_q$nb,
+                       wm_q$wt,
+                  nsim = 99)
+```
+
+### 3.5 Computing Local Moran's I
+
+```{r}
+lisa <- wm_q %>% 
+  mutate(local_moran = local_moran(
+    GDPPC, nb, wt, nsim = 99),
+         .before = 1) %>%
+  unnest(local_moran)
+```
+
+Visualizing local Moran's I:
+
+```{r}
+tmap_mode("plot")
+tm_shape(lisa) +
+  tm_fill("ii") + 
+  tm_borders(alpha = 0.5) +
+  tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(
+    main.title = "local Moran's I of GDPPC",
+    main.title.size = 2)
+```
+
+Visualizing p-value of local Moran's I:
+
+```{r}
+tmap_mode("plot")
+tm_shape(lisa) +
+  tm_fill("p_ii_sim") + 
+  tm_borders(alpha = 0.5) +
+   tm_layout(main.title = "p-value of local Moran's I",
+            main.title.size = 2)
+```
+
+To plot both of them together:
+
+```{r}
+tmap_mode("plot")
+map1 <- tm_shape(lisa) +
+  tm_fill("ii") + 
+  tm_borders(alpha = 0.5) +
+  tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(main.title = "local Moran's I of GDPPC",
+            main.title.size = 0.8)
+
+map2 <- tm_shape(lisa) +
+  tm_fill("p_ii",
+          breaks = c(0, 0.001, 0.01, 0.05, 1),
+              labels = c("0.001", "0.01", "0.05", "Not sig")) + 
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "p-value of local Moran's I",
+            main.title.size = 0.8)
+
+tmap_arrange(map1, map2, ncol = 2)
+```
+
+Plotting LISA map:
+
+```{r}
+lisa_sig <- lisa  %>%
+  filter(p_ii_sim < 0.05)
+tmap_mode("plot")
+tm_shape(lisa) +
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+tm_shape(lisa_sig) +
+  tm_fill("mean") + 
+  tm_borders(alpha = 0.4)
+```
+
+### 3.6 Hot & Cold Spot Area Analysis
+
+To derive a spatial weight matrix:
+
+```{r}
+wm_idw <- hunan_joined %>%
+  mutate(nb = include_self(
+    st_contiguity(geometry)),
+    wts = st_inverse_distance(nb, 
+                              geometry, 
+                              scale = 1,
+                              alpha = 1),
+         .before = 1)
+```
+
+Computing local Gi statistics:
+
+```{r}
+HCSA <- wm_idw %>% 
+  mutate(local_Gi = local_gstar_perm(
+    GDPPC, nb, wts, nsim = 99),
+         .before = 1) %>%
+  unnest(local_Gi)
+HCSA
+```
+
+Visualizing Gi:
+
+```{r}
+tmap_mode("plot")
+tm_shape(HCSA) +
+  tm_fill("gi_star") + 
+  tm_borders(alpha = 0.5) +
+  tm_view(set.zoom.limits = c(6,8))
+```
+
+Visualizing p-value of HCSA:
+
+```{r}
+tmap_mode("plot")
+tm_shape(HCSA) +
+  tm_fill("p_sim") + 
+  tm_borders(alpha = 0.5)
+```
+
+Visualizing local HCSA:
+
+```{r}
+tmap_mode("plot")
+map1 <- tm_shape(HCSA) +
+  tm_fill("gi_star") + 
+  tm_borders(alpha = 0.5) +
+  tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(main.title = "Gi* of GDPPC",
+            main.title.size = 0.8)
+
+map2 <- tm_shape(HCSA) +
+  tm_fill("p_value",
+          breaks = c(0, 0.001, 0.01, 0.05, 1),
+              labels = c("0.001", "0.01", "0.05", "Not sig")) + 
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "p-value of Gi*",
+            main.title.size = 0.8)
+
+tmap_arrange(map1, map2, ncol = 2)
+```
+
+Visualizing hot spot and cold spot areas:
+
+```{r}
+HCSA_sig <- HCSA  %>%
+  filter(p_sim < 0.05)
+tmap_mode("plot")
+tm_shape(HCSA) +
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+tm_shape(HCSA_sig) +
+  tm_fill("cluster") + 
+  tm_borders(alpha = 0.4)
+```

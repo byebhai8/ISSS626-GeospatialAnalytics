@@ -1,0 +1,165 @@
+---
+title: "Take-Home Exercise 02"
+author: "Bhairavi Vairavelu"
+date: "Sep 30 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+# Discovering Impacts of COVID-19 on Thailand Tourism Economy using Spatial & Spatio-Temporal Statistics
+
+## 1.0 Overview
+
+Tourism is one of Thailand’s largest industries, accounting for some 20% of the gross domestic product (GDP). In 2019, Thailand earned 90 billion US\$ from domestic and international tourism, but the COVID-19 pandemic caused revenues to crash to 24 billion US\$ in 2020.
+
+The figure below shows the total revenue receipt from tourism sector from January 2019 until Feb 2023. This figure also reveals that the revenue from tourism industry have been recovered gradually since September 2021.
+
+![](fig01.png){fig-align="center"}
+
+However, it is important to note that the tourism economy of Thailand are not evenly distributed. The figure below reveals that the tourism economy of Thailand are mainly focused on five provinces, namely Bangkok, Phuket, Chon Buri, Krabi and Chiang Mai.
+
+![](fig02.png){fig-align="center"}
+
+### 1.1 Objectives
+
+Through this exercise, we are interested to discover the following:
+
+-   If the key indicators of tourism economy of Thailand are independent from space and space and time
+
+-   If the tourism economy is indeed spatial and spatio-temporal dependent
+
+    -   If so, we would like to detect where are the clusters and outliers, and the emerging hot spot/cold spot areas
+
+### 1.2 The Task
+
+We will be performing the following tasks in this exercise:
+
+-   Preparation of the following Geospatial data layer:
+
+    -   Study area layer in sf polygon features (at province level incl. Bangkok)
+
+    -   Tourism economy indicators layer within the study area in sf polygon features
+
+    -   Derived tourism economy indicator layer in spacetime s3 class of sfdep, with time series kept at month and year levels
+
+-   Perform Global Spatial Autocorrelation Analysis using sfdep methods
+
+```{=html}
+<!-- -->
+```
+-   Perform Local Spatial Autocorrelation Analysis using sfdep methods
+
+-   Perform Emerging Hot/Cold Spot Analysis using sfdep methods
+
+### 1.3 Analytical Tools
+
+The following R packages will be used for this exercise:
+
+-   **sf**, which is used for importing and handling geospatial data in R
+
+-   **sfdep**, which is used for spatial dependence with spatial features
+
+-   **tmap**, which is used to prepare cartographic quality choropleth maps
+
+-   **plotly**, for creating interactive graphs
+
+-   **tidyverse**, which is mainly for wrangling attribute data in R
+
+-   **lubridate**, which is used to parse and manipulate dates
+
+The code chunk below uses p_load() of pacman package to check if the necessary packages have been installed in R. If yes, we will load the packages on R environment as shown below.
+
+```{r}
+pacman::p_load(sf, sfdep, tmap, plotly, tidyverse, lubridate)
+```
+
+## 2.0 Data
+
+### 2.1 Getting the Data
+
+For this exercise, we will be using two datasets:
+
+-   Thailand Domestic Tourism Statistics from Kaggle
+
+![](data01.png){fig-align="center"}
+
+-   Thailand - Subnational Administrative Boundaries from HDX
+
+![](data02.png){fig-align="center"}
+
+### 2.2 Importing the Data
+
+These are the files we have for Thailand Domestic Tourism Statistics:
+
+![](data01_files.png){fig-align="center"}
+
+Note that we will only use Version 2 of the dataset.
+
+The code chunk below is used to load the ver2 data into our R environment.
+
+```{r}
+#|eval: false
+tourism <- read_csv("data/aspatial/thailand_domestic_tourism_2019_2023_ver2.csv")
+write_rds(tourism, "data/rds/tourism.rds")
+```
+
+The code chunk below will be used to import the saved tourism.rds into R environment.
+
+```{r}
+tourism <- read_rds("data/rds/tourism.rds")
+```
+
+These are the files we have for Thailand - Subnational Administrative Boundaries:
+
+![](data02_files.png){fig-align="center"}
+
+Recall that this HDX data source contains information on 4 administrative levels - 0 for Country, 1 for Province, 2 for District and 3 for Sub-District. Hence, there were numerous files downloaded from this data source. However, we only want to focus on Province-level analysis for this exercises. As such, we will only load the ADM1 data into our R environment.
+
+The code chunk below is used to load the ver2 data into our R environment.
+
+```{r}
+#|eval: false
+boundaries = st_read(dsn = "data/geospatial",
+                     layer = "tha_admbnda_adm1_rtsd_20220121")
+write_rds(boundaries, "data/rds/boundaries.rds")
+```
+
+The code chunk below will be used to import the saved boundaries.rds into R environment.
+
+```{r}
+boundaries <- read_rds("data/rds/boundaries.rds")
+```
+
+## 3.0 Data Wrangling
+
+Let's take a quick look at the newly imported data by using the glimpse() function of dplyr package as shown below.
+
+```{r}
+glimpse(tourism)
+```
+
+The tourism data serves as the attribute table we will use moving forward.
+
+Likewise, we can run the glimpse() function on the boundaries data for some quick insights.
+
+```{r}
+glimpse(boundaries)
+```
+
+The boundaries data contains the geospatial information we require for our analysis.
+
+## Global Spatial Autocorrelation Analysis
+
+xx
+
+## Local Spatial Autocorrelation Analysis
+
+xx
+
+## Emerging Hot Spot Analysis
+
+xx
