@@ -1,0 +1,248 @@
+---
+title: "In-Class Exercise 07"
+author: "Bhairavi Vairavelu"
+date: "Oct 14 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+# **Calibrating Hedonic Pricing Model for Private Highrise Property with GWR Method**
+
+### 1. Overview
+
+**Geographically weighted regression (GWR)** is a spatial statistical technique that takes non-stationary variables into consideration (e.g., climate; demographic factors; physical environment characteristics) and models the local relationships between these independent variables and an outcome of interest (also known as dependent variable). In this hands-on exercise, you will learn how to build hedonic pricing models by using GWR methods. The dependent variable is the resale prices of condominium in 2015. The independent variables are divided into either structural and locational.
+
+### 2. Data
+
+Two data sets will be used in this model building exercise, they are:
+
+-   URA Master Plan subzone boundary in shapefile format
+
+-   condo_resale_2015 in csv format
+
+### 3. Getting Started
+
+We will install and load the necessary R packages for our analysis.
+
+```{r}
+pacman::p_load(olsrr, corrplot, ggpubr, sf, spdep, GWmodel, tmap, tidyverse, gtsummary, ggstatsplot, sfdep)
+```
+
+### 4. Geospatial Data Wrangling
+
+The code chunk below is used to import the MP_SUBZONE_WEB_PL shapefile by using st_read() of sf package.
+
+```{r}
+mpsz = st_read(dsn = "data/geospatial", layer = "MP14_SUBZONE_WEB_PL")
+```
+
+Note that the geometry type is polygon and that the mpsz object has no EPSG information.
+
+The code chunk below updates the newly imported mpsz with the correct EPSG code (3414).
+
+```{r}
+mpsz_svy21 <- st_transform(mpsz, 3414)
+```
+
+The code chunk below will be used to verify the newly transformed mpsz_svy21.
+
+```{r}
+st_crs(mpsz_svy21)
+```
+
+Note that the EPSG is indicated as 3414 now.
+
+We will use st_bbox() of sf package to reveal the extent of mpsz_svy21.
+
+```{r}
+st_bbox(mpsz_svy21)
+```
+
+### 5. Aspatial Data Wrangling
+
+The codes chunk below uses read_csv() function of readr package to import condo_resale_2015 into R as a tibble data frame called condo_resale.
+
+```{r}
+condo_resale = read_csv("data/aspatial/Condo_resale_2015.csv")
+```
+
+The code chunk below uses glimpse() to display the data structure of condo_resale.
+
+```{r}
+glimpse(condo_resale)
+```
+
+```{r}
+head(condo_resale$LONGITUDE)
+```
+
+```{r}
+head(condo_resale$LATITUDE)
+```
+
+The summary() function of base R is used to display the summary statistics of condo_resale tibble data frame.
+
+```{r}
+summary(condo_resale)
+```
+
+Note that condo_resale is a tibble data frame, which is aspatial. So, we will convert it to a sf object. The code chunk below converts the condo_resale into a simple feature data frame by using st_as_sf() of sf package.
+
+```{r}
+condo_resale.sf <- st_as_sf(condo_resale,
+                            coords = c("LONGITUDE", "LATITUDE"),
+                            crs=4326) %>%
+  st_transform(crs=3414)
+```
+
+Next, head() will be used to list the content of condo_resale.sf object.
+
+```{r}
+head(condo_resale.sf)
+```
+
+Note that the output is now in point feature data frame.
+
+### 6. Exploratory Data Analysis
+
+We can plot the distribution of Selling Price by using appropriate Exploratory Data Analysis (EDA) as shown in the code chunk below.
+
+```{r}
+ggplot(data=condo_resale.sf, aes(x=`SELLING_PRICE`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+```
+
+Correlation Analysis - ggstatsplot method.
+
+```{r}
+#| fig-width: 12
+#| fig-height: 10
+ggcorrmat(condo_resale[, 5:23])
+```
+
+### 7. Linear Regression
+
+The code chunk below is using lm() to calibrate the multiple linear regression model.
+
+```{r}
+condo_mlr <- lm(formula = SELLING_PRICE ~ AREA_SQM + AGE + PROX_CBD +
+                  PROX_CHILDCARE + PROX_ELDERLYCARE + PROX_URA_GROWTH_AREA+ 
+                  PROX_HAWKER_MARKET + PROX_KINDERGARTEN + PROX_MRT + PROX_PARK + 
+                  PROX_PRIMARY_SCH + PROX_TOP_PRIMARY_SCH + PROX_SHOPPING_MALL + 
+                  PROX_SUPERMARKET + PROX_BUS_STOP + NO_Of_UNITS + 
+                  FAMILY_FRIENDLY + FREEHOLD + LEASEHOLD_99YR,
+                data = condo_resale.sf)
+summary(condo_mlr)
+```
+
+Model Assessment: olsrr method
+
+```{r}
+ols_regress(condo_mlr)
+```
+
+Multicolinearity:
+
+```{r}
+ols_vif_tol(condo_mlr)
+```
+
+Variable selection:
+
+```{r}
+condo_fw_mlr <- ols_step_forward_p(
+  condo_mlr,
+  p_val = 0.05,
+  details = FALSE #TRUE
+)
+```
+
+```{r}
+#| fig-width: 12
+#| fig-height: 10
+plot(condo_fw_mlr)
+```
+
+Test for Non-Linearity:
+
+```{r}
+ols_plot_resid_fit(condo_fw_mlr$model)
+```
+
+```{r}
+ols_plot_resid_hist(condo_fw_mlr$model)
+```
+
+We can also perform formal statistical test methods using ols_test_normality().
+
+```{r}
+ols_test_normality(condo_fw_mlr$model)
+```
+
+To test for Spatial Autocorrelation...
+
+First we will export the residual of the hedonic pricing model and save it as a data frame.
+
+```{r}
+mlr_output <- as.data.frame(condo_fw_mlr$model$residuals) %>%
+  rename(`FW_MLR_RES` = `condo_fw_mlr$model$residuals`)
+```
+
+Next, we will join the newly created data frame with condo_resale_sf object.
+
+```{r}
+condo_resale_sf <- cbind(condo_resale.sf,
+                         mlr_output$FW_MLR_RES) %>%
+  rename(`MLR_RES` = `mlr_output.FW_MLR_RES`)
+```
+
+Next, we will use tmap package to display the distribution of the residuals on an interactive map.
+
+```{r}
+tmap_mode("view")
+tmap_options(check.and.fix = TRUE)
+tm_shape(mpsz)+
+  tmap_options(check.and.fix = TRUE)+
+  tm_polygons(alpha = 0.4)+
+  tm_shape(condo_resale_sf)+
+  tm_dots(col = "MLR_RES",
+          alpha = 0.6,
+          style = "quantile")
+tmap_mode("plot")
+```
+
+```{r}
+condo_resale_sf <- condo_resale_sf %>%
+  mutate(nb = st_knn(geometry, k=6, longlat=FALSE),
+         wt = st_weights(nb, style="W"),
+         .before=1)
+```
+
+```{r}
+global_moran_perm(condo_resale_sf$MLR_RES,
+                  condo_resale_sf$nb,
+                  condo_resale_sf$wt,
+                  alternative = "two.sided",
+                  nsim = 99)
+```
+
+### 8. Building Hedonic Pricing Models
+
+Building Fixed Bandwidth GWR Model:
+
+```{r}
+#bw_fixed <- bw.gwr(formula = SELLING_PRICE ~ AREA_SQM + AGE + PROX_CBD +
+#                     PROX_CHILDCARE + PROX_ELDERLYCARE + PROX_URA_GROWTH_AREA +
+#                     PROX_MRT + PROX_PARK + PROX_PRIMARY_SCH + PROX_SHOPPING_MALL #                     + PROX_BUS_STOP + NO_Of_UNITS + FAMILY_FRIENDLY + FREEHOLD,
+#                   data = condo_resale_sf,
+#                   approach = "CV",
+#                   kernel = "gaussian",
+#                   adaptive = FALSE,
+#                   longlat = FALSE)
+```
+
+x
