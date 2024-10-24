@@ -1,0 +1,41 @@
+---
+title: "Take-Home Exercise 03"
+author: "Bhairavi Vairavelu"
+date: "Oct 21 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+# **Modelling Geography of Financial Inclusion with Geographically Weighted Methods**
+
+## 1.0 Overview
+
+x
+
+## 2.0 Data
+
+x
+
+## 3.0 Geospatial Data Wrangling
+
+x
+
+## 4.0 Aspatial Data Wrangling
+
+x
+
+## 5.0 Exploratory Data Analysis
+
+x
+
+## 6.0 Financial Inclusion Model
+
+x
+
+## 7.0 Using gwModel
+
+x

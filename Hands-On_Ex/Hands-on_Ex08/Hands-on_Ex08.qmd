@@ -1,0 +1,93 @@
+---
+title: "Hands-on Exercise 08"
+author: "Bhairavi Vairavelu"
+date: "Oct 21 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+# Geographically Weighted Predictive Models
+
+## 1.0 Overview
+
+Predictive modelling uses statistical learning or machine learning techniques to predict outcomes. However, a set of known outcomes and predictors (variables) will be used to calibrate the predictive models.
+
+In this exercise, we will build predictive models by using geographical random forest method
+
+## 2.0 The Data
+
+Aspatial data:
+
+-   HDB Resale data
+
+Geospatial data:
+
+-   MP14_SUBZONE_WEB_PL
+
+Locational factors with geographic coordinates:
+
+-   Eldercare data
+
+-   Hawker Centre data
+
+-   Parks data
+
+-   Supermarket data
+
+-   CHAS clinics data
+
+-   Childcare service data
+
+-   Kindergartens data
+
+-   MRT data
+
+-   Bus stops data
+
+Locational factors without geographic coordinates:
+
+-   Primary schooldata
+
+-   CBD coordinates
+
+-   Shopping malls data
+
+-   Good primary schools data
+
+## 3.0 Installing & Loading R Packages
+
+The code chunk below will check and install the R packages that we require for this exercise.
+
+```{r}
+pacman::p_load(sf, spdep, GWmodel, SpatialML, 
+               tmap, rsample, Metrics, tidyverse)
+```
+
+## 4.0 Preparing the Data
+
+### 4.1 Reading data file
+
+We will read the input data set, which is a simple feature data frame.
+
+```{r}
+mdata <- read_rds("data/rds/mdata.rds")
+```
+
+### 4.2 Data Sampling
+
+The entire data is split into training and test data sets, which are 65% and 35% respectively. This will be done using initial_split() of rsample package.
+
+```{r}
+set.seed(1234)
+#resale_split <- rsample::initial_split(mdata, prop = 6.5/10,)
+#train_data <- training(resale_split)
+#test_data <- testing(resale_split)
+#write_rds(train_data, "data/rds/train_data.rds")
+#write_rds(test_data, "data/rds/test_data.rds")
+```
+
+x
