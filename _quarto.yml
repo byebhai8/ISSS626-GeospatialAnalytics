@@ -53,6 +53,8 @@ website:
           href: "In-Class_Ex/In-Class_Ex07/In-Class_Ex07.html"
         - text: "In-Class Exercise 08"
           href: "In-Class_Ex/In-Class_Ex08/In-Class_Ex08.html"
+        - text: "In-Class Exercise 10"
+          href: "In-Class_Ex/In-Class_Ex10/In-Class_Ex10.html"
     - text: "Take-Home Exercise"
       menu:
         - text: "Take-Home Exercise 01"
@@ -60,7 +62,7 @@ website:
         - text: "Take-Home Exercise 02"
           href: "Take-Home_Ex/Take-Home_Ex02/Take-Home_Ex02D.html"
         - text: "Take-Home Exercise 03"
-          href: "Take-Home_Ex/Take-Home_Ex03/Take-Home_Ex03A1.html"
+          href: "Take-Home_Ex/Take-Home_Ex03/Take-Home_Ex03A2.html"
     right:
       - href: index.qmd
         text: Home

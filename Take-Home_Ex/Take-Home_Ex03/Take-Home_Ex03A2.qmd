@@ -1,0 +1,613 @@
+---
+title: "Take-Home Exercise 03A"
+author: "Bhairavi Vairavelu"
+date: "Oct 21 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+# **Modelling Geography of Financial Inclusion with Geographically Weighted Methods**
+
+## 1.0 Overview
+
+Financial inclusion is the availability and equality of opportunities to access financial services. It refers to processes by which individuals and businesses can access appropriate, affordable, and timely financial products and services. These financial products and services include banking, loan, equity, and insurance products. It provides paths to enhance inclusiveness in economic growth by enabling the unbanked population to access the means for savings, investments, and insurance towards improving household income and reducing income inequality.
+
+### 1.1 Tasks
+
+In this exercise, we will be building an explanatory model to determine factors affecting financial inclusion by using geographical weighted regression methods.
+
+### 1.2 Study Area
+
+We will be focusing on the FinScope Tanzania 2023 dataset for this exercise, and conduct our analysis at the district level.
+
+### 1.3 Analysis Method
+
+Geographically Weighted Regression (GWR) is the spatial statistical technique that we will use in this exercise. GWR takes non-stationary variables into consideration, and models the local relationships between these independent variables, and an outcome of interest. For this exercise, the dependent variable is formal_finservice_usage, and the independent variables are age, is_rural, is_urban, has_mobile_usage, has_bank_usage, has pension_usage, has_insurance_usage, has_investment usage.
+
+## 2.0 Data
+
+For the purpose of this exercise, we will be using two datasets:
+
+-   FinScope Tanzania 2023, which contains individual survey interview data
+
+-   Tanzania geoBoundaries, which is a district level boundary GIS data
+
+## 3.0 Installing and Launching Packages
+
+We intend to utilize the following R packages in this exercise:
+
+-   **olsrr**, for building OLS and performing diagnostic tests
+
+-   **corrplot**, for multivariate data visualization and analysis
+
+-   **ggpubr**, to customize ggplot2-based plots
+
+-   **sf**, for spatial data handling
+
+-   **spdep**, to create spatial weights matrix objects from polygon
+
+-   **GWmodel**, for calibrating geographically weighted family of models
+
+-   **tmap**, for visualizing geospatial objects
+
+-   **tidyverse**, for attribute data handling,
+
+-   **gtsummary**, to create analytical and summary tables
+
+-   **ggstatsplot**, to create graphics with details from statistical tests included in the plots
+
+The code chunk below can be used to install and launch the above-mentioned R packages:
+
+```{r}
+pacman::p_load(olsrr, corrplot, ggpubr, sf, spdep, GWmodel, tmap, tidyverse, gtsummary, ggstatsplot)
+```
+
+## 4.0 Geospatial Data Wrangling
+
+### 4.1 Importing Geospatial Data
+
+The geospatial data used in this exercise, the Tanzania geoBoundaries district level data, is in ESRI shapefile format. The code chunk below imports this shapefile by using st_read() of sf packages.
+
+```{r}
+gb = st_read(dsn = "data/geospatial", layer = "geoBoundaries-TZA-ADM2") %>%
+  rename(district = shapeName)
+```
+
+The report above shows that the R object used to contain the imported shapefile is called gb, and it is a simple feature object. The geometry type is multipolygon, representing the geographic boundaries of districts in Tanzania. The CRS is WGS 84. with no specific EPSG code provided in the data set. The dataset contains 170 rows and 5 columns.
+
+### 4.2 Updating CRS Information
+
+It is noted that the correct EPSG code for Tanzania is EPSG: **21037**, which can be verified here: [EPSG.io](https://epsg.io/21037#:~:text=Scope%3A%20Engineering%20survey%2C%20topographic%20mapping,east%20of%2036%C2%B0E.)
+
+As such, we will use the code chunk below to update the newly imported gb simple feature data frame with the correct EPSG code.
+
+```{r}
+gbTransformed <- st_transform(gb, 21037)
+```
+
+After transforming the projection metadata, we can verify the projection of the newly transformed gbTransformed by using st_crs() of sf package. This can be achieved by using the code chunk below:
+
+```{r}
+st_crs(gbTransformed)
+```
+
+Note that the EPSG is indicated as 21037 now. We can now use the st_bbox() of sf package to reveal the extent of gbTransformed, as shown in the code chunk below:
+
+```{r}
+st_bbox(gbTransformed)
+```
+
+This bounding box basically provides us with the geographic extent of the Tanzania data (gbTransformed) in terms of projection, and this will be used in our visualizations for further spatial operations.
+
+### 4.3 Converting Multipolygon to Polygon
+
+In the code chunk below, we can use tmap package to plot the polygons in gbTransformed data to visualize the geographical boundaries of the districts in Tanzania.
+
+```{r}
+tm_shape(gbTransformed) +
+  tm_polygons() +
+  tm_layout(main.title = "Multipolygon Map", main.title.size = 0.8)
+```
+
+However, it is noted that the gbTransformed simple feature data frame contains the geometry object in multipolygon type. However, we require the data to be of polygon type instead for our analysis. As such, we will use convert multipolygon to polygon.
+
+The first step would be to calculate the area of each polygon, which can be done using the code chunk below:
+
+```{r}
+gbPolygon <- gbTransformed %>%
+  st_cast("POLYGON") %>%
+  mutate(area = st_area(.))
+```
+
+Next, we will group the unique districts together and select the largest polygon by area using the code chunk below:
+
+```{r}
+gbCleaned <- gbPolygon %>%
+  group_by(district) %>%
+  filter(area == max(area)) %>%
+  ungroup() %>%
+  select(-area) %>%
+  select(district)
+```
+
+We can run our visualization again to verify how the polygons plot now in the map:
+
+```{r}
+tm_shape(gbCleaned) +
+  tm_polygons() +
+  tm_layout(main.title = "Polygon Map", main.title.size = 0.8)
+```
+
+To have a better comparison, we can plot both the multipolygon map and polygon map side by side:
+
+```{r}
+gbTransformed_map <- tm_shape(gbTransformed) +
+  tm_polygons() +
+  tm_layout(main.title = "Multipolygon Map", main.title.size = 0.8)
+
+gbCleaned_map <- tm_shape(gbCleaned) +
+  tm_polygons() +
+  tm_layout(main.title = "Polygon Map", main.title.size = 0.8)
+
+tmap_arrange(gbTransformed_map, gbCleaned_map)
+```
+
+The original multipolygon object contained small disconnected geometries, represented as tiny dots within the map. After converting this object to a polygon object, these small disconnected dots were removed, leaving only the main polygons. Hence, this side by side comparison illustrates how the conversion has streamlined the map by eliminating these small, isolated points, resulting in a cleaner and more coherent geographical representation.
+
+## 5.0 Aspatial Data Wrangling
+
+### 5.1 Importing Aspatial Data
+
+The code chunk below uses read_csv() of readr package to import the csv file into R as a tibble data frame.
+
+```{r}
+tz = read_csv("data/aspatial/FinScope Tanzania 2023_Individual Main Data_FINAL.csv")
+```
+
+The report above shows that the R object used to contain the imported attribute data is called tz, and it is a tibble data frame. Also, the dataset contains 9915 rows and 721 columns.
+
+After importing the file, it is important for us to examine if the file has been imported correctly. To do this, we will use head to display the first couple of rows of tz data frame .
+
+```{r}
+head(tz)
+```
+
+### 5.2 Data Cleanup
+
+Given that the tz tibble data frame contains 721 columns, we first want to cleanup the dataset and only retain the fields that we want to focus our analysis on. Some of the fields we can consider for our analysis are:
+
+1.  Overall Formal: this combines all variables that indicate **formal financial service usage** by an individual
+
+2.  Informal: this combines all variables that indicate **informal financial service usage** by an individual
+
+3.  Age: an individual's age
+
+4.  Land Size: the approx. land size that is used for farming by an individual's household
+
+5.  Is Rural: if an individual's cluster type is Rural
+
+6.  Is Urban: if an individual's cluster type is Urban
+
+7.  Has Bank Usage: this combines all variables that indicate bank service usage by an individual
+
+8.  Has Mobile Usage: this combines all variables that indicate mobile money usage by an individual
+
+9.  Has Insurance Usage: this combines all variables that indicate any insurance usage by an individual
+
+10. Has Investment Usage: this combines all variables that indicate formal investment mechanisms usage by an individual
+
+11. Has Pension Usage: this combines all variables that indicate pension service usage by an individual
+
+As such, we will use the code chunk below to retain the columns that we intend to use for our analysis. Note that we also want to preprocess these fields into a numerical format for GWR, which generally requires numerical inputs.
+
+```{r}
+tzCleaned <- tz %>%
+  select(1,5,13,36,9,714,715,703,702,709,706,705) %>%
+  mutate(
+    land_size = cut(as.numeric(C16), 
+                         breaks = c(0, 5, 10, 20, 50, 100, Inf), 
+                         labels = c("0-5", "5-10", "10-20", "20-50", "50-100", "100+"), 
+                         include.lowest = TRUE),
+    formal_finservice_usage = if_else(OVERALL_FORMAL == "OVERALL_FORMAL", 1, 0),
+    informal_finservice_usage = if_else(INFORMAL == "INFORMAL incl SACCO AND CMG RISK CONTRIBUTIONS", 1, 0),
+    is_rural = if_else(clustertype == "Rural", 1, 0),
+    is_urban = if_else(clustertype == "Urban", 1, 0),
+    has_mobile_usage = if_else(MM == "MM", 1, 0),
+    has_bank_usage = if_else(BANKED == "Banked", 1, 0),
+    has_pension_usage = if_else(PENSION == "PENSION", 1, 0),
+    has_insurance_usage = if_else(INSURANCE == "INSURANCE", 1, 0),
+    has_investment_usage = if_else(FORM_INVESTMENTS == "FORM_INVESTMENTS", 1, 0)
+  ) %>%
+  rename(
+    district = dist_name,
+    age = c8c) %>% 
+  select(1:3,13:22)
+```
+
+Let's do a glimpse to check the tzCleaned data frame:
+
+```{r}
+glimpse(tzCleaned)
+```
+
+Let's also do a summary statistic:
+
+```{r}
+summary(tzCleaned)
+```
+
+We can also further split the data for our analysis:
+
+One that indicates **formal financial service usage** by an individual:
+
+```{r}
+tzFormal <- tzCleaned %>%
+  select(1:5, 7:13) %>%
+  filter(formal_finservice_usage == "1")
+```
+
+Another that indicates **informal financial service usage** by an individual:
+
+```{r}
+tzInformal <- tzCleaned %>%
+  select(1:4, 6:13) %>%
+  filter(informal_finservice_usage == "1")
+```
+
+### 5.3 Performing Relational Join
+
+The code chunk below will be used to update the gbCleaned with the attribute fields of tzCleaned dataframe. This will be performed using the left_join() of dplyr package:
+
+```{r}
+gbTZ <- left_join(gbCleaned, tzCleaned)
+```
+
+We will also perform the relational join for both the **formal** and **informal** indicators.
+
+```{r}
+gbTZ_Formal <- left_join(gbCleaned, tzFormal)
+```
+
+```{r}
+gbTZ_Informal <- left_join(gbCleaned, tzInformal)
+```
+
+We can now check the summary statistics again:
+
+```{r}
+summary(gbTZ)
+```
+
+```{r}
+summary(gbTZ_Formal)
+```
+
+```{r}
+summary(gbTZ_Informal)
+```
+
+Noted that there are 34 SN (serial numbers) that are NA. Hence, we will remove those records from our analysis:
+
+```{r}
+gbTZ <- gbTZ %>%
+  filter(!is.na(SN))
+
+gbTZ_Formal <- gbTZ_Formal %>%
+  filter(!is.na(SN))
+
+gbTZ_Informal <- gbTZ_Informal %>%
+  filter(!is.na(SN))
+```
+
+We can now run the summary statistics again to ensure that the NA records have been removed:
+
+```{r}
+summary(gbTZ)
+```
+
+```{r}
+summary(gbTZ_Formal)
+```
+
+```{r}
+summary(gbTZ_Informal)
+```
+
+## 6.0 Exploratory Data Analysis
+
+### 6.1 Spatial Distribution
+
+In the code chunk below, we aim to visualize the spatial distribution of formal and informal financial service usage across the districts in Tanzania.
+
+```{r}
+tmap_mode("plot")
+
+formalMap <- tm_shape(gbCleaned) +
+  tm_polygons() +
+  tm_shape(gbTZ) +  
+  tm_fill(col = "formal_finservice_usage",
+          alpha = 0.7,
+          style = "quantile",
+          palette = "Blues",
+          title = "Formal Financial Service Usage") +
+  tm_borders() +
+  tm_layout(main.title = "Formal Financial Service Usage by District", main.title.size = 0.8)
+
+informalMap <- tm_shape(gbCleaned) +
+  tm_polygons() +
+  tm_shape(gbTZ) +  
+  tm_fill(col = "informal_finservice_usage",
+          alpha = 0.7,
+          style = "quantile",
+          palette = "Blues",
+          title = "Informal Financial Service Usage") +
+  tm_borders() +
+  tm_layout(main.title = "Informal Financial Service Usage by District", main.title.size = 0.8)
+
+tmap_arrange(formalMap, informalMap)
+```
+
+The darker shades of blue represent higher usage rates for formal and informal financial services, with lighter shades indicating lower usage. This allows for a quick comparison across the districts, helping us to highlight areas that have higher or lower financial service adoption.
+
+### 6.2 Demographic & Land Size
+
+The code chunk below plots the demographic and land distribution in Tanzania. By examining age and land size, we can identify patterns that may influence access to and usage of financial services.
+
+```{r}
+age <- ggplot(gbTZ, aes(x= `age`)) + 
+  geom_histogram(bins=20, color="black", fill="light blue") +
+  labs(title = "Distribution by Age", x = "Age", y = "Count") +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 10))
+
+land <- ggplot(gbTZ, aes(x = land_size)) + 
+  geom_bar(fill = "skyblue", color = "black") +
+  labs(title = "Distribution by Land Size", x = "Land Size", y = "Count") +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 10))
+
+ggarrange(age, land, ncol = 2)
+```
+
+The histogram on the left represents the count distribution across ages, highlighting that majority of them are below the age of 50. The bar chart on the right represents counts across the different land size categories, showing how land size ownership may relate to financial inclusion. For example, majority have land size of 0-5 acres, followed by people who have no lands.
+
+### 6.3 Multiple Histogram Plots - Formal
+
+We will also be drawing a multiple histogram plot, also known as trellis plot, by using ggarrange() of ggpubr package. This will be achieved using the code chunk below, which will create 7 histograms that represent the different independent variables for **formal financial service usage**.
+
+```{r}
+is_rural_1 <- ggplot(gbTZ_Formal, aes(x = as.factor(is_rural))) +   
+  geom_bar(fill = "skyblue") +   
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5, size = 3) + 
+  labs(x = "Rural", y = "Count") +   
+  scale_x_discrete(labels = c("No", "Yes")) +   
+  ylim(0, 7000) + 
+  theme_minimal()
+
+is_urban_1 <- ggplot(gbTZ_Formal, aes(x = as.factor(is_urban))) +   
+  geom_bar(fill = "skyblue") +   
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5, size = 3) + 
+  labs(x = "Urban", y = "Count") +   
+  scale_x_discrete(labels = c("No", "Yes")) +   
+  ylim(0, 7000) + 
+  theme_minimal()
+
+has_mobile_usage_1 <- ggplot(gbTZ_Formal, aes(x = as.factor(has_mobile_usage))) + 
+  geom_bar(fill = "skyblue") +   
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5, size = 3) + 
+  labs(x = "Mobile Banking", y = "Count") +   
+  scale_x_discrete(labels = c("No", "Yes")) +   
+  ylim(0, 7000) + 
+  theme_minimal()
+
+has_bank_usage_1 <- ggplot(gbTZ_Formal, aes(x = as.factor(has_bank_usage))) +   
+  geom_bar(fill = "skyblue") +   
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5, size = 3) + 
+  labs(x = "Bank", y = "Count") +   
+  scale_x_discrete(labels = c("No", "Yes")) +   
+  ylim(0, 7000) + 
+  theme_minimal()
+
+has_pension_usage_1 <- ggplot(gbTZ_Formal, aes(x = as.factor(has_pension_usage))) +
+  geom_bar(fill = "skyblue") +   
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5, size = 3) + 
+  labs(x = "Pension", y = "Count") +   
+  scale_x_discrete(labels = c("No", "Yes")) +   
+  ylim(0, 7000) + 
+  theme_minimal()
+
+has_insurance_usage_1 <- ggplot(gbTZ_Formal, aes(x = as.factor(has_insurance_usage))) +   
+  geom_bar(fill = "skyblue") +   
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5, size = 3) + 
+  labs(x = "Insurance", y = "Count") +   
+  scale_x_discrete(labels = c("No", "Yes")) +   
+  ylim(0, 7000) + 
+  theme_minimal()
+
+has_investment_usage_1 <- ggplot(gbTZ_Formal, aes(x = as.factor(has_investment_usage))) +   
+  geom_bar(fill = "skyblue") +   
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5, size = 3) + 
+  labs(x = "Investment", y = "Count") +   
+  scale_x_discrete(labels = c("No", "Yes")) +   
+  ylim(0, 7000) + 
+  theme_minimal()
+
+ggarrange(
+  is_rural_1, is_urban_1, has_mobile_usage_1, 
+  has_bank_usage_1, has_pension_usage_1, has_insurance_usage_1, has_investment_usage_1,
+  ncol = 4,
+  nrow = 2
+)
+```
+
+The plot above reveals that majority individuals that have formal financial service usage are from the rural cluster, have mobile banking, but not bank usage. They also do not have pension usage, insurance usage, or investment usages.
+
+### 6.4 Multiple Histogram Plots - Informal
+
+Likewise, we will create 7 histograms that represent the different independent variables for **informal financial service usage** in the code chunk below.
+
+```{r}
+is_rural_2 <- ggplot(gbTZ_Informal, aes(x = as.factor(is_rural))) +   
+  geom_bar(fill = "skyblue") +   
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5, size = 3) + 
+  labs(x = "Rural", y = "Count") +   
+  scale_x_discrete(labels = c("No", "Yes")) +   
+  ylim(0, 7000) + 
+  theme_minimal()
+
+is_urban_2 <- ggplot(gbTZ_Informal, aes(x = as.factor(is_urban))) +   
+  geom_bar(fill = "skyblue") +   
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5, size = 3) + 
+  labs(x = "Urban", y = "Count") +   
+  scale_x_discrete(labels = c("No", "Yes")) +   
+  ylim(0, 7000) + 
+  theme_minimal()
+
+has_mobile_usage_2 <- ggplot(gbTZ_Informal, aes(x = as.factor(has_mobile_usage))) +   
+  geom_bar(fill = "skyblue") +   
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5, size = 3) + 
+  labs(x = "Mobile Banking", y = "Count") +   
+  scale_x_discrete(labels = c("No", "Yes")) +   
+  ylim(0, 7000) + 
+  theme_minimal()
+
+has_bank_usage_2 <- ggplot(gbTZ_Informal, aes(x = as.factor(has_bank_usage))) +   
+  geom_bar(fill = "skyblue") +   
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5, size = 3) + 
+  labs(x = "Bank", y = "Count") +   
+  scale_x_discrete(labels = c("No", "Yes")) +   
+  ylim(0, 7000) + 
+  theme_minimal()
+
+has_pension_usage_2 <- ggplot(gbTZ_Informal, aes(x = as.factor(has_pension_usage))) +   
+  geom_bar(fill = "skyblue") +   
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5, size = 3) + 
+  labs(x = "Pension", y = "Count") +   
+  scale_x_discrete(labels = c("No", "Yes")) +   
+  ylim(0, 7000) + 
+  theme_minimal()
+
+has_insurance_usage_2 <- ggplot(gbTZ_Informal, aes(x = as.factor(has_insurance_usage))) +   
+  geom_bar(fill = "skyblue") +   
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5, size = 3) + 
+  labs(x = "Insurance", y = "Count") +   
+  scale_x_discrete(labels = c("No", "Yes")) +   
+  ylim(0, 7000) + 
+  theme_minimal()
+
+has_investment_usage_2 <- ggplot(gbTZ_Informal, aes(x = as.factor(has_investment_usage))) +   
+  geom_bar(fill = "skyblue") +   
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5, size = 3) + 
+  labs(x = "Investment", y = "Count") +   
+  scale_x_discrete(labels = c("No", "Yes")) +   
+  ylim(0, 7000) + 
+  theme_minimal()
+
+ggarrange(
+  is_rural_2, is_urban_2, has_mobile_usage_2, 
+  has_bank_usage_2, has_pension_usage_2, has_insurance_usage_2,
+  has_investment_usage_2,
+  ncol = 4,
+  nrow = 2
+)
+```
+
+The plot above reveals that majority individuals that have informal financial service usage are from the rural cluster, have mobile banking, but not bank usage. They also do not have pension usage, insurance usage, or investment usages. Note that this is similar to our analysis of the plot output for formal financial service usage in the previous section.
+
+## 7.0 Financial Inclusion Modeling using GWmodel
+
+### 7.1 Converting Simple Feature to Spatial Points
+
+We will convert the gbTZ_Formal from a simple feature object into a Spatial Points data frame because spdep package can only process sp conformed spatial data objects. This will be performed using the code chunk below:
+
+```{r}
+gbTZ_FormalSP <- as_Spatial(gbTZ_Formal)
+gbTZ_FormalSP
+```
+
+Next, we will be doing the financial inclusion modelling using GWmodel by using both the fixed and adaptive bandwidth schemes.
+
+### 7.2 Fixed Bandwidth GWR Model
+
+In the code chunk below, bw.gwr() is used to determine the optimal fixed bandwidth to be used in the model.
+
+```{r}
+bw.fixed <- bw.gwr(
+  formula = formal_finservice_usage ~ age + is_rural + is_urban +
+    has_mobile_usage + has_bank_usage + has_pension_usage + 
+    has_insurance_usage + has_investment_usage,
+  data = gbTZ_FormalSP,
+  approach = "CV", 
+  kernel = "gaussian", 
+  adaptive = FALSE, 
+  longlat = FALSE 
+)
+```
+
+The result shows that the recommended bandwidth is 379282.5
+
+Now, we can use the code chunk below to calibrate the gwr model using fixed bandwidth and gaussian kernel.
+
+```{r}
+gwr.fixed <- gwr.basic(
+  formula = formal_finservice_usage ~ age + is_rural + is_urban +
+            has_mobile_usage + has_bank_usage + has_pension_usage +
+            has_insurance_usage + has_investment_usage,
+  data = gbTZ_FormalSP,
+  bw = bw.fixed,
+  kernel = "gaussian", 
+  longlat = FALSE
+)
+```
+
+The code chunk below is used to display the model output.
+
+```{r}
+gwr.fixed
+```
+
+### 7.3 Adaptive Bandwidth GWR Model
+
+Likewise, we will use bw.gwr() to determine the recommended data point to use.
+
+```{r}
+bw.adaptive <- bw.gwr(
+  formula = formal_finservice_usage ~ age + is_rural + is_urban +
+    has_mobile_usage + has_bank_usage + has_pension_usage + 
+    has_insurance_usage + has_investment_usage,
+  data = gbTZ_FormalSP,
+  approach = "CV", 
+  kernel = "gaussian", 
+  adaptive = TRUE, 
+  longlat = FALSE 
+)
+```
+
+The result shows that 4125 is the recommended data point to use.
+
+Now, we will calibrate the gwr model by using adaptive bandwidth and gaussian kernel.
+
+```{r}
+gwr.adaptive <- gwr.basic(
+  formula = formal_finservice_usage ~ age + is_rural + is_urban +
+            has_mobile_usage + has_bank_usage + has_pension_usage +
+            has_insurance_usage + has_investment_usage,
+  data = gbTZ_FormalSP,
+  bw = bw.adaptive,
+  kernel = "gaussian", 
+  adaptive = TRUE,
+  longlat = FALSE
+)
+```
+
+The code chunk below is used to display the model output.
+
+```{r}
+gwr.adaptive
+```
+
+x

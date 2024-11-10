@@ -1,0 +1,2013 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Bhairavi Vairavelu">
+<meta name="dcterms.date" content="2024-10-21">
+
+<title>ISSS626-GAA - Take-Home Exercise 03A</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">ISSS626-GAA</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-hands-on-exercise" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Hands-On Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-exercise">    
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01A.html">
+ <span class="dropdown-text">Hands-On Exercise 01A</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01B.html">
+ <span class="dropdown-text">Hands-On Exercise 01B</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02A.html">
+ <span class="dropdown-text">Hands-On Exercise 02A</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02B.html">
+ <span class="dropdown-text">Hands-On Exercise 02B</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html">
+ <span class="dropdown-text">Hands-On Exercise 03</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html">
+ <span class="dropdown-text">Hands-On Exercise 04</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05A/Hands-on_Ex05A.html">
+ <span class="dropdown-text">Hands-On Exercise 05A</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05B/Hands-on_Ex05B.html">
+ <span class="dropdown-text">Hands-On Exercise 05B</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html">
+ <span class="dropdown-text">Hands-On Exercise 06</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html">
+ <span class="dropdown-text">Hands-On Exercise 07</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html">
+ <span class="dropdown-text">Hands-On Exercise 08</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09.html">
+ <span class="dropdown-text">Hands-On Exercise 09</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex10/Hands-on_Ex10A/Hands-on_Ex10A.html">
+ <span class="dropdown-text">Hands-On Exercise 10A</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex10/Hands-on_Ex10B/Hands-on_Ex10B.html">
+ <span class="dropdown-text">Hands-On Exercise 10B</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-in-class-exercise" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">In-Class Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercise">    
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-Class_Ex01/In-Class_Ex01_1.html">
+ <span class="dropdown-text">In-Class Exercise 01</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-Class_Ex02/In-Class_Ex02.html">
+ <span class="dropdown-text">In-Class Exercise 02</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-Class_Ex03/In-Class_Ex03.html">
+ <span class="dropdown-text">In-Class Exercise 03</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-Class_Ex04/In-Class_Ex04.html">
+ <span class="dropdown-text">In-Class Exercise 04</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-Class_Ex05/In-Class_Ex05.html">
+ <span class="dropdown-text">In-Class Exercise 05</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-Class_Ex06/In-Class_Ex06.html">
+ <span class="dropdown-text">In-Class Exercise 06</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-Class_Ex07/In-Class_Ex07.html">
+ <span class="dropdown-text">In-Class Exercise 07</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-Class_Ex08/In-Class_Ex08.html">
+ <span class="dropdown-text">In-Class Exercise 08</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-Class_Ex10/In-Class_Ex10.html">
+ <span class="dropdown-text">In-Class Exercise 10</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-take-home-exercise" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Take-Home Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-take-home-exercise">    
+        <li>
+    <a class="dropdown-item" href="../../Take-Home_Ex/Take-Home_Ex01/Take-Home_Ex1D.html">
+ <span class="dropdown-text">Take-Home Exercise 01</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Take-Home_Ex/Take-Home_Ex02/Take-Home_Ex02D.html">
+ <span class="dropdown-text">Take-Home Exercise 02</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Take-Home_Ex/Take-Home_Ex03/Take-Home_Ex03A2.html">
+ <span class="dropdown-text">Take-Home Exercise 03</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#modelling-geography-of-financial-inclusion-with-geographically-weighted-methods" id="toc-modelling-geography-of-financial-inclusion-with-geographically-weighted-methods" class="nav-link active" data-scroll-target="#modelling-geography-of-financial-inclusion-with-geographically-weighted-methods"><strong>Modelling Geography of Financial Inclusion with Geographically Weighted Methods</strong></a>
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">1.0 Overview</a>
+  <ul>
+  <li><a href="#tasks" id="toc-tasks" class="nav-link" data-scroll-target="#tasks">1.1 Tasks</a></li>
+  <li><a href="#study-area" id="toc-study-area" class="nav-link" data-scroll-target="#study-area">1.2 Study Area</a></li>
+  <li><a href="#analysis-method" id="toc-analysis-method" class="nav-link" data-scroll-target="#analysis-method">1.3 Analysis Method</a></li>
+  </ul></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">2.0 Data</a></li>
+  <li><a href="#installing-and-launching-packages" id="toc-installing-and-launching-packages" class="nav-link" data-scroll-target="#installing-and-launching-packages">3.0 Installing and Launching Packages</a></li>
+  <li><a href="#geospatial-data-wrangling" id="toc-geospatial-data-wrangling" class="nav-link" data-scroll-target="#geospatial-data-wrangling">4.0 Geospatial Data Wrangling</a>
+  <ul>
+  <li><a href="#importing-geospatial-data" id="toc-importing-geospatial-data" class="nav-link" data-scroll-target="#importing-geospatial-data">4.1 Importing Geospatial Data</a></li>
+  <li><a href="#updating-crs-information" id="toc-updating-crs-information" class="nav-link" data-scroll-target="#updating-crs-information">4.2 Updating CRS Information</a></li>
+  <li><a href="#converting-multipolygon-to-polygon" id="toc-converting-multipolygon-to-polygon" class="nav-link" data-scroll-target="#converting-multipolygon-to-polygon">4.3 Converting Multipolygon to Polygon</a></li>
+  </ul></li>
+  <li><a href="#aspatial-data-wrangling" id="toc-aspatial-data-wrangling" class="nav-link" data-scroll-target="#aspatial-data-wrangling">5.0 Aspatial Data Wrangling</a>
+  <ul>
+  <li><a href="#importing-aspatial-data" id="toc-importing-aspatial-data" class="nav-link" data-scroll-target="#importing-aspatial-data">5.1 Importing Aspatial Data</a></li>
+  <li><a href="#data-cleanup" id="toc-data-cleanup" class="nav-link" data-scroll-target="#data-cleanup">5.2 Data Cleanup</a></li>
+  <li><a href="#performing-relational-join" id="toc-performing-relational-join" class="nav-link" data-scroll-target="#performing-relational-join">5.3 Performing Relational Join</a></li>
+  </ul></li>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">6.0 Exploratory Data Analysis</a>
+  <ul>
+  <li><a href="#spatial-distribution" id="toc-spatial-distribution" class="nav-link" data-scroll-target="#spatial-distribution">6.1 Spatial Distribution</a></li>
+  <li><a href="#demographic-land-size" id="toc-demographic-land-size" class="nav-link" data-scroll-target="#demographic-land-size">6.2 Demographic &amp; Land Size</a></li>
+  <li><a href="#multiple-histogram-plots---formal" id="toc-multiple-histogram-plots---formal" class="nav-link" data-scroll-target="#multiple-histogram-plots---formal">6.3 Multiple Histogram Plots - Formal</a></li>
+  <li><a href="#multiple-histogram-plots---informal" id="toc-multiple-histogram-plots---informal" class="nav-link" data-scroll-target="#multiple-histogram-plots---informal">6.4 Multiple Histogram Plots - Informal</a></li>
+  </ul></li>
+  <li><a href="#financial-inclusion-modeling-using-gwmodel" id="toc-financial-inclusion-modeling-using-gwmodel" class="nav-link" data-scroll-target="#financial-inclusion-modeling-using-gwmodel">7.0 Financial Inclusion Modeling using GWmodel</a>
+  <ul>
+  <li><a href="#converting-simple-feature-to-spatial-points" id="toc-converting-simple-feature-to-spatial-points" class="nav-link" data-scroll-target="#converting-simple-feature-to-spatial-points">7.1 Converting Simple Feature to Spatial Points</a></li>
+  <li><a href="#fixed-bandwidth-gwr-model" id="toc-fixed-bandwidth-gwr-model" class="nav-link" data-scroll-target="#fixed-bandwidth-gwr-model">7.2 Fixed Bandwidth GWR Model</a></li>
+  <li><a href="#adaptive-bandwidth-gwr-model" id="toc-adaptive-bandwidth-gwr-model" class="nav-link" data-scroll-target="#adaptive-bandwidth-gwr-model">7.3 Adaptive Bandwidth GWR Model</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Take-Home Exercise 03A</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Bhairavi Vairavelu </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 21, 2024</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">November 11, 2024</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="modelling-geography-of-financial-inclusion-with-geographically-weighted-methods" class="level1">
+<h1><strong>Modelling Geography of Financial Inclusion with Geographically Weighted Methods</strong></h1>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">1.0 Overview</h2>
+<p>Financial inclusion is the availability and equality of opportunities to access financial services. It refers to processes by which individuals and businesses can access appropriate, affordable, and timely financial products and services. These financial products and services include banking, loan, equity, and insurance products. It provides paths to enhance inclusiveness in economic growth by enabling the unbanked population to access the means for savings, investments, and insurance towards improving household income and reducing income inequality.</p>
+<section id="tasks" class="level3">
+<h3 class="anchored" data-anchor-id="tasks">1.1 Tasks</h3>
+<p>In this exercise, we will be building an explanatory model to determine factors affecting financial inclusion by using geographical weighted regression methods.</p>
+</section>
+<section id="study-area" class="level3">
+<h3 class="anchored" data-anchor-id="study-area">1.2 Study Area</h3>
+<p>We will be focusing on the FinScope Tanzania 2023 dataset for this exercise, and conduct our analysis at the district level.</p>
+</section>
+<section id="analysis-method" class="level3">
+<h3 class="anchored" data-anchor-id="analysis-method">1.3 Analysis Method</h3>
+<p>Geographically Weighted Regression (GWR) is the spatial statistical technique that we will use in this exercise. GWR takes non-stationary variables into consideration, and models the local relationships between these independent variables, and an outcome of interest. For this exercise, the dependent variable is formal_finservice_usage, and the independent variables are age, is_rural, is_urban, has_mobile_usage, has_bank_usage, has pension_usage, has_insurance_usage, has_investment usage.</p>
+</section>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">2.0 Data</h2>
+<p>For the purpose of this exercise, we will be using two datasets:</p>
+<ul>
+<li><p>FinScope Tanzania 2023, which contains individual survey interview data</p></li>
+<li><p>Tanzania geoBoundaries, which is a district level boundary GIS data</p></li>
+</ul>
+</section>
+<section id="installing-and-launching-packages" class="level2">
+<h2 class="anchored" data-anchor-id="installing-and-launching-packages">3.0 Installing and Launching Packages</h2>
+<p>We intend to utilize the following R packages in this exercise:</p>
+<ul>
+<li><p><strong>olsrr</strong>, for building OLS and performing diagnostic tests</p></li>
+<li><p><strong>corrplot</strong>, for multivariate data visualization and analysis</p></li>
+<li><p><strong>ggpubr</strong>, to customize ggplot2-based plots</p></li>
+<li><p><strong>sf</strong>, for spatial data handling</p></li>
+<li><p><strong>spdep</strong>, to create spatial weights matrix objects from polygon</p></li>
+<li><p><strong>GWmodel</strong>, for calibrating geographically weighted family of models</p></li>
+<li><p><strong>tmap</strong>, for visualizing geospatial objects</p></li>
+<li><p><strong>tidyverse</strong>, for attribute data handling,</p></li>
+<li><p><strong>gtsummary</strong>, to create analytical and summary tables</p></li>
+<li><p><strong>ggstatsplot</strong>, to create graphics with details from statistical tests included in the plots</p></li>
+</ul>
+<p>The code chunk below can be used to install and launch the above-mentioned R packages:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(olsrr, corrplot, ggpubr, sf, spdep, GWmodel, tmap, tidyverse, gtsummary, ggstatsplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>also installing the dependency 'glue'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.2:
+  cannot open URL 'http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.2/PACKAGES'</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  There are binary versions available but the source versions are later:
+          binary source needs_compilation
+glue       1.7.0  1.8.0              TRUE
+gtsummary  1.7.2  2.0.3             FALSE
+
+  Binaries will be installed
+package 'glue' successfully unpacked and MD5 sums checked</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: cannot remove prior installation of package 'glue'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file.copy(savedcopy, lib, recursive = TRUE): problem copying
+C:\R-4.2.2\library\00LOCK\glue\libs\x64\glue.dll to
+C:\R-4.2.2\library\glue\libs\x64\glue.dll: Permission denied</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: restored 'glue'</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+The downloaded binary packages are in
+    C:\Users\bhair\AppData\Local\Temp\Rtmpkz7hFM\downloaded_packages</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>installing the source package 'gtsummary'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in utils::install.packages(package, ...): installation of package
+'gtsummary' had non-zero exit status</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in p_install(package, character.only = TRUE, ...):</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+logical.return = TRUE, : there is no package called 'gtsummary'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in pacman::p_load(olsrr, corrplot, ggpubr, sf, spdep, GWmodel, tmap, : Failed to install/load:
+gtsummary</code></pre>
+</div>
+</div>
+</section>
+<section id="geospatial-data-wrangling" class="level2">
+<h2 class="anchored" data-anchor-id="geospatial-data-wrangling">4.0 Geospatial Data Wrangling</h2>
+<section id="importing-geospatial-data" class="level3">
+<h3 class="anchored" data-anchor-id="importing-geospatial-data">4.1 Importing Geospatial Data</h3>
+<p>The geospatial data used in this exercise, the Tanzania geoBoundaries district level data, is in ESRI shapefile format. The code chunk below imports this shapefile by using st_read() of sf packages.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>gb <span class="ot">=</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>, <span class="at">layer =</span> <span class="st">"geoBoundaries-TZA-ADM2"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">district =</span> shapeName)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `geoBoundaries-TZA-ADM2' from data source 
+  `C:\byebhai8\ISSS626-GeospatialAnalytics\Take-Home_Ex\Take-Home_Ex03\data\geospatial' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 170 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 29.58953 ymin: -11.76235 xmax: 40.44473 ymax: -0.983143
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
+<p>The report above shows that the R object used to contain the imported shapefile is called gb, and it is a simple feature object. The geometry type is multipolygon, representing the geographic boundaries of districts in Tanzania. The CRS is WGS 84. with no specific EPSG code provided in the data set. The dataset contains 170 rows and 5 columns.</p>
+</section>
+<section id="updating-crs-information" class="level3">
+<h3 class="anchored" data-anchor-id="updating-crs-information">4.2 Updating CRS Information</h3>
+<p>It is noted that the correct EPSG code for Tanzania is EPSG: <strong>21037</strong>, which can be verified here: <a href="https://epsg.io/21037#:~:text=Scope%3A%20Engineering%20survey%2C%20topographic%20mapping,east%20of%2036%C2%B0E.">EPSG.io</a></p>
+<p>As such, we will use the code chunk below to update the newly imported gb simple feature data frame with the correct EPSG code.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gbTransformed <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(gb, <span class="dv">21037</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>After transforming the projection metadata, we can verify the projection of the newly transformed gbTransformed by using st_crs() of sf package. This can be achieved by using the code chunk below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(gbTransformed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Coordinate Reference System:
+  User input: EPSG:21037 
+  wkt:
+PROJCRS["Arc 1960 / UTM zone 37S",
+    BASEGEOGCRS["Arc 1960",
+        DATUM["Arc 1960",
+            ELLIPSOID["Clarke 1880 (RGS)",6378249.145,293.465,
+                LENGTHUNIT["metre",1]]],
+        PRIMEM["Greenwich",0,
+            ANGLEUNIT["degree",0.0174532925199433]],
+        ID["EPSG",4210]],
+    CONVERSION["UTM zone 37S",
+        METHOD["Transverse Mercator",
+            ID["EPSG",9807]],
+        PARAMETER["Latitude of natural origin",0,
+            ANGLEUNIT["degree",0.0174532925199433],
+            ID["EPSG",8801]],
+        PARAMETER["Longitude of natural origin",39,
+            ANGLEUNIT["degree",0.0174532925199433],
+            ID["EPSG",8802]],
+        PARAMETER["Scale factor at natural origin",0.9996,
+            SCALEUNIT["unity",1],
+            ID["EPSG",8805]],
+        PARAMETER["False easting",500000,
+            LENGTHUNIT["metre",1],
+            ID["EPSG",8806]],
+        PARAMETER["False northing",10000000,
+            LENGTHUNIT["metre",1],
+            ID["EPSG",8807]]],
+    CS[Cartesian,2],
+        AXIS["(E)",east,
+            ORDER[1],
+            LENGTHUNIT["metre",1]],
+        AXIS["(N)",north,
+            ORDER[2],
+            LENGTHUNIT["metre",1]],
+    USAGE[
+        SCOPE["Engineering survey, topographic mapping."],
+        AREA["Kenya - south of equator and east of 36°E; Tanzania - east of 36°E."],
+        BBOX[-11.75,36,0,41.6]],
+    ID["EPSG",21037]]</code></pre>
+</div>
+</div>
+<p>Note that the EPSG is indicated as 21037 now. We can now use the st_bbox() of sf package to reveal the extent of gbTransformed, as shown in the code chunk below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_bbox</span>(gbTransformed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     xmin      ymin      xmax      ymax 
+-548109.3 8698827.9  658089.6 9890498.9 </code></pre>
+</div>
+</div>
+<p>This bounding box basically provides us with the geographic extent of the Tanzania data (gbTransformed) in terms of projection, and this will be used in our visualizations for further spatial operations.</p>
+</section>
+<section id="converting-multipolygon-to-polygon" class="level3">
+<h3 class="anchored" data-anchor-id="converting-multipolygon-to-polygon">4.3 Converting Multipolygon to Polygon</h3>
+<p>In the code chunk below, we can use tmap package to plot the polygons in gbTransformed data to visualize the geographical boundaries of the districts in Tanzania.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(gbTransformed) <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Multipolygon Map"</span>, <span class="at">main.title.size =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex03A2_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>However, it is noted that the gbTransformed simple feature data frame contains the geometry object in multipolygon type. However, we require the data to be of polygon type instead for our analysis. As such, we will use convert multipolygon to polygon.</p>
+<p>The first step would be to calculate the area of each polygon, which can be done using the code chunk below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>gbPolygon <span class="ot">&lt;-</span> gbTransformed <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_cast</span>(<span class="st">"POLYGON"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">area =</span> <span class="fu">st_area</span>(.))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in st_cast.sf(., "POLYGON"): repeating attributes for all
+sub-geometries for which they may not be constant</code></pre>
+</div>
+</div>
+<p>Next, we will group the unique districts together and select the largest polygon by area using the code chunk below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>gbCleaned <span class="ot">&lt;-</span> gbPolygon <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(district) <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(area <span class="sc">==</span> <span class="fu">max</span>(area)) <span class="sc">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>area) <span class="sc">%&gt;%</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(district)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can run our visualization again to verify how the polygons plot now in the map:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(gbCleaned) <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Polygon Map"</span>, <span class="at">main.title.size =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex03A2_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To have a better comparison, we can plot both the multipolygon map and polygon map side by side:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>gbTransformed_map <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(gbTransformed) <span class="sc">+</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Multipolygon Map"</span>, <span class="at">main.title.size =</span> <span class="fl">0.8</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>gbCleaned_map <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(gbCleaned) <span class="sc">+</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Polygon Map"</span>, <span class="at">main.title.size =</span> <span class="fl">0.8</span>)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(gbTransformed_map, gbCleaned_map)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex03A2_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The original multipolygon object contained small disconnected geometries, represented as tiny dots within the map. After converting this object to a polygon object, these small disconnected dots were removed, leaving only the main polygons. Hence, this side by side comparison illustrates how the conversion has streamlined the map by eliminating these small, isolated points, resulting in a cleaner and more coherent geographical representation.</p>
+</section>
+</section>
+<section id="aspatial-data-wrangling" class="level2">
+<h2 class="anchored" data-anchor-id="aspatial-data-wrangling">5.0 Aspatial Data Wrangling</h2>
+<section id="importing-aspatial-data" class="level3">
+<h3 class="anchored" data-anchor-id="importing-aspatial-data">5.1 Importing Aspatial Data</h3>
+<p>The code chunk below uses read_csv() of readr package to import the csv file into R as a tibble data frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>tz <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/FinScope Tanzania 2023_Individual Main Data_FINAL.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details,
+e.g.:
+  dat &lt;- vroom(...)
+  problems(dat)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 9915 Columns: 721
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (703): reg_name, dist_name, ward_code1, ward_name, ea_code, clustertype,...
+dbl  (13): SN, reg_code, dist_code, c8c, D6_1_1, D6_1_2, D6_1_3, gov_3, cmg4...
+lgl   (5): e_5_1, e_5_2, g_5_2__5, g_5_2__13, serv2_4
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>The report above shows that the R object used to contain the imported attribute data is called tz, and it is a tibble data frame. Also, the dataset contains 9915 rows and 721 columns.</p>
+<p>After importing the file, it is important for us to examine if the file has been imported correctly. To do this, we will use head to display the first couple of rows of tz data frame .</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tz)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 721
+     SN reg_name      reg_code dist_code dist_name ward_code1 ward_name ea_code
+  &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;  
+1  4529 Mwanza              19         7 Misungwi  251        Mondo     004    
+2  4245 Kagera              18         7 Missenyi  011        Kakunyu   001    
+3  8149 Mbeya               12         3 Kyela     283        Nkuyu     301    
+4  6763 Dodoma               1         3 Kongwa    123        Kibaigwa  301    
+5  7805 Dar es Salaam        7         2 Ilala     252        Majohe    029    
+6  8232 Singida             13         1 Iramba    053        Shelui    301    
+# ℹ 713 more variables: clustertype &lt;chr&gt;, c1 &lt;chr&gt;, c2 &lt;chr&gt;, c7 &lt;chr&gt;,
+#   c8c &lt;dbl&gt;, c9 &lt;chr&gt;, c10 &lt;chr&gt;, c11 &lt;chr&gt;, c8n_a1 &lt;chr&gt;, c8n_a2 &lt;chr&gt;,
+#   c8n_b1 &lt;chr&gt;, c8n_b2 &lt;chr&gt;, c8n_c1 &lt;chr&gt;, c8n_c2 &lt;chr&gt;, c8n_d1 &lt;chr&gt;,
+#   c8n_d2 &lt;chr&gt;, c8n_e1 &lt;chr&gt;, c8n_e2 &lt;chr&gt;, c8n_f1 &lt;chr&gt;, c8n_f2 &lt;chr&gt;,
+#   c12_1 &lt;chr&gt;, c12_2 &lt;chr&gt;, c12_3 &lt;chr&gt;, c12_4 &lt;chr&gt;, c22 &lt;chr&gt;, c14 &lt;chr&gt;,
+#   c15 &lt;chr&gt;, C16 &lt;chr&gt;, c16_unit &lt;chr&gt;, c17_1__1 &lt;chr&gt;, c17_1__2 &lt;chr&gt;,
+#   c17_1__3 &lt;chr&gt;, c17_1__4 &lt;chr&gt;, c17_1__5 &lt;chr&gt;, c17_1__6 &lt;chr&gt;, …</code></pre>
+</div>
+</div>
+</section>
+<section id="data-cleanup" class="level3">
+<h3 class="anchored" data-anchor-id="data-cleanup">5.2 Data Cleanup</h3>
+<p>Given that the tz tibble data frame contains 721 columns, we first want to cleanup the dataset and only retain the fields that we want to focus our analysis on. Some of the fields we can consider for our analysis are:</p>
+<ol type="1">
+<li><p>Overall Formal: this combines all variables that indicate <strong>formal financial service usage</strong> by an individual</p></li>
+<li><p>Informal: this combines all variables that indicate <strong>informal financial service usage</strong> by an individual</p></li>
+<li><p>Age: an individual’s age</p></li>
+<li><p>Land Size: the approx. land size that is used for farming by an individual’s household</p></li>
+<li><p>Is Rural: if an individual’s cluster type is Rural</p></li>
+<li><p>Is Urban: if an individual’s cluster type is Urban</p></li>
+<li><p>Has Bank Usage: this combines all variables that indicate bank service usage by an individual</p></li>
+<li><p>Has Mobile Usage: this combines all variables that indicate mobile money usage by an individual</p></li>
+<li><p>Has Insurance Usage: this combines all variables that indicate any insurance usage by an individual</p></li>
+<li><p>Has Investment Usage: this combines all variables that indicate formal investment mechanisms usage by an individual</p></li>
+<li><p>Has Pension Usage: this combines all variables that indicate pension service usage by an individual</p></li>
+</ol>
+<p>As such, we will use the code chunk below to retain the columns that we intend to use for our analysis. Note that we also want to preprocess these fields into a numerical format for GWR, which generally requires numerical inputs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>tzCleaned <span class="ot">&lt;-</span> tz <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">13</span>,<span class="dv">36</span>,<span class="dv">9</span>,<span class="dv">714</span>,<span class="dv">715</span>,<span class="dv">703</span>,<span class="dv">702</span>,<span class="dv">709</span>,<span class="dv">706</span>,<span class="dv">705</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">land_size =</span> <span class="fu">cut</span>(<span class="fu">as.numeric</span>(C16), </span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="cn">Inf</span>), </span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"0-5"</span>, <span class="st">"5-10"</span>, <span class="st">"10-20"</span>, <span class="st">"20-50"</span>, <span class="st">"50-100"</span>, <span class="st">"100+"</span>), </span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">include.lowest =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">formal_finservice_usage =</span> <span class="fu">if_else</span>(OVERALL_FORMAL <span class="sc">==</span> <span class="st">"OVERALL_FORMAL"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">informal_finservice_usage =</span> <span class="fu">if_else</span>(INFORMAL <span class="sc">==</span> <span class="st">"INFORMAL incl SACCO AND CMG RISK CONTRIBUTIONS"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">is_rural =</span> <span class="fu">if_else</span>(clustertype <span class="sc">==</span> <span class="st">"Rural"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">is_urban =</span> <span class="fu">if_else</span>(clustertype <span class="sc">==</span> <span class="st">"Urban"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">has_mobile_usage =</span> <span class="fu">if_else</span>(MM <span class="sc">==</span> <span class="st">"MM"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">has_bank_usage =</span> <span class="fu">if_else</span>(BANKED <span class="sc">==</span> <span class="st">"Banked"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">has_pension_usage =</span> <span class="fu">if_else</span>(PENSION <span class="sc">==</span> <span class="st">"PENSION"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">has_insurance_usage =</span> <span class="fu">if_else</span>(INSURANCE <span class="sc">==</span> <span class="st">"INSURANCE"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">has_investment_usage =</span> <span class="fu">if_else</span>(FORM_INVESTMENTS <span class="sc">==</span> <span class="st">"FORM_INVESTMENTS"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">district =</span> dist_name,</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">age =</span> c8c) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,<span class="dv">13</span><span class="sc">:</span><span class="dv">22</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `land_size = cut(...)`.
+Caused by warning in `cut()`:
+! NAs introduced by coercion</code></pre>
+</div>
+</div>
+<p>Let’s do a glimpse to check the tzCleaned data frame:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(tzCleaned)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 9,915
+Columns: 13
+$ SN                        &lt;dbl&gt; 4529, 4245, 8149, 6763, 7805, 8232, 9411, 70…
+$ district                  &lt;chr&gt; "Misungwi", "Missenyi", "Kyela", "Kongwa", "…
+$ age                       &lt;dbl&gt; 47, 63, 74, 29, 53, 39, 24, 55, 45, 56, 51, …
+$ land_size                 &lt;fct&gt; 0-5, 0-5, NA, NA, 0-5, 0-5, 0-5, 0-5, 0-5, 5…
+$ formal_finservice_usage   &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
+$ informal_finservice_usage &lt;dbl&gt; 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
+$ is_rural                  &lt;dbl&gt; 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,…
+$ is_urban                  &lt;dbl&gt; 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,…
+$ has_mobile_usage          &lt;dbl&gt; 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
+$ has_bank_usage            &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,…
+$ has_pension_usage         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ has_insurance_usage       &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ has_investment_usage      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</code></pre>
+</div>
+</div>
+<p>Let’s also do a summary statistic:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(tzCleaned)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       SN         district              age          land_size   
+ Min.   :   1   Length:9915        Min.   : 16.00   0-5   :5788  
+ 1st Qu.:2480   Class :character   1st Qu.: 27.00   5-10  : 687  
+ Median :4958   Mode  :character   Median : 37.00   10-20 : 248  
+ Mean   :4958                      Mean   : 39.68   20-50 : 110  
+ 3rd Qu.:7436                      3rd Qu.: 50.00   50-100:  22  
+ Max.   :9915                      Max.   :100.00   100+  :  39  
+                                                    NA's  :3021  
+ formal_finservice_usage informal_finservice_usage    is_rural     
+ Min.   :0.0000          Min.   :0.0000            Min.   :0.0000  
+ 1st Qu.:1.0000          1st Qu.:0.0000            1st Qu.:0.0000  
+ Median :1.0000          Median :1.0000            Median :1.0000  
+ Mean   :0.7531          Mean   :0.5364            Mean   :0.6655  
+ 3rd Qu.:1.0000          3rd Qu.:1.0000            3rd Qu.:1.0000  
+ Max.   :1.0000          Max.   :1.0000            Max.   :1.0000  
+                                                                   
+    is_urban      has_mobile_usage has_bank_usage   has_pension_usage
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.00000  
+ 1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.00000  
+ Median :0.0000   Median :1.0000   Median :0.0000   Median :0.00000  
+ Mean   :0.3345   Mean   :0.7106   Mean   :0.2052   Mean   :0.04034  
+ 3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:0.0000   3rd Qu.:0.00000  
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.00000  
+                                                                     
+ has_insurance_usage has_investment_usage
+ Min.   :0.000       Min.   :0.00000     
+ 1st Qu.:0.000       1st Qu.:0.00000     
+ Median :0.000       Median :0.00000     
+ Mean   :0.103       Mean   :0.04246     
+ 3rd Qu.:0.000       3rd Qu.:0.00000     
+ Max.   :1.000       Max.   :1.00000     
+                                         </code></pre>
+</div>
+</div>
+<p>We can also further split the data for our analysis:</p>
+<p>One that indicates <strong>formal financial service usage</strong> by an individual:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>tzFormal <span class="ot">&lt;-</span> tzCleaned <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">7</span><span class="sc">:</span><span class="dv">13</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(formal_finservice_usage <span class="sc">==</span> <span class="st">"1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Another that indicates <strong>informal financial service usage</strong> by an individual:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>tzInformal <span class="ot">&lt;-</span> tzCleaned <span class="sc">%&gt;%</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">6</span><span class="sc">:</span><span class="dv">13</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(informal_finservice_usage <span class="sc">==</span> <span class="st">"1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="performing-relational-join" class="level3">
+<h3 class="anchored" data-anchor-id="performing-relational-join">5.3 Performing Relational Join</h3>
+<p>The code chunk below will be used to update the gbCleaned with the attribute fields of tzCleaned dataframe. This will be performed using the left_join() of dplyr package:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>gbTZ <span class="ot">&lt;-</span> <span class="fu">left_join</span>(gbCleaned, tzCleaned)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(district)`</code></pre>
+</div>
+</div>
+<p>We will also perform the relational join for both the <strong>formal</strong> and <strong>informal</strong> indicators.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>gbTZ_Formal <span class="ot">&lt;-</span> <span class="fu">left_join</span>(gbCleaned, tzFormal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(district)`</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>gbTZ_Informal <span class="ot">&lt;-</span> <span class="fu">left_join</span>(gbCleaned, tzInformal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(district)`</code></pre>
+</div>
+</div>
+<p>We can now check the summary statistics again:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gbTZ)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   district                  geometry          SN            age        
+ Length:9076        POLYGON      :9076   Min.   :   1   Min.   : 16.00  
+ Class :character   epsg:21037   :   0   1st Qu.:2385   1st Qu.: 27.00  
+ Mode  :character   +proj=utm ...:   0   Median :4664   Median : 37.00  
+                                         Mean   :4814   Mean   : 39.73  
+                                         3rd Qu.:7316   3rd Qu.: 50.00  
+                                         Max.   :9915   Max.   :100.00  
+                                         NA's   :34     NA's   :34      
+  land_size    formal_finservice_usage informal_finservice_usage
+ 0-5   :5482   Min.   :0.000           Min.   :0.0000           
+ 5-10  : 656   1st Qu.:0.000           1st Qu.:0.0000           
+ 10-20 : 237   Median :1.000           Median :1.0000           
+ 20-50 : 103   Mean   :0.741           Mean   :0.5309           
+ 50-100:  19   3rd Qu.:1.000           3rd Qu.:1.0000           
+ 100+  :  35   Max.   :1.000           Max.   :1.0000           
+ NA's  :2544   NA's   :34              NA's   :34               
+    is_rural         is_urban      has_mobile_usage has_bank_usage  
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+ Median :1.0000   Median :0.0000   Median :1.0000   Median :0.0000  
+ Mean   :0.6984   Mean   :0.3016   Mean   :0.6971   Mean   :0.1954  
+ 3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:0.0000  
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  
+ NA's   :34       NA's   :34       NA's   :34       NA's   :34      
+ has_pension_usage has_insurance_usage has_investment_usage
+ Min.   :0.00000   Min.   :0.00000     Min.   :0.00000     
+ 1st Qu.:0.00000   1st Qu.:0.00000     1st Qu.:0.00000     
+ Median :0.00000   Median :0.00000     Median :0.00000     
+ Mean   :0.03771   Mean   :0.09766     Mean   :0.03959     
+ 3rd Qu.:0.00000   3rd Qu.:0.00000     3rd Qu.:0.00000     
+ Max.   :1.00000   Max.   :1.00000     Max.   :1.00000     
+ NA's   :34        NA's   :34          NA's   :34          </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gbTZ_Formal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   district                  geometry          SN            age        
+ Length:6734        POLYGON      :6734   Min.   :   1   Min.   : 16.00  
+ Class :character   epsg:21037   :   0   1st Qu.:2427   1st Qu.: 28.00  
+ Mode  :character   +proj=utm ...:   0   Median :5100   Median : 37.00  
+                                         Mean   :5076   Mean   : 39.96  
+                                         3rd Qu.:7761   3rd Qu.: 50.00  
+                                         Max.   :9915   Max.   :100.00  
+                                         NA's   :34     NA's   :34      
+  land_size    formal_finservice_usage    is_rural         is_urban     
+ 0-5   :3899   Min.   :1               Min.   :0.0000   Min.   :0.0000  
+ 5-10  : 462   1st Qu.:1               1st Qu.:0.0000   1st Qu.:0.0000  
+ 10-20 : 181   Median :1               Median :1.0000   Median :0.0000  
+ 20-50 :  83   Mean   :1               Mean   :0.6427   Mean   :0.3573  
+ 50-100:  11   3rd Qu.:1               3rd Qu.:1.0000   3rd Qu.:1.0000  
+ 100+  :  26   Max.   :1               Max.   :1.0000   Max.   :1.0000  
+ NA's  :2072   NA's   :34              NA's   :34       NA's   :34      
+ has_mobile_usage has_bank_usage   has_pension_usage has_insurance_usage
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.0000    Min.   :0.0000     
+ 1st Qu.:1.0000   1st Qu.:0.0000   1st Qu.:0.0000    1st Qu.:0.0000     
+ Median :1.0000   Median :0.0000   Median :0.0000    Median :0.0000     
+ Mean   :0.9407   Mean   :0.2637   Mean   :0.0509    Mean   :0.1318     
+ 3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:0.0000    3rd Qu.:0.0000     
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.0000    Max.   :1.0000     
+ NA's   :34       NA's   :34       NA's   :34        NA's   :34         
+ has_investment_usage
+ Min.   :0.00000     
+ 1st Qu.:0.00000     
+ Median :0.00000     
+ Mean   :0.05343     
+ 3rd Qu.:0.00000     
+ Max.   :1.00000     
+ NA's   :34          </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gbTZ_Informal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   district                  geometry          SN            age        
+ Length:4834        POLYGON      :4834   Min.   :   1   Min.   : 16.00  
+ Class :character   epsg:21037   :   0   1st Qu.:2531   1st Qu.: 28.00  
+ Mode  :character   +proj=utm ...:   0   Median :5214   Median : 36.00  
+                                         Mean   :5098   Mean   : 38.66  
+                                         3rd Qu.:7676   3rd Qu.: 48.00  
+                                         Max.   :9915   Max.   :100.00  
+                                         NA's   :34     NA's   :34      
+  land_size    informal_finservice_usage    is_rural         is_urban     
+ 0-5   :2887   Min.   :1                 Min.   :0.0000   Min.   :0.0000  
+ 5-10  : 334   1st Qu.:1                 1st Qu.:0.0000   1st Qu.:0.0000  
+ 10-20 : 138   Median :1                 Median :1.0000   Median :0.0000  
+ 20-50 :  65   Mean   :1                 Mean   :0.6675   Mean   :0.3325  
+ 50-100:   8   3rd Qu.:1                 3rd Qu.:1.0000   3rd Qu.:1.0000  
+ 100+  :  18   Max.   :1                 Max.   :1.0000   Max.   :1.0000  
+ NA's  :1384   NA's   :34                NA's   :34       NA's   :34      
+ has_mobile_usage has_bank_usage   has_pension_usage has_insurance_usage
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.000     Min.   :0.000      
+ 1st Qu.:1.0000   1st Qu.:0.0000   1st Qu.:0.000     1st Qu.:0.000      
+ Median :1.0000   Median :0.0000   Median :0.000     Median :0.000      
+ Mean   :0.8225   Mean   :0.2687   Mean   :0.055     Mean   :0.114      
+ 3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:0.000     3rd Qu.:0.000      
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.000     Max.   :1.000      
+ NA's   :34       NA's   :34       NA's   :34        NA's   :34         
+ has_investment_usage
+ Min.   :0.0000      
+ 1st Qu.:0.0000      
+ Median :0.0000      
+ Mean   :0.0575      
+ 3rd Qu.:0.0000      
+ Max.   :1.0000      
+ NA's   :34          </code></pre>
+</div>
+</div>
+<p>Noted that there are 34 SN (serial numbers) that are NA. Hence, we will remove those records from our analysis:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>gbTZ <span class="ot">&lt;-</span> gbTZ <span class="sc">%&gt;%</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(SN))</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>gbTZ_Formal <span class="ot">&lt;-</span> gbTZ_Formal <span class="sc">%&gt;%</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(SN))</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>gbTZ_Informal <span class="ot">&lt;-</span> gbTZ_Informal <span class="sc">%&gt;%</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(SN))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can now run the summary statistics again to ensure that the NA records have been removed:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gbTZ)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   district                  geometry          SN            age        
+ Length:9042        POLYGON      :9042   Min.   :   1   Min.   : 16.00  
+ Class :character   epsg:21037   :   0   1st Qu.:2385   1st Qu.: 27.00  
+ Mode  :character   +proj=utm ...:   0   Median :4664   Median : 37.00  
+                                         Mean   :4814   Mean   : 39.73  
+                                         3rd Qu.:7316   3rd Qu.: 50.00  
+                                         Max.   :9915   Max.   :100.00  
+                                                                        
+  land_size    formal_finservice_usage informal_finservice_usage
+ 0-5   :5482   Min.   :0.000           Min.   :0.0000           
+ 5-10  : 656   1st Qu.:0.000           1st Qu.:0.0000           
+ 10-20 : 237   Median :1.000           Median :1.0000           
+ 20-50 : 103   Mean   :0.741           Mean   :0.5309           
+ 50-100:  19   3rd Qu.:1.000           3rd Qu.:1.0000           
+ 100+  :  35   Max.   :1.000           Max.   :1.0000           
+ NA's  :2510                                                    
+    is_rural         is_urban      has_mobile_usage has_bank_usage  
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+ Median :1.0000   Median :0.0000   Median :1.0000   Median :0.0000  
+ Mean   :0.6984   Mean   :0.3016   Mean   :0.6971   Mean   :0.1954  
+ 3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:0.0000  
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  
+                                                                    
+ has_pension_usage has_insurance_usage has_investment_usage
+ Min.   :0.00000   Min.   :0.00000     Min.   :0.00000     
+ 1st Qu.:0.00000   1st Qu.:0.00000     1st Qu.:0.00000     
+ Median :0.00000   Median :0.00000     Median :0.00000     
+ Mean   :0.03771   Mean   :0.09766     Mean   :0.03959     
+ 3rd Qu.:0.00000   3rd Qu.:0.00000     3rd Qu.:0.00000     
+ Max.   :1.00000   Max.   :1.00000     Max.   :1.00000     
+                                                           </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gbTZ_Formal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   district                  geometry          SN            age        
+ Length:6700        POLYGON      :6700   Min.   :   1   Min.   : 16.00  
+ Class :character   epsg:21037   :   0   1st Qu.:2427   1st Qu.: 28.00  
+ Mode  :character   +proj=utm ...:   0   Median :5100   Median : 37.00  
+                                         Mean   :5076   Mean   : 39.96  
+                                         3rd Qu.:7761   3rd Qu.: 50.00  
+                                         Max.   :9915   Max.   :100.00  
+                                                                        
+  land_size    formal_finservice_usage    is_rural         is_urban     
+ 0-5   :3899   Min.   :1               Min.   :0.0000   Min.   :0.0000  
+ 5-10  : 462   1st Qu.:1               1st Qu.:0.0000   1st Qu.:0.0000  
+ 10-20 : 181   Median :1               Median :1.0000   Median :0.0000  
+ 20-50 :  83   Mean   :1               Mean   :0.6427   Mean   :0.3573  
+ 50-100:  11   3rd Qu.:1               3rd Qu.:1.0000   3rd Qu.:1.0000  
+ 100+  :  26   Max.   :1               Max.   :1.0000   Max.   :1.0000  
+ NA's  :2038                                                            
+ has_mobile_usage has_bank_usage   has_pension_usage has_insurance_usage
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.0000    Min.   :0.0000     
+ 1st Qu.:1.0000   1st Qu.:0.0000   1st Qu.:0.0000    1st Qu.:0.0000     
+ Median :1.0000   Median :0.0000   Median :0.0000    Median :0.0000     
+ Mean   :0.9407   Mean   :0.2637   Mean   :0.0509    Mean   :0.1318     
+ 3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:0.0000    3rd Qu.:0.0000     
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.0000    Max.   :1.0000     
+                                                                        
+ has_investment_usage
+ Min.   :0.00000     
+ 1st Qu.:0.00000     
+ Median :0.00000     
+ Mean   :0.05343     
+ 3rd Qu.:0.00000     
+ Max.   :1.00000     
+                     </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gbTZ_Informal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   district                  geometry          SN            age        
+ Length:4800        POLYGON      :4800   Min.   :   1   Min.   : 16.00  
+ Class :character   epsg:21037   :   0   1st Qu.:2531   1st Qu.: 28.00  
+ Mode  :character   +proj=utm ...:   0   Median :5214   Median : 36.00  
+                                         Mean   :5098   Mean   : 38.66  
+                                         3rd Qu.:7676   3rd Qu.: 48.00  
+                                         Max.   :9915   Max.   :100.00  
+                                                                        
+  land_size    informal_finservice_usage    is_rural         is_urban     
+ 0-5   :2887   Min.   :1                 Min.   :0.0000   Min.   :0.0000  
+ 5-10  : 334   1st Qu.:1                 1st Qu.:0.0000   1st Qu.:0.0000  
+ 10-20 : 138   Median :1                 Median :1.0000   Median :0.0000  
+ 20-50 :  65   Mean   :1                 Mean   :0.6675   Mean   :0.3325  
+ 50-100:   8   3rd Qu.:1                 3rd Qu.:1.0000   3rd Qu.:1.0000  
+ 100+  :  18   Max.   :1                 Max.   :1.0000   Max.   :1.0000  
+ NA's  :1350                                                              
+ has_mobile_usage has_bank_usage   has_pension_usage has_insurance_usage
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.000     Min.   :0.000      
+ 1st Qu.:1.0000   1st Qu.:0.0000   1st Qu.:0.000     1st Qu.:0.000      
+ Median :1.0000   Median :0.0000   Median :0.000     Median :0.000      
+ Mean   :0.8225   Mean   :0.2687   Mean   :0.055     Mean   :0.114      
+ 3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:0.000     3rd Qu.:0.000      
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.000     Max.   :1.000      
+                                                                        
+ has_investment_usage
+ Min.   :0.0000      
+ 1st Qu.:0.0000      
+ Median :0.0000      
+ Mean   :0.0575      
+ 3rd Qu.:0.0000      
+ Max.   :1.0000      
+                     </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="exploratory-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">6.0 Exploratory Data Analysis</h2>
+<section id="spatial-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-distribution">6.1 Spatial Distribution</h3>
+<p>In the code chunk below, we aim to visualize the spatial distribution of formal and informal financial service usage across the districts in Tanzania.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>tmap mode set to plotting</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>formalMap <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(gbCleaned) <span class="sc">+</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(gbTZ) <span class="sc">+</span>  </span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="at">col =</span> <span class="st">"formal_finservice_usage"</span>,</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">alpha =</span> <span class="fl">0.7</span>,</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"quantile"</span>,</span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> <span class="st">"Blues"</span>,</span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>          <span class="at">title =</span> <span class="st">"Formal Financial Service Usage"</span>) <span class="sc">+</span></span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>() <span class="sc">+</span></span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Formal Financial Service Usage by District"</span>, <span class="at">main.title.size =</span> <span class="fl">0.8</span>)</span>
+<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a>informalMap <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(gbCleaned) <span class="sc">+</span></span>
+<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb61-14"><a href="#cb61-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(gbTZ) <span class="sc">+</span>  </span>
+<span id="cb61-15"><a href="#cb61-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="at">col =</span> <span class="st">"informal_finservice_usage"</span>,</span>
+<span id="cb61-16"><a href="#cb61-16" aria-hidden="true" tabindex="-1"></a>          <span class="at">alpha =</span> <span class="fl">0.7</span>,</span>
+<span id="cb61-17"><a href="#cb61-17" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"quantile"</span>,</span>
+<span id="cb61-18"><a href="#cb61-18" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> <span class="st">"Blues"</span>,</span>
+<span id="cb61-19"><a href="#cb61-19" aria-hidden="true" tabindex="-1"></a>          <span class="at">title =</span> <span class="st">"Informal Financial Service Usage"</span>) <span class="sc">+</span></span>
+<span id="cb61-20"><a href="#cb61-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>() <span class="sc">+</span></span>
+<span id="cb61-21"><a href="#cb61-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Informal Financial Service Usage by District"</span>, <span class="at">main.title.size =</span> <span class="fl">0.8</span>)</span>
+<span id="cb61-22"><a href="#cb61-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-23"><a href="#cb61-23" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(formalMap, informalMap)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex03A2_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The darker shades of blue represent higher usage rates for formal and informal financial services, with lighter shades indicating lower usage. This allows for a quick comparison across the districts, helping us to highlight areas that have higher or lower financial service adoption.</p>
+</section>
+<section id="demographic-land-size" class="level3">
+<h3 class="anchored" data-anchor-id="demographic-land-size">6.2 Demographic &amp; Land Size</h3>
+<p>The code chunk below plots the demographic and land distribution in Tanzania. By examining age and land size, we can identify patterns that may influence access to and usage of financial services.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ, <span class="fu">aes</span>(<span class="at">x=</span> <span class="st">`</span><span class="at">age</span><span class="st">`</span>)) <span class="sc">+</span> </span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">20</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"light blue"</span>) <span class="sc">+</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution by Age"</span>, <span class="at">x =</span> <span class="st">"Age"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>land <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ, <span class="fu">aes</span>(<span class="at">x =</span> land_size)) <span class="sc">+</span> </span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution by Land Size"</span>, <span class="at">x =</span> <span class="st">"Land Size"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(age, land, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex03A2_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The histogram on the left represents the count distribution across ages, highlighting that majority of them are below the age of 50. The bar chart on the right represents counts across the different land size categories, showing how land size ownership may relate to financial inclusion. For example, majority have land size of 0-5 acres, followed by people who have no lands.</p>
+</section>
+<section id="multiple-histogram-plots---formal" class="level3">
+<h3 class="anchored" data-anchor-id="multiple-histogram-plots---formal">6.3 Multiple Histogram Plots - Formal</h3>
+<p>We will also be drawing a multiple histogram plot, also known as trellis plot, by using ggarrange() of ggpubr package. This will be achieved using the code chunk below, which will create 7 histograms that represent the different independent variables for <strong>formal financial service usage</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>is_rural_1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ_Formal, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(is_rural))) <span class="sc">+</span>   </span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span>   </span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Rural"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span>   </span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)) <span class="sc">+</span>   </span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">7000</span>) <span class="sc">+</span> </span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>is_urban_1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ_Formal, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(is_urban))) <span class="sc">+</span>   </span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span>   </span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Urban"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span>   </span>
+<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)) <span class="sc">+</span>   </span>
+<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">7000</span>) <span class="sc">+</span> </span>
+<span id="cb63-15"><a href="#cb63-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb63-16"><a href="#cb63-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-17"><a href="#cb63-17" aria-hidden="true" tabindex="-1"></a>has_mobile_usage_1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ_Formal, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(has_mobile_usage))) <span class="sc">+</span> </span>
+<span id="cb63-18"><a href="#cb63-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span>   </span>
+<span id="cb63-19"><a href="#cb63-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb63-20"><a href="#cb63-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Mobile Banking"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span>   </span>
+<span id="cb63-21"><a href="#cb63-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)) <span class="sc">+</span>   </span>
+<span id="cb63-22"><a href="#cb63-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">7000</span>) <span class="sc">+</span> </span>
+<span id="cb63-23"><a href="#cb63-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb63-24"><a href="#cb63-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-25"><a href="#cb63-25" aria-hidden="true" tabindex="-1"></a>has_bank_usage_1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ_Formal, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(has_bank_usage))) <span class="sc">+</span>   </span>
+<span id="cb63-26"><a href="#cb63-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span>   </span>
+<span id="cb63-27"><a href="#cb63-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb63-28"><a href="#cb63-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Bank"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span>   </span>
+<span id="cb63-29"><a href="#cb63-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)) <span class="sc">+</span>   </span>
+<span id="cb63-30"><a href="#cb63-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">7000</span>) <span class="sc">+</span> </span>
+<span id="cb63-31"><a href="#cb63-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb63-32"><a href="#cb63-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-33"><a href="#cb63-33" aria-hidden="true" tabindex="-1"></a>has_pension_usage_1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ_Formal, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(has_pension_usage))) <span class="sc">+</span></span>
+<span id="cb63-34"><a href="#cb63-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span>   </span>
+<span id="cb63-35"><a href="#cb63-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb63-36"><a href="#cb63-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Pension"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span>   </span>
+<span id="cb63-37"><a href="#cb63-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)) <span class="sc">+</span>   </span>
+<span id="cb63-38"><a href="#cb63-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">7000</span>) <span class="sc">+</span> </span>
+<span id="cb63-39"><a href="#cb63-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb63-40"><a href="#cb63-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-41"><a href="#cb63-41" aria-hidden="true" tabindex="-1"></a>has_insurance_usage_1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ_Formal, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(has_insurance_usage))) <span class="sc">+</span>   </span>
+<span id="cb63-42"><a href="#cb63-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span>   </span>
+<span id="cb63-43"><a href="#cb63-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb63-44"><a href="#cb63-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Insurance"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span>   </span>
+<span id="cb63-45"><a href="#cb63-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)) <span class="sc">+</span>   </span>
+<span id="cb63-46"><a href="#cb63-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">7000</span>) <span class="sc">+</span> </span>
+<span id="cb63-47"><a href="#cb63-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb63-48"><a href="#cb63-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-49"><a href="#cb63-49" aria-hidden="true" tabindex="-1"></a>has_investment_usage_1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ_Formal, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(has_investment_usage))) <span class="sc">+</span>   </span>
+<span id="cb63-50"><a href="#cb63-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span>   </span>
+<span id="cb63-51"><a href="#cb63-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb63-52"><a href="#cb63-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Investment"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span>   </span>
+<span id="cb63-53"><a href="#cb63-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)) <span class="sc">+</span>   </span>
+<span id="cb63-54"><a href="#cb63-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">7000</span>) <span class="sc">+</span> </span>
+<span id="cb63-55"><a href="#cb63-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb63-56"><a href="#cb63-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-57"><a href="#cb63-57" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(</span>
+<span id="cb63-58"><a href="#cb63-58" aria-hidden="true" tabindex="-1"></a>  is_rural_1, is_urban_1, has_mobile_usage_1, </span>
+<span id="cb63-59"><a href="#cb63-59" aria-hidden="true" tabindex="-1"></a>  has_bank_usage_1, has_pension_usage_1, has_insurance_usage_1, has_investment_usage_1,</span>
+<span id="cb63-60"><a href="#cb63-60" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">4</span>,</span>
+<span id="cb63-61"><a href="#cb63-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="dv">2</span></span>
+<span id="cb63-62"><a href="#cb63-62" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The dot-dot notation (`..count..`) was deprecated in ggplot2 3.4.0.
+ℹ Please use `after_stat(count)` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex03A2_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The plot above reveals that majority individuals that have formal financial service usage are from the rural cluster, have mobile banking, but not bank usage. They also do not have pension usage, insurance usage, or investment usages.</p>
+</section>
+<section id="multiple-histogram-plots---informal" class="level3">
+<h3 class="anchored" data-anchor-id="multiple-histogram-plots---informal">6.4 Multiple Histogram Plots - Informal</h3>
+<p>Likewise, we will create 7 histograms that represent the different independent variables for <strong>informal financial service usage</strong> in the code chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>is_rural_2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ_Informal, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(is_rural))) <span class="sc">+</span>   </span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span>   </span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Rural"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span>   </span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)) <span class="sc">+</span>   </span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">7000</span>) <span class="sc">+</span> </span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>is_urban_2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ_Informal, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(is_urban))) <span class="sc">+</span>   </span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span>   </span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Urban"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span>   </span>
+<span id="cb65-13"><a href="#cb65-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)) <span class="sc">+</span>   </span>
+<span id="cb65-14"><a href="#cb65-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">7000</span>) <span class="sc">+</span> </span>
+<span id="cb65-15"><a href="#cb65-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb65-16"><a href="#cb65-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-17"><a href="#cb65-17" aria-hidden="true" tabindex="-1"></a>has_mobile_usage_2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ_Informal, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(has_mobile_usage))) <span class="sc">+</span>   </span>
+<span id="cb65-18"><a href="#cb65-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span>   </span>
+<span id="cb65-19"><a href="#cb65-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb65-20"><a href="#cb65-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Mobile Banking"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span>   </span>
+<span id="cb65-21"><a href="#cb65-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)) <span class="sc">+</span>   </span>
+<span id="cb65-22"><a href="#cb65-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">7000</span>) <span class="sc">+</span> </span>
+<span id="cb65-23"><a href="#cb65-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb65-24"><a href="#cb65-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-25"><a href="#cb65-25" aria-hidden="true" tabindex="-1"></a>has_bank_usage_2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ_Informal, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(has_bank_usage))) <span class="sc">+</span>   </span>
+<span id="cb65-26"><a href="#cb65-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span>   </span>
+<span id="cb65-27"><a href="#cb65-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb65-28"><a href="#cb65-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Bank"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span>   </span>
+<span id="cb65-29"><a href="#cb65-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)) <span class="sc">+</span>   </span>
+<span id="cb65-30"><a href="#cb65-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">7000</span>) <span class="sc">+</span> </span>
+<span id="cb65-31"><a href="#cb65-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb65-32"><a href="#cb65-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-33"><a href="#cb65-33" aria-hidden="true" tabindex="-1"></a>has_pension_usage_2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ_Informal, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(has_pension_usage))) <span class="sc">+</span>   </span>
+<span id="cb65-34"><a href="#cb65-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span>   </span>
+<span id="cb65-35"><a href="#cb65-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb65-36"><a href="#cb65-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Pension"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span>   </span>
+<span id="cb65-37"><a href="#cb65-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)) <span class="sc">+</span>   </span>
+<span id="cb65-38"><a href="#cb65-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">7000</span>) <span class="sc">+</span> </span>
+<span id="cb65-39"><a href="#cb65-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb65-40"><a href="#cb65-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-41"><a href="#cb65-41" aria-hidden="true" tabindex="-1"></a>has_insurance_usage_2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ_Informal, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(has_insurance_usage))) <span class="sc">+</span>   </span>
+<span id="cb65-42"><a href="#cb65-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span>   </span>
+<span id="cb65-43"><a href="#cb65-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb65-44"><a href="#cb65-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Insurance"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span>   </span>
+<span id="cb65-45"><a href="#cb65-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)) <span class="sc">+</span>   </span>
+<span id="cb65-46"><a href="#cb65-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">7000</span>) <span class="sc">+</span> </span>
+<span id="cb65-47"><a href="#cb65-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb65-48"><a href="#cb65-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-49"><a href="#cb65-49" aria-hidden="true" tabindex="-1"></a>has_investment_usage_2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbTZ_Informal, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(has_investment_usage))) <span class="sc">+</span>   </span>
+<span id="cb65-50"><a href="#cb65-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span>   </span>
+<span id="cb65-51"><a href="#cb65-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb65-52"><a href="#cb65-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Investment"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span>   </span>
+<span id="cb65-53"><a href="#cb65-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)) <span class="sc">+</span>   </span>
+<span id="cb65-54"><a href="#cb65-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">7000</span>) <span class="sc">+</span> </span>
+<span id="cb65-55"><a href="#cb65-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb65-56"><a href="#cb65-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-57"><a href="#cb65-57" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(</span>
+<span id="cb65-58"><a href="#cb65-58" aria-hidden="true" tabindex="-1"></a>  is_rural_2, is_urban_2, has_mobile_usage_2, </span>
+<span id="cb65-59"><a href="#cb65-59" aria-hidden="true" tabindex="-1"></a>  has_bank_usage_2, has_pension_usage_2, has_insurance_usage_2,</span>
+<span id="cb65-60"><a href="#cb65-60" aria-hidden="true" tabindex="-1"></a>  has_investment_usage_2,</span>
+<span id="cb65-61"><a href="#cb65-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">4</span>,</span>
+<span id="cb65-62"><a href="#cb65-62" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="dv">2</span></span>
+<span id="cb65-63"><a href="#cb65-63" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex03A2_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The plot above reveals that majority individuals that have informal financial service usage are from the rural cluster, have mobile banking, but not bank usage. They also do not have pension usage, insurance usage, or investment usages. Note that this is similar to our analysis of the plot output for formal financial service usage in the previous section.</p>
+</section>
+</section>
+<section id="financial-inclusion-modeling-using-gwmodel" class="level2">
+<h2 class="anchored" data-anchor-id="financial-inclusion-modeling-using-gwmodel">7.0 Financial Inclusion Modeling using GWmodel</h2>
+<section id="converting-simple-feature-to-spatial-points" class="level3">
+<h3 class="anchored" data-anchor-id="converting-simple-feature-to-spatial-points">7.1 Converting Simple Feature to Spatial Points</h3>
+<p>We will convert the gbTZ_Formal from a simple feature object into a Spatial Points data frame because spdep package can only process sp conformed spatial data objects. This will be performed using the code chunk below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>gbTZ_FormalSP <span class="ot">&lt;-</span> <span class="fu">as_Spatial</span>(gbTZ_Formal)</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>gbTZ_FormalSP</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatialPolygonsDataFrame 
+features    : 6700 
+extent      : -547292.6, 658089.6, 8698828, 9890499  (xmin, xmax, ymin, ymax)
+crs         : +proj=utm +zone=37 +south +a=6378249.145 +rf=293.465 +towgs84=-160,-6,-302,0,0,0,0 +units=m +no_defs 
+variables   : 12
+names       : district,   SN, age, land_size, formal_finservice_usage, is_rural, is_urban, has_mobile_usage, has_bank_usage, has_pension_usage, has_insurance_usage, has_investment_usage 
+min values  :   Arusha,    1,  16,       0-5,                       1,        0,        0,                0,              0,                 0,                   0,                    0 
+max values  :     Wete, 9915, 100,    50-100,                       1,        1,        1,                1,              1,                 1,                   1,                    1 </code></pre>
+</div>
+</div>
+<p>Next, we will be doing the financial inclusion modelling using GWmodel by using both the fixed and adaptive bandwidth schemes.</p>
+</section>
+<section id="fixed-bandwidth-gwr-model" class="level3">
+<h3 class="anchored" data-anchor-id="fixed-bandwidth-gwr-model">7.2 Fixed Bandwidth GWR Model</h3>
+<p>In the code chunk below, bw.gwr() is used to determine the optimal fixed bandwidth to be used in the model.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>bw.fixed <span class="ot">&lt;-</span> <span class="fu">bw.gwr</span>(</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> formal_finservice_usage <span class="sc">~</span> age <span class="sc">+</span> is_rural <span class="sc">+</span> is_urban <span class="sc">+</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>    has_mobile_usage <span class="sc">+</span> has_bank_usage <span class="sc">+</span> has_pension_usage <span class="sc">+</span> </span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>    has_insurance_usage <span class="sc">+</span> has_investment_usage,</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> gbTZ_FormalSP,</span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">approach =</span> <span class="st">"CV"</span>, </span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel =</span> <span class="st">"gaussian"</span>, </span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">adaptive =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">longlat =</span> <span class="cn">FALSE</span> </span>
+<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Take a cup of tea and have a break, it will take a few minutes.
+          -----A kind suggestion from GWmodel development group
+Fixed bandwidth: 987432.1 CV score: 22880.16 
+Fixed bandwidth: 610388.6 CV score: 747.5205 
+Fixed bandwidth: 377363 CV score: 45.55502 
+Fixed bandwidth: 233345.2 CV score: 1571.232 
+Fixed bandwidth: 466370.8 CV score: 47.95333 
+Fixed bandwidth: 322353.1 CV score: 1.770887e+22 
+Fixed bandwidth: 411360.9 CV score: 352.1635 
+Fixed bandwidth: 356351 CV score: 1.605605e+24 
+Fixed bandwidth: 390349 CV score: 1062.088 
+Fixed bandwidth: 369337.1 CV score: 357.9162 
+Fixed bandwidth: 382323.2 CV score: 2.127712e+26 
+Fixed bandwidth: 374297.4 CV score: 112.7846 
+Fixed bandwidth: 379257.6 CV score: 27.39943 
+Fixed bandwidth: 380428.5 CV score: 1148.343 
+Fixed bandwidth: 378533.9 CV score: 5703.256 
+Fixed bandwidth: 379704.9 CV score: 36.71049 
+Fixed bandwidth: 378981.2 CV score: 1136.048 
+Fixed bandwidth: 379428.4 CV score: 109.2795 
+Fixed bandwidth: 379152 CV score: 419.9114 
+Fixed bandwidth: 379322.8 CV score: 3.777893e+22 
+Fixed bandwidth: 379217.3 CV score: 134.8313 
+Fixed bandwidth: 379282.5 CV score: 25.07924 
+Fixed bandwidth: 379297.9 CV score: 75.41214 
+Fixed bandwidth: 379273 CV score: 1470.092 
+Fixed bandwidth: 379288.4 CV score: 46.02101 
+Fixed bandwidth: 379278.9 CV score: 2.342294e+24 
+Fixed bandwidth: 379284.8 CV score: 1890.25 
+Fixed bandwidth: 379281.1 CV score: 1017.842 
+Fixed bandwidth: 379283.4 CV score: 1087.648 
+Fixed bandwidth: 379282 CV score: 4.25013e+22 
+Fixed bandwidth: 379282.8 CV score: 90.88415 
+Fixed bandwidth: 379282.3 CV score: 4.835703e+24 
+Fixed bandwidth: 379282.6 CV score: 140.7534 
+Fixed bandwidth: 379282.4 CV score: 5.858686e+23 
+Fixed bandwidth: 379282.6 CV score: 251.4205 
+Fixed bandwidth: 379282.5 CV score: 345.7589 
+Fixed bandwidth: 379282.5 CV score: 3.541775e+23 
+Fixed bandwidth: 379282.5 CV score: 575.5683 
+Fixed bandwidth: 379282.5 CV score: 335.232 
+Fixed bandwidth: 379282.5 CV score: 23.8124 
+Fixed bandwidth: 379282.5 CV score: 4.835703e+24 
+Fixed bandwidth: 379282.5 CV score: 222.2371 
+Fixed bandwidth: 379282.5 CV score: 410.3286 
+Fixed bandwidth: 379282.5 CV score: 1.088033e+25 
+Fixed bandwidth: 379282.5 CV score: 18.67962 
+Fixed bandwidth: 379282.5 CV score: 54.45861 
+Fixed bandwidth: 379282.5 CV score: 2.43497e+21 
+Fixed bandwidth: 379282.5 CV score: 6.286414e+25 
+Fixed bandwidth: 379282.5 CV score: 28472.28 
+Fixed bandwidth: 379282.5 CV score: 7.253555e+25 </code></pre>
+</div>
+</div>
+<p>The result shows that the recommended bandwidth is 379282.5</p>
+<p>Now, we can use the code chunk below to calibrate the gwr model using fixed bandwidth and gaussian kernel.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>gwr.fixed <span class="ot">&lt;-</span> <span class="fu">gwr.basic</span>(</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> formal_finservice_usage <span class="sc">~</span> age <span class="sc">+</span> is_rural <span class="sc">+</span> is_urban <span class="sc">+</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>            has_mobile_usage <span class="sc">+</span> has_bank_usage <span class="sc">+</span> has_pension_usage <span class="sc">+</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>            has_insurance_usage <span class="sc">+</span> has_investment_usage,</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> gbTZ_FormalSP,</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">bw =</span> bw.fixed,</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel =</span> <span class="st">"gaussian"</span>, </span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">longlat =</span> <span class="cn">FALSE</span></span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The code chunk below is used to display the model output.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>gwr.fixed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2024-11-11 01:17:29 
+   Call:
+   gwr.basic(formula = formal_finservice_usage ~ age + is_rural + 
+    is_urban + has_mobile_usage + has_bank_usage + has_pension_usage + 
+    has_insurance_usage + has_investment_usage, data = gbTZ_FormalSP, 
+    bw = bw.fixed, kernel = "gaussian", longlat = FALSE)
+
+   Dependent (y) variable:  formal_finservice_usage
+   Independent variables:  age is_rural is_urban has_mobile_usage has_bank_usage has_pension_usage has_insurance_usage has_investment_usage
+   Number of data points: 6700
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+       Min         1Q     Median         3Q        Max 
+-1.130e-15 -5.300e-16 -1.900e-16 -3.000e-17  1.707e-12 
+
+   Coefficients: (1 not defined because of singularities)
+                          Estimate Std. Error    t value Pr(&gt;|t|)    
+   (Intercept)           1.000e+00  1.393e-15  7.181e+14   &lt;2e-16 ***
+   age                  -6.949e-18  1.697e-17 -4.090e-01    0.682    
+   is_rural             -8.000e-16  5.479e-16 -1.460e+00    0.144    
+   is_urban                     NA         NA         NA       NA    
+   has_mobile_usage      4.337e-17  1.103e-15  3.900e-02    0.969    
+   has_bank_usage       -4.763e-16  6.280e-16 -7.580e-01    0.448    
+   has_pension_usage     1.987e-16  5.204e-15  3.800e-02    0.970    
+   has_insurance_usage  -2.322e-16  8.228e-16 -2.820e-01    0.778    
+   has_investment_usage -1.503e-16  5.083e-15 -3.000e-02    0.976    
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 2.088e-14 on 6692 degrees of freedom
+   Multiple R-squared:   0.5
+   Adjusted R-squared: 0.4995 
+   F-statistic: 956.1 on 7 and 6692 DF,  p-value: &lt; 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 2.917156e-24
+   Sigma(hat): 2.086927e-14
+   AIC:  -403074.9
+   AICc:  -403074.9
+   BIC:  -409618.7
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: gaussian 
+   Fixed bandwidth: 379282.5 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                               Min.     1st Qu.      Median     3rd Qu.   Max.
+   Intercept             7.7076e-01  9.8936e-01  9.9937e-01  1.0084e+00 1.2073
+   age                  -3.2353e-16 -1.8865e-17  4.6214e-18  2.5587e-17 0.0000
+   is_rural             -2.8295e-01 -8.0950e-03  1.1340e-03  8.4172e-03 0.2761
+   is_urban             -2.8316e-01 -8.2258e-03 -3.4451e-04  6.8684e-03 0.1827
+   has_mobile_usage     -1.4155e-14 -2.6090e-15  2.3592e-16  2.4425e-15 0.0000
+   has_bank_usage       -9.4369e-16 -1.8041e-16  2.7756e-17  2.0817e-16 0.0000
+   has_pension_usage    -1.4211e-14 -3.5527e-15  0.0000e+00  3.5527e-15 0.0000
+   has_insurance_usage  -5.4401e-15 -4.5797e-16 -2.7756e-17  2.6368e-16 0.0000
+   has_investment_usage -2.1316e-14 -1.7764e-15  0.0000e+00  3.5527e-15 0.0000
+   ************************Diagnostic information*************************
+   Number of data points: 6700 
+   Effective number of parameters (2trace(S) - trace(S'S)): 27.17595 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 6672.824 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): -16326.16 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): -16348.35 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): -22891.75 
+   Residual sum of squares: 34.08784 
+   R-square value:  -Inf 
+   Adjusted R-square value:  -Inf 
+
+   ***********************************************************************
+   Program stops at: 2024-11-11 01:17:51 </code></pre>
+</div>
+</div>
+</section>
+<section id="adaptive-bandwidth-gwr-model" class="level3">
+<h3 class="anchored" data-anchor-id="adaptive-bandwidth-gwr-model">7.3 Adaptive Bandwidth GWR Model</h3>
+<p>Likewise, we will use bw.gwr() to determine the recommended data point to use.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>bw.adaptive <span class="ot">&lt;-</span> <span class="fu">bw.gwr</span>(</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> formal_finservice_usage <span class="sc">~</span> age <span class="sc">+</span> is_rural <span class="sc">+</span> is_urban <span class="sc">+</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>    has_mobile_usage <span class="sc">+</span> has_bank_usage <span class="sc">+</span> has_pension_usage <span class="sc">+</span> </span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>    has_insurance_usage <span class="sc">+</span> has_investment_usage,</span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> gbTZ_FormalSP,</span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">approach =</span> <span class="st">"CV"</span>, </span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel =</span> <span class="st">"gaussian"</span>, </span>
+<span id="cb73-8"><a href="#cb73-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">adaptive =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb73-9"><a href="#cb73-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">longlat =</span> <span class="cn">FALSE</span> </span>
+<span id="cb73-10"><a href="#cb73-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Take a cup of tea and have a break, it will take a few minutes.
+          -----A kind suggestion from GWmodel development group
+Adaptive bandwidth: 4148 CV score: 85.29868 
+Adaptive bandwidth: 2572 CV score: 388.0207 
+Adaptive bandwidth: 5124 CV score: 2845.688 
+Adaptive bandwidth: 3547 CV score: 137.4969 
+Adaptive bandwidth: 4522 CV score: 129.6609 
+Adaptive bandwidth: 3919 CV score: 375.8045 
+Adaptive bandwidth: 4291 CV score: 128.9413 
+Adaptive bandwidth: 4060 CV score: 202.4762 
+Adaptive bandwidth: 4202 CV score: 256.6942 
+Adaptive bandwidth: 4114 CV score: 27.82453 
+Adaptive bandwidth: 4093 CV score: 28.13117 
+Adaptive bandwidth: 4127 CV score: 24.42802 
+Adaptive bandwidth: 4135 CV score: 91.47258 
+Adaptive bandwidth: 4122 CV score: 28.53629 
+Adaptive bandwidth: 4130 CV score: 24.43066 
+Adaptive bandwidth: 4125 CV score: 24.28051 
+Adaptive bandwidth: 4123 CV score: 28.53629 
+Adaptive bandwidth: 4125 CV score: 24.28051 </code></pre>
+</div>
+</div>
+<p>The result shows that 4125 is the recommended data point to use.</p>
+<p>Now, we will calibrate the gwr model by using adaptive bandwidth and gaussian kernel.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>gwr.adaptive <span class="ot">&lt;-</span> <span class="fu">gwr.basic</span>(</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> formal_finservice_usage <span class="sc">~</span> age <span class="sc">+</span> is_rural <span class="sc">+</span> is_urban <span class="sc">+</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>            has_mobile_usage <span class="sc">+</span> has_bank_usage <span class="sc">+</span> has_pension_usage <span class="sc">+</span></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>            has_insurance_usage <span class="sc">+</span> has_investment_usage,</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> gbTZ_FormalSP,</span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">bw =</span> bw.adaptive,</span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel =</span> <span class="st">"gaussian"</span>, </span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">adaptive =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">longlat =</span> <span class="cn">FALSE</span></span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The code chunk below is used to display the model output.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>gwr.adaptive</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2024-11-11 01:21:28 
+   Call:
+   gwr.basic(formula = formal_finservice_usage ~ age + is_rural + 
+    is_urban + has_mobile_usage + has_bank_usage + has_pension_usage + 
+    has_insurance_usage + has_investment_usage, data = gbTZ_FormalSP, 
+    bw = bw.adaptive, kernel = "gaussian", adaptive = TRUE, longlat = FALSE)
+
+   Dependent (y) variable:  formal_finservice_usage
+   Independent variables:  age is_rural is_urban has_mobile_usage has_bank_usage has_pension_usage has_insurance_usage has_investment_usage
+   Number of data points: 6700
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+       Min         1Q     Median         3Q        Max 
+-1.130e-15 -5.300e-16 -1.900e-16 -3.000e-17  1.707e-12 
+
+   Coefficients: (1 not defined because of singularities)
+                          Estimate Std. Error    t value Pr(&gt;|t|)    
+   (Intercept)           1.000e+00  1.393e-15  7.181e+14   &lt;2e-16 ***
+   age                  -6.949e-18  1.697e-17 -4.090e-01    0.682    
+   is_rural             -8.000e-16  5.479e-16 -1.460e+00    0.144    
+   is_urban                     NA         NA         NA       NA    
+   has_mobile_usage      4.337e-17  1.103e-15  3.900e-02    0.969    
+   has_bank_usage       -4.763e-16  6.280e-16 -7.580e-01    0.448    
+   has_pension_usage     1.987e-16  5.204e-15  3.800e-02    0.970    
+   has_insurance_usage  -2.322e-16  8.228e-16 -2.820e-01    0.778    
+   has_investment_usage -1.503e-16  5.083e-15 -3.000e-02    0.976    
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 2.088e-14 on 6692 degrees of freedom
+   Multiple R-squared:   0.5
+   Adjusted R-squared: 0.4995 
+   F-statistic: 956.1 on 7 and 6692 DF,  p-value: &lt; 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 2.917156e-24
+   Sigma(hat): 2.086927e-14
+   AIC:  -403074.9
+   AICc:  -403074.9
+   BIC:  -409618.7
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: gaussian 
+   Adaptive bandwidth: 4125 (number of nearest neighbours)
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                               Min.     1st Qu.      Median     3rd Qu.   Max.
+   Intercept             7.3344e-01  9.9203e-01  9.9925e-01  1.0054e+00 1.2053
+   age                  -1.2653e-16 -1.9678e-17  4.0115e-18  2.4178e-17 0.0000
+   is_rural             -1.4288e-01 -7.6662e-03  2.3536e-04  6.8793e-03 0.1385
+   is_urban             -3.6368e-01 -5.9763e-03  2.1954e-04  1.0536e-02 0.2865
+   has_mobile_usage     -4.2577e-14 -3.1086e-15 -5.5511e-17  1.8319e-15 0.0000
+   has_bank_usage       -1.9706e-15 -2.3592e-16  2.7756e-17  1.5266e-16 0.0000
+   has_pension_usage    -1.0658e-14 -3.5527e-15  0.0000e+00  3.5527e-15 0.0000
+   has_insurance_usage  -3.0254e-15 -3.7470e-16  0.0000e+00  2.9143e-16 0.0000
+   has_investment_usage -1.0658e-14 -3.5527e-15  0.0000e+00  3.5527e-15 0.0000
+   ************************Diagnostic information*************************
+   Number of data points: 6700 
+   Effective number of parameters (2trace(S) - trace(S'S)): 14.50779 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 6685.492 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): -22506.09 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): -22519.76 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): -29129.06 
+   Residual sum of squares: 13.58674 
+   R-square value:  -Inf 
+   Adjusted R-square value:  -Inf 
+
+   ***********************************************************************
+   Program stops at: 2024-11-11 01:22:01 </code></pre>
+</div>
+</div>
+<p>x</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
